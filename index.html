@@ -868,8 +868,6 @@ const provinceJobsCache = new Map();
 const EXPECTED_SOURCES = [
   'jobicy',
   'remotive',
-  'local',
-  'vnboard',
   'topcv',
   'vietnamworks',
   'careerbuilder',
@@ -1103,169 +1101,6 @@ async function fetchProvinceJobs(province) {
   mergeJobs(jobs);
 }
 
-// ===== CURATED VIETNAM JOBS (static fallback showing real local-style data) =====
-function getLocalJobs() {
-  return [
-    {
-      id:'local_1', title:'Nhân viên Marketing Online Part-time', company:'AgencyVN Digital',
-      logo:'', type:'part-time', industry:'Marketing',
-      location:'Hà Nội', excerpt:'Chạy quảng cáo Facebook/Google, viết content, báo cáo tuần',
-      description:'<p>AgencyVN Digital tìm nhân viên Marketing online làm bán thời gian 4h/ngày.</p><ul><li>Quản lý fanpage, chạy ads Facebook/TikTok</li><li>Viết caption, content cho thương hiệu</li><li>Báo cáo hiệu quả hàng tuần</li></ul><p>Lương: 5-8 triệu/tháng. Làm từ xa hoặc tại văn phòng Cầu Giấy.</p>',
-      url:'https://vietnamworks.com', date: new Date().toISOString(), source:'local',
-      salaryMin:'5000000', salaryMax:'8000000', currency:'VND'
-    },
-    {
-      id:'local_2', title:'Lập trình viên Web Freelance (ReactJS)', company:'Startup Fintech TPHCM',
-      logo:'', type:'freelance', industry:'Software Development',
-      location:'TP. Hồ Chí Minh', excerpt:'Xây dựng landing page, dashboard admin cho ứng dụng fintech',
-      description:'<p>Startup fintech cần developer ReactJS làm project ngắn hạn 2-3 tháng.</p><ul><li>Xây dựng giao diện dashboard quản lý</li><li>Tích hợp REST API backend Node.js</li><li>Responsive, tối ưu hiệu suất</li></ul><p>Budget: 15-25 triệu/tháng. Remote 100%.</p>',
-      url:'https://topcv.vn', date: new Date().toISOString(), source:'local',
-      salaryMin:'15000000', salaryMax:'25000000', currency:'VND'
-    },
-    {
-      id:'local_3', title:'Cộng tác viên Dịch thuật Anh-Việt', company:'TranslatePro Vietnam',
-      logo:'', type:'freelance', industry:'Translation',
-      location:'Toàn quốc (Remote)', excerpt:'Dịch tài liệu, website, app từ tiếng Anh sang tiếng Việt',
-      description:'<p>Nhận dịch thuật tài liệu kỹ thuật, marketing, pháp lý.</p><ul><li>Làm theo project, linh hoạt thời gian</li><li>Yêu cầu: Anh văn C1+, kinh nghiệm dịch thuật</li><li>Trả công theo từ: 150-250 VND/từ</li></ul>',
-      url:'https://upwork.com', date: new Date().toISOString(), source:'local',
-      salaryMin:'', salaryMax:'', currency:'VND'
-    },
-    {
-      id:'local_4', title:'Gia sư Toán / Lý / Hóa Part-time', company:'EduConnect VN',
-      logo:'', type:'part-time', industry:'Education',
-      location:'Đà Nẵng', excerpt:'Dạy kèm học sinh THPT, lịch linh hoạt 2-4 buổi/tuần',
-      description:'<p>EduConnect kết nối gia sư với học sinh toàn quốc.</p><ul><li>Dạy online hoặc tại nhà</li><li>Lương: 150.000-300.000/buổi</li><li>Hỗ trợ tài liệu, lịch dạy</li></ul>',
-      url:'https://giasuviet.vn', date: new Date().toISOString(), source:'local',
-      salaryMin:'', salaryMax:'', currency:'VND'
-    },
-    {
-      id:'local_5', title:'Customer Support Agent (Tiếng Anh) — Remote', company:'Global SaaS Co.',
-      logo:'', type:'part-time', industry:'Customer Service',
-      location:'Toàn quốc (Remote)', excerpt:'Hỗ trợ khách hàng quốc tế qua chat/email, ca sáng',
-      description:'<p>Công ty SaaS quốc tế tuyển agent hỗ trợ khách hàng.</p><ul><li>Ca sáng 6h-12h hoặc ca chiều 14h-20h</li><li>Tiếng Anh giao tiếp tốt</li><li>Lương: $300-500/tháng</li><li>Remote 100%, không cần kinh nghiệm</li></ul>',
-      url:'https://jobicy.com', date: new Date().toISOString(), source:'local',
-      salaryMin:'', salaryMax:'', currency:'USD'
-    },
-    {
-      id:'local_6', title:'Thiết kế đồ họa Freelance (Canva/AI Tools)', company:'Creative Hub VN',
-      logo:'', type:'freelance', industry:'Design',
-      location:'TP. Hồ Chí Minh', excerpt:'Thiết kế banner, post mạng xã hội, template marketing',
-      description:'<p>Nhận thiết kế đồ họa cho các thương hiệu SME.</p><ul><li>Banner quảng cáo Facebook, Google</li><li>Template Instagram, TikTok thumbnail</li><li>Yêu cầu: Canva Pro, Photoshop hoặc Figma</li><li>Thu nhập: 8-15 triệu/tháng tùy năng lực</li></ul>',
-      url:'https://topcv.vn', date: new Date().toISOString(), source:'local',
-      salaryMin:'8000000', salaryMax:'15000000', currency:'VND'
-    },
-    {
-      id:'local_7', title:'Nhân viên Telesales Part-time', company:'BatDongSan Corp',
-      logo:'', type:'part-time', industry:'Sales',
-      location:'Bình Dương', excerpt:'Tư vấn bất động sản qua điện thoại, hoa hồng cao',
-      description:'<p>Tuyển telesales bán thời gian cho dự án BĐS Bình Dương.</p><ul><li>Ca 8h-12h hoặc 13h-17h</li><li>Lương cơ bản + hoa hồng 1-3% giá trị hợp đồng</li><li>Đào tạo miễn phí</li></ul>',
-      url:'https://batdongsan.com.vn', date: new Date().toISOString(), source:'local',
-      salaryMin:'', salaryMax:'', currency:'VND'
-    },
-    {
-      id:'local_8', title:'Data Entry / Nhập liệu Remote', company:'DataVN Solutions',
-      logo:'', type:'part-time', industry:'Data Entry',
-      location:'Toàn quốc (Remote)', excerpt:'Nhập liệu Excel, kiểm tra dữ liệu, làm theo ca linh hoạt',
-      description:'<p>Công việc nhập liệu từ xa, phù hợp sinh viên và người nội trợ.</p><ul><li>Thời gian: linh hoạt 4-6 giờ/ngày</li><li>Yêu cầu: máy tính, internet ổn định, Excel cơ bản</li><li>Lương: 4-6 triệu/tháng</li></ul>',
-      url:'https://vietnamworks.com', date: new Date().toISOString(), source:'local',
-      salaryMin:'4000000', salaryMax:'6000000', currency:'VND'
-    },
-  ];
-}
-
-// ===== VN BOARD JOBS (manual curation feed) =====
-function getVNBoardJobs() {
-  return [
-    {
-      id:'vn_1', title:'Nhân viên Bán hàng Part-time (Shop thời trang)', company:'TopCV Listing',
-      logo:'', type:'part-time', industry:'Sales',
-      location:'Đà Nẵng', excerpt:'Bán hàng tại cửa hàng, ca xoay 4-6h',
-      description:'<p>Tuyển nhân viên bán hàng part-time cho shop thời trang.</p><ul><li>Ca xoay, linh hoạt</li><li>Ưu tiên giao tiếp tốt</li><li>Thu nhập theo ca + thưởng</li></ul>',
-      url:'https://topcv.vn', date: new Date().toISOString(), source:'vnboard',
-      salaryMin:'3500000', salaryMax:'6500000', currency:'VND'
-    },
-    {
-      id:'vn_2', title:'CTV Content Part-time (Làm từ xa)', company:'VietnamWorks Listing',
-      logo:'', type:'part-time', industry:'Content',
-      location:'Hà Nội', excerpt:'Viết nội dung fanpage/website, 3-4 bài/tuần',
-      description:'<p>Cộng tác viên content part-time cho doanh nghiệp SME.</p><ul><li>Viết bài blog, fanpage</li><li>Làm từ xa, deadline linh hoạt</li><li>Trả lương theo bài</li></ul>',
-      url:'https://www.vietnamworks.com', date: new Date().toISOString(), source:'vnboard',
-      salaryMin:'2000000', salaryMax:'4000000', currency:'VND'
-    },
-    {
-      id:'vn_3', title:'Gia sư Tiếng Anh Part-time', company:'Vieclam24h Listing',
-      logo:'', type:'part-time', industry:'Education',
-      location:'Cần Thơ', excerpt:'Dạy kèm 1-1 hoặc nhóm nhỏ, lịch linh hoạt',
-      description:'<p>Tuyển gia sư tiếng Anh part-time.</p><ul><li>Ca tối hoặc cuối tuần</li><li>Lương theo buổi</li><li>Ưu tiên có chứng chỉ</li></ul>',
-      url:'https://vieclam24h.vn', date: new Date().toISOString(), source:'vnboard',
-      salaryMin:'3000000', salaryMax:'7000000', currency:'VND'
-    },
-    {
-      id:'vn_4', title:'Thu ngân Part-time (Siêu thị mini)', company:'CareerBuilder Listing',
-      logo:'', type:'part-time', industry:'Retail',
-      location:'Hồ Chí Minh', excerpt:'Thu ngân ca tối, 4-5h/ngày',
-      description:'<p>Tuyển thu ngân part-time cho cửa hàng tiện lợi.</p><ul><li>Ca tối 18h-23h</li><li>Thao tác POS cơ bản</li><li>Thu nhập theo ca</li></ul>',
-      url:'https://careerbuilder.vn', date: new Date().toISOString(), source:'vnboard',
-      salaryMin:'2800000', salaryMax:'5200000', currency:'VND'
-    },
-    {
-      id:'vn_5', title:'CTV Nhập liệu Part-time', company:'MyWork Listing',
-      logo:'', type:'part-time', industry:'Data Entry',
-      location:'Hà Nội', excerpt:'Nhập liệu Excel, đối soát đơn hàng',
-      description:'<p>Cộng tác viên nhập liệu part-time.</p><ul><li>Giờ giấc linh hoạt</li><li>Yêu cầu Excel cơ bản</li><li>Trả lương theo sản lượng</li></ul>',
-      url:'https://mywork.com.vn', date: new Date().toISOString(), source:'vnboard',
-      salaryMin:'2500000', salaryMax:'4500000', currency:'VND'
-    },
-    {
-      id:'vn_6', title:'CTV Marketing Part-time (Seeding)', company:'Timviec365 Listing',
-      logo:'', type:'part-time', industry:'Marketing',
-      location:'Đồng Nai', excerpt:'Seeding bài viết, tăng tương tác fanpage',
-      description:'<p>CTV marketing part-time làm từ xa.</p><ul><li>Seeding group/ fanpage</li><li>Thời gian linh hoạt</li><li>Ưu tiên có kinh nghiệm</li></ul>',
-      url:'https://timviec365.vn', date: new Date().toISOString(), source:'vnboard',
-      salaryMin:'2000000', salaryMax:'4000000', currency:'VND'
-    },
-    {
-      id:'vn_7', title:'Tester Manual Part-time', company:'ITviec Listing',
-      logo:'', type:'part-time', industry:'Software Testing',
-      location:'Đà Nẵng', excerpt:'Test web/app, báo lỗi theo checklist',
-      description:'<p>Tester part-time cho dự án web/app.</p><ul><li>Test case cơ bản</li><li>Ghi nhận bug trên Jira</li><li>Ưu tiên biết QA</li></ul>',
-      url:'https://itviec.com', date: new Date().toISOString(), source:'vnboard',
-      salaryMin:'4000000', salaryMax:'8000000', currency:'VND'
-    },
-    {
-      id:'vn_8', title:'CTV Thiết kế Banner Part-time', company:'TopDev Listing',
-      logo:'', type:'part-time', industry:'Design',
-      location:'Hà Nội', excerpt:'Thiết kế banner, key visual đơn giản',
-      description:'<p>CTV thiết kế part-time.</p><ul><li>Dùng Figma/Photoshop</li><li>Nhận việc theo batch</li><li>Trả lương theo sản phẩm</li></ul>',
-      url:'https://topdev.vn', date: new Date().toISOString(), source:'vnboard',
-      salaryMin:'3000000', salaryMax:'6000000', currency:'VND'
-    },
-    {
-      id:'vn_9', title:'Shipper Part-time (Nội thành)', company:'ViecLamTot Listing',
-      logo:'', type:'part-time', industry:'Logistics',
-      location:'Hồ Chí Minh', excerpt:'Giao hàng nội thành theo ca',
-      description:'<p>Tuyển shipper part-time nội thành.</p><ul><li>Ca linh hoạt</li><li>Có xe máy</li><li>Thu nhập theo đơn</li></ul>',
-      url:'https://vieclamtot.com', date: new Date().toISOString(), source:'vnboard',
-      salaryMin:'3500000', salaryMax:'9000000', currency:'VND'
-    },
-    {
-      id:'vn_10', title:'CTV Chăm sóc khách hàng Part-time', company:'JobsGO Listing',
-      logo:'', type:'part-time', industry:'Customer Service',
-      location:'Hải Phòng', excerpt:'Gọi xác nhận đơn, hỗ trợ sau bán',
-      description:'<p>CTV CSKH part-time.</p><ul><li>Gọi xác nhận đơn</li><li>Ca sáng hoặc chiều</li><li>Giọng nói rõ ràng</li></ul>',
-      url:'https://jobsgo.vn', date: new Date().toISOString(), source:'vnboard',
-      salaryMin:'2500000', salaryMax:'5000000', currency:'VND'
-    },
-    {
-      id:'vn_11', title:'CTV Bán hàng Online Part-time', company:'TimViecNhanh Listing',
-      logo:'', type:'part-time', industry:'Sales',
-      location:'Khánh Hòa', excerpt:'Tư vấn chat, chốt đơn qua inbox',
-      description:'<p>CTV bán hàng online part-time.</p><ul><li>Trực chat, tư vấn</li><li>Linh hoạt thời gian</li><li>Hoa hồng theo đơn</li></ul>',
-      url:'https://timviecnhanh.com', date: new Date().toISOString(), source:'vnboard',
-      salaryMin:'2000000', salaryMax:'5000000', currency:'VND'
-    }
-  ];
-}
 
 // ===== DEDUP =====
 function dedup(jobs) {
@@ -1311,8 +1146,6 @@ function sourceBadge(source) {
   const m = {
     jobicy:'source-jobicy',
     remotive:'source-remotive',
-    local:'source-local',
-    vnboard:'source-vnboard',
     topcv:'source-vnboard',
     vietnamworks:'source-vnboard',
     careerbuilder:'source-vnboard',
@@ -1334,8 +1167,6 @@ function sourceBadge(source) {
   const labels = {
     jobicy:'Jobicy',
     remotive:'Remotive',
-    local:'VN Local',
-    vnboard:'VN Boards',
     topcv:'TopCV',
     vietnamworks:'VietnamWorks',
     careerbuilder:'CareerBuilder',
@@ -1590,10 +1421,6 @@ async function loadAllJobs() {
 
   const errors = [];
   let jobs = [];
-
-  // Always include local curated jobs so the grid never starts empty
-  jobs = jobs.concat(getLocalJobs());
-  jobs = jobs.concat(getVNBoardJobs());
 
   // Fetch from APIs concurrently
   const [jobicyJobs, remotiveJobs, directJobs] = await Promise.allSettled([
