@@ -1469,7 +1469,7 @@ async function loadAllJobs() {
 
   if (errors.length) {
     document.getElementById('errorBanner').style.display = 'flex';
-    document.getElementById('errorMsg').textContent = 'Một số nguồn tạm thời không khả dụng. Đang hiển thị dữ liệu cục bộ. ' + errors.join('; ');
+    document.getElementById('errorMsg').textContent = 'Realtime không truy cập được nguồn. ' + errors.join('; ');
   }
 
   applyFilters();
