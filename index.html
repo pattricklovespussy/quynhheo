@@ -1001,6 +1001,18 @@ async function fetchRemotive() {
   return jobs;
 }
 
+// ===== DIRECT VN JOBS (serverless) =====
+async function fetchDirectVNJobs() {
+  try {
+    const r = await fetch(`/api/jobs?keyword=${encodeURIComponent('part time')}`);
+    if (!r.ok) return [];
+    const data = await r.json();
+    return Array.isArray(data.jobs) ? data.jobs : [];
+  } catch {
+    return [];
+  }
+}
+
 // ===== CURATED VIETNAM JOBS (static fallback showing real local-style data) =====
 function getLocalJobs() {
   return [
@@ -1210,8 +1222,38 @@ function logoEl(job) {
 
 // ===== SOURCE BADGE =====
 function sourceBadge(source) {
-  const m = {jobicy:'source-jobicy',remotive:'source-remotive',local:'source-local',vnboard:'source-vnboard'};
-  const labels = {jobicy:'Jobicy',remotive:'Remotive',local:'VN Local',vnboard:'VN Boards'};
+  const m = {
+    jobicy:'source-jobicy',
+    remotive:'source-remotive',
+    local:'source-local',
+    vnboard:'source-vnboard',
+    topcv:'source-vnboard',
+    vietnamworks:'source-vnboard',
+    careerbuilder:'source-vnboard',
+    vieclam24h:'source-vnboard',
+    timviec365:'source-vnboard',
+    mywork:'source-vnboard',
+    jobsgo:'source-vnboard',
+    vieclamtot:'source-vnboard',
+    timviecnhanh:'source-vnboard',
+    itviec:'source-vnboard'
+  };
+  const labels = {
+    jobicy:'Jobicy',
+    remotive:'Remotive',
+    local:'VN Local',
+    vnboard:'VN Boards',
+    topcv:'TopCV',
+    vietnamworks:'VietnamWorks',
+    careerbuilder:'CareerBuilder',
+    vieclam24h:'ViecLam24h',
+    timviec365:'Timviec365',
+    mywork:'MyWork',
+    jobsgo:'JobsGO',
+    vieclamtot:'ViecLamTot',
+    timviecnhanh:'TimViecNhanh',
+    itviec:'ITviec'
+  };
   return `<span class="source-badge ${m[source]||''}">${labels[source]||source}</span>`;
 }
 
@@ -1431,9 +1473,10 @@ async function loadAllJobs() {
   jobs = jobs.concat(getVNBoardJobs());
 
   // Fetch from APIs concurrently
-  const [jobicyJobs, remotiveJobs] = await Promise.allSettled([
+  const [jobicyJobs, remotiveJobs, directJobs] = await Promise.allSettled([
     fetchJobicy(),
-    fetchRemotive()
+    fetchRemotive(),
+    fetchDirectVNJobs()
   ]);
 
   if (jobicyJobs.status === 'fulfilled') {
@@ -1446,6 +1489,12 @@ async function loadAllJobs() {
     jobs = jobs.concat(remotiveJobs.value);
   } else {
     errors.push('Remotive: ' + remotiveJobs.reason.message);
+  }
+
+  if (directJobs.status === 'fulfilled') {
+    jobs = jobs.concat(directJobs.value);
+  } else {
+    errors.push('VN Direct: ' + (directJobs.reason && directJobs.reason.message ? directJobs.reason.message : 'error'));
   }
 
   allJobs = dedup(jobs);
