@@ -1065,14 +1065,15 @@ async function fetchRemotive() {
 
 // ===== DIRECT VN JOBS (serverless) =====
 async function fetchDirectVNJobs(keyword = 'part time') {
-  try {
-    const r = await fetch(`/api/jobs?keyword=${encodeURIComponent(keyword)}`);
-    if (!r.ok) return [];
-    const data = await r.json();
-    return Array.isArray(data.jobs) ? data.jobs : [];
-  } catch {
-    return [];
+  if (window.location.protocol === 'file:') {
+    throw new Error('Realtime cần chạy qua server (không chạy bằng file://)');
   }
+  const r = await fetch(`/api/jobs?keyword=${encodeURIComponent(keyword)}`);
+  if (!r.ok) {
+    throw new Error('Không truy cập được /api/jobs');
+  }
+  const data = await r.json();
+  return Array.isArray(data.jobs) ? data.jobs : [];
 }
 
 function buildProvinceKeywords(province) {
@@ -1466,7 +1467,7 @@ async function loadAllJobs() {
 
   document.getElementById('sourceCount').textContent = EXPECTED_SOURCES.length;
 
-  if (errors.length && allJobs.length <= 8) {
+  if (errors.length) {
     document.getElementById('errorBanner').style.display = 'flex';
     document.getElementById('errorMsg').textContent = 'Một số nguồn tạm thời không khả dụng. Đang hiển thị dữ liệu cục bộ. ' + errors.join('; ');
   }
