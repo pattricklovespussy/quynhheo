@@ -413,9 +413,9 @@ module.exports = async function handler(req, res) {
         }
         if (items.length >= 40) break; // cap per source to avoid overload
       }
-      return items
-        .filter(item => isPartTimeTitle(item.title))
-        .map(item => mapToJob(key, item));
+      const filtered = items.filter(item => isPartTimeTitle(item.title));
+      const finalItems = filtered.length ? filtered : items;
+      return finalItems.map(item => mapToJob(key, item));
     })
   );
 
