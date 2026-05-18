@@ -866,25 +866,10 @@ let activeIndustry = 'all';
 let activeProvince = null;
 const provinceJobsCache = new Map();
 const EXPECTED_SOURCES = [
-  'jobicy',
-  'remotive',
-  'topcv',
-  'vietnamworks',
-  'careerbuilder',
-  'vieclam24h',
-  'timviec365',
-  'mywork',
-  'jobsgo',
-  'vieclamtot',
-  'timviecnhanh',
-  'itviec',
-  '123job',
-  'careerlink',
-  'viecoi',
-  'jobstreet',
-  'hrchannels',
-  'ybox',
-  'glints'
+  'jobicy', 'remotive', 'remoteok', 'arbeitnow', 'findwork',
+  'topcv', 'vietnamworks', 'careerbuilder', 'vieclam24h', 'timviec365',
+  'mywork', 'jobsgo', 'vieclamtot', 'timviecnhanh', 'itviec',
+  '123job', 'careerlink', 'viecoi', 'jobstreet', 'hrchannels', 'ybox', 'glints'
 ];
 
 const VN_LOCATION_KEYWORDS = [
@@ -1089,6 +1074,124 @@ async function fetchDirectVNJobs(keyword = 'part time') {
   }
   const data = await r.json();
   return Array.isArray(data.jobs) ? data.jobs : [];
+}
+
+// ===== REMOTEOK (free, no key, CORS open) =====
+async function fetchRemoteOK() {
+  const url = 'https://remoteok.com/api?tag=part-time';
+  const r = await fetch(url, {
+    signal: AbortSignal.timeout(12000),
+    headers: { 'Accept': 'application/json' }
+  });
+  if (!r.ok) throw new Error('RemoteOK lỗi ' + r.status);
+  const data = await r.json();
+  // First element is legal notice, skip
+  return (Array.isArray(data) ? data.slice(1) : []).map(j => ({
+    id: 'rok_' + j.id,
+    title: j.position || '',
+    company: j.company || '',
+    logo: j.company_logo || '',
+    type: 'part-time',
+    industry: (j.tags || []).slice(0,3).join(', '),
+    location: j.location || 'Remote',
+    excerpt: j.description ? j.description.replace(/<[^>]+>/g,'').slice(0,140) : '',
+    description: j.description || '',
+    url: j.url || ('https://remoteok.com/remote-jobs/' + j.slug),
+    date: j.date || '',
+    salaryMin: j.salary_min || '',
+    salaryMax: j.salary_max || '',
+    currency: 'USD',
+    tags: j.tags || [],
+    source: 'remoteok'
+  })).filter(j => j.title);
+}
+
+// ===== ARBEITNOW (free, no key, CORS open) =====
+async function fetchArbeitnow() {
+  const url = 'https://www.arbeitnow.com/api/job-board-api?page=1';
+  const r = await fetch(url, { signal: AbortSignal.timeout(12000) });
+  if (!r.ok) throw new Error('Arbeitnow lỗi ' + r.status);
+  const data = await r.json();
+  return (data.data || []).map(j => ({
+    id: 'arb_' + j.slug,
+    title: j.title || '',
+    company: j.company_name || '',
+    logo: j.company_logo || '',
+    type: j.job_types && j.job_types.length ? j.job_types[0].toLowerCase().replace(/\s/g,'-') : 'part-time',
+    industry: (j.tags || []).slice(0,3).join(', '),
+    location: j.location || 'Remote',
+    excerpt: j.description ? j.description.replace(/<[^>]+>/g,'').slice(0,140) : '',
+    description: j.description || '',
+    url: j.url || '',
+    date: j.created_at ? new Date(j.created_at * 1000).toISOString() : '',
+    salaryMin: '',
+    salaryMax: '',
+    currency: 'USD',
+    tags: j.tags || [],
+    source: 'arbeitnow'
+  })).filter(j => j.title && j.url);
+}
+
+// ===== FINDWORK (free, no key) =====
+async function fetchFindWork() {
+  const url = 'https://findwork.dev/api/jobs/?employment_type=part_time&order_by=-date';
+  const r = await fetch(url, { signal: AbortSignal.timeout(12000) });
+  if (!r.ok) throw new Error('FindWork lỗi ' + r.status);
+  const data = await r.json();
+  return (data.results || []).map(j => ({
+    id: 'fw_' + j.id,
+    title: j.role || '',
+    company: j.company_name || '',
+    logo: j.company_logo || '',
+    type: 'part-time',
+    industry: (j.keywords || []).slice(0,3).join(', '),
+    location: j.location || 'Remote',
+    excerpt: j.text ? j.text.replace(/<[^>]+>/g,'').slice(0,140) : '',
+    description: j.text || '',
+    url: j.url || '',
+    date: j.date_posted || '',
+    salaryMin: '',
+    salaryMax: '',
+    currency: 'USD',
+    tags: j.keywords || [],
+    source: 'findwork'
+  })).filter(j => j.title && j.url);
+}
+
+// ===== JOBICY VIETNAM mở rộng =====
+async function fetchJobicyVN() {
+  const urls = [
+    'https://jobicy.com/api/v2/remote-jobs?count=100&geo=vietnam',
+    'https://jobicy.com/api/v2/remote-jobs?count=100&tag=part-time',
+    'https://jobicy.com/api/v2/remote-jobs?count=100',
+  ];
+  let jobs = [];
+  for (const url of urls) {
+    try {
+      const data = await fetchWithProxy(url);
+      if (data && data.jobs) {
+        jobs = jobs.concat(data.jobs.map(j => ({
+          id: 'jcy2_' + j.id,
+          title: j.jobTitle || '',
+          company: j.companyName || '',
+          logo: j.companyLogo || '',
+          type: (j.jobType || 'part-time').toLowerCase(),
+          industry: j.jobIndustry || '',
+          location: j.jobGeo || 'Anywhere',
+          excerpt: j.jobExcerpt || '',
+          description: j.jobDescription || '',
+          url: j.url || '#',
+          date: j.pubDate || '',
+          salaryMin: j.annualSalaryMin || '',
+          salaryMax: j.annualSalaryMax || '',
+          currency: j.salaryCurrency || 'USD',
+          source: 'jobicy'
+        })));
+      }
+    } catch(e) {}
+    await new Promise(r => setTimeout(r, 200));
+  }
+  return jobs;
 }
 
 // ===== TOPCV PART-TIME JOBS =====
@@ -1310,6 +1413,9 @@ function sourceBadge(source) {
   const m = {
     jobicy:'source-jobicy',
     remotive:'source-remotive',
+    remoteok:'source-remotive',
+    arbeitnow:'source-remotive',
+    findwork:'source-remotive',
     topcv:'source-vnboard',
     vietnamworks:'source-vnboard',
     careerbuilder:'source-vnboard',
@@ -1331,6 +1437,9 @@ function sourceBadge(source) {
   const labels = {
     jobicy:'Jobicy',
     remotive:'Remotive',
+    remoteok:'RemoteOK',
+    arbeitnow:'Arbeitnow',
+    findwork:'FindWork',
     topcv:'TopCV',
     vietnamworks:'VietnamWorks',
     careerbuilder:'CareerBuilder',
@@ -1595,37 +1704,23 @@ async function loadAllJobs() {
   const errors = [];
   let jobs = [];
 
-  // Fetch from APIs concurrently
-  const [jobicyJobs, remotiveJobs, directJobs, topCVJobs] = await Promise.allSettled([
-    fetchJobicy(),
+  // Fetch từ tất cả nguồn miễn phí song song
+  const results = await Promise.allSettled([
+    fetchJobicyVN(),
     fetchRemotive(),
-    fetchDirectVNJobs(),
-    fetchTopCVAllPages()
+    fetchRemoteOK(),
+    fetchArbeitnow(),
+    fetchFindWork(),
   ]);
 
-  if (jobicyJobs.status === 'fulfilled') {
-    jobs = jobs.concat(jobicyJobs.value);
-  } else {
-    errors.push('Jobicy: ' + jobicyJobs.reason.message);
-  }
-
-  if (remotiveJobs.status === 'fulfilled') {
-    jobs = jobs.concat(remotiveJobs.value);
-  } else {
-    errors.push('Remotive: ' + remotiveJobs.reason.message);
-  }
-
-  if (directJobs.status === 'fulfilled') {
-    jobs = jobs.concat(directJobs.value);
-  } else {
-    errors.push('VN Direct: ' + (directJobs.reason && directJobs.reason.message ? directJobs.reason.message : 'error'));
-  }
-
-  if (topCVJobs.status === 'fulfilled') {
-    jobs = jobs.concat(topCVJobs.value);
-  } else {
-    errors.push('TopCV: ' + (topCVJobs.reason && topCVJobs.reason.message ? topCVJobs.reason.message : 'error'));
-  }
+  const sourceNames = ['Jobicy', 'Remotive', 'RemoteOK', 'Arbeitnow', 'FindWork'];
+  results.forEach((res, i) => {
+    if (res.status === 'fulfilled') {
+      jobs = jobs.concat(res.value);
+    } else {
+      errors.push(sourceNames[i] + ': ' + (res.reason && res.reason.message ? res.reason.message : 'lỗi'));
+    }
+  });
 
   // Append new jobs instead of resetting the list
   allJobs = dedup(allJobs.concat(jobs));
@@ -1645,13 +1740,6 @@ async function loadAllJobs() {
   document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString('vi-VN', {hour:'2-digit',minute:'2-digit'});
 
   document.getElementById('sourceCount').textContent = EXPECTED_SOURCES.length;
-
-  // Show TopCV fetch status
-  if (topCVJobs.status === 'rejected') {
-    document.getElementById('errorBanner').style.display = 'flex';
-    const msgEl = document.getElementById('errorMsg');
-    msgEl.textContent = (msgEl.textContent ? msgEl.textContent + ' | ' : '') + 'TopCV: không thể tải trực tiếp (CORS). Thử lại hoặc chạy qua server.';
-  }
 
   if (errors.length) {
     document.getElementById('errorBanner').style.display = 'flex';
