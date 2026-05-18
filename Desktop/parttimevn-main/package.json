@@ -1,9 +1,0 @@
-{
-  "name": "parttime-vn",
-  "version": "1.0.0",
-  "description": "Tìm việc part-time khắp Việt Nam",
-  "private": true,
-  "engines": {
-    "node": ">=18"
-  }
-}
