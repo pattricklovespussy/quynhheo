@@ -689,7 +689,7 @@
       <span class="search-icon">🔍</span>
       <input type="text" id="searchInput" placeholder="Tìm theo chức danh, kỹ năng, công ty..." autocomplete="off">
     </div>
-    <button class="btn-refresh" onclick="loadAllJobs()">⟳ Làm mới</button>
+    <button class="btn-refresh" onclick="loadAllJobs()">⟳ Quét Việc Làm</button>
   </div>
 </header>
 
@@ -790,7 +790,7 @@
 </div>
 
 <footer>
-  Dữ liệu từ <a href="https://jobicy.com" target="_blank">Jobicy</a> &amp; <a href="https://remotive.com" target="_blank">Remotive</a> &amp; <a href="https://www.vietnamworks.com" target="_blank">VietnamWorks</a> &amp; <a href="https://topcv.vn" target="_blank">TopCV</a> &amp; <a href="https://careerbuilder.vn" target="_blank">CareerBuilder</a> &amp; <a href="https://mywork.com.vn" target="_blank">MyWork</a> &amp; <a href="https://timviec365.vn" target="_blank">Timviec365</a> &amp; <a href="https://vieclam24h.vn" target="_blank">ViecLam24h</a> &amp; <a href="https://itviec.com" target="_blank">ITviec</a> &amp; <a href="https://jobsgo.vn" target="_blank">JobsGO</a> &amp; <a href="https://topdev.vn" target="_blank">TopDev</a> &amp; <a href="https://vieclamtot.com" target="_blank">ViecLamTot</a> &amp; <a href="https://timviecnhanh.com" target="_blank">TimViecNhanh</a> — Cập nhật liên tục<br>
+  Dữ liệu từ <a href="https://jobicy.com" target="_blank">Jobicy</a> &amp; <a href="https://remotive.com" target="_blank">Remotive</a> &amp; <a href="https://www.vietnamworks.com" target="_blank">VietnamWorks</a> &amp; <a href="https://topcv.vn" target="_blank">TopCV</a> &amp; <a href="https://careerbuilder.vn" target="_blank">CareerBuilder</a> &amp; <a href="https://mywork.com.vn" target="_blank">MyWork</a> &amp; <a href="https://timviec365.vn" target="_blank">Timviec365</a> &amp; <a href="https://vieclam24h.vn" target="_blank">ViecLam24h</a> &amp; <a href="https://itviec.com" target="_blank">ITviec</a> &amp; <a href="https://jobsgo.vn" target="_blank">JobsGO</a> &amp; <a href="https://topdev.vn" target="_blank">TopDev</a> &amp; <a href="https://vieclamtot.com" target="_blank">ViecLamTot</a> &amp; <a href="https://timviecnhanh.com" target="_blank">TimViecNhanh</a> — Made by patrick w love <br>
   Hiển thị việc làm remote/part-time phù hợp với ứng viên tại Việt Nam
 </footer>
 
@@ -839,6 +839,7 @@ let filteredJobs = [];
 let activeType = 'all';
 let activeIndustry = 'all';
 let activeProvince = null;
+const provinceJobsCache = new Map();
 
 const VN_LOCATION_KEYWORDS = [
   ...PROVINCES,
@@ -851,16 +852,16 @@ const PROVINCE_ALIASES = {
   'An Giang': ['An Giang','Kiên Giang'],
   'Bắc Ninh': ['Bắc Ninh','Bắc Giang'],
   'Cà Mau': ['Cà Mau','Bạc Liêu'],
-  'Cần Thơ': ['Cần Thơ','Sóc Trăng','Hậu Giang'],
+  'Cần Thơ': ['Cần Thơ','Can Tho','Sóc Trăng','Hậu Giang'],
   'Đắk Lắk': ['Đắk Lắk','Phú Yên'],
-  'Đà Nẵng': ['Đà Nẵng','Quảng Nam'],
+  'Đà Nẵng': ['Đà Nẵng','Da Nang','Quảng Nam'],
   'Đồng Nai': ['Đồng Nai','Bình Phước'],
   'Đồng Tháp': ['Đồng Tháp','Tiền Giang'],
   'Gia Lai': ['Gia Lai','Bình Định'],
-  'Hải Phòng': ['Hải Phòng','Hải Dương'],
-  'Hồ Chí Minh': ['Hồ Chí Minh','TP. Hồ Chí Minh','HCM','Bình Dương','Bà Rịa - Vũng Tàu','Vũng Tàu'],
+  'Hải Phòng': ['Hải Phòng','Hai Phong','Hải Dương'],
+  'Hồ Chí Minh': ['Hồ Chí Minh','Ho Chi Minh','Ho Chi Minh City','TP. Hồ Chí Minh','TP HCM','TP.HCM','TPHCM','HCM','Bình Dương','Bà Rịa - Vũng Tàu','Ba Ria Vung Tau','Vũng Tàu'],
   'Hưng Yên': ['Hưng Yên','Thái Bình'],
-  'Khánh Hòa': ['Khánh Hòa','Ninh Thuận'],
+  'Khánh Hòa': ['Khánh Hòa','Khanh Hoa','Ninh Thuận'],
   'Lâm Đồng': ['Lâm Đồng','Đắk Nông'],
   'Long An': ['Long An','Tây Ninh'],
   'Nghệ An': ['Nghệ An'],
@@ -874,6 +875,10 @@ const PROVINCE_ALIASES = {
   'Tiền Giang': ['Tiền Giang','Bến Tre','Trà Vinh'],
   'Tuyên Quang': ['Tuyên Quang','Hà Giang']
 };
+
+function isNationalLocation(nLoc) {
+  return nLoc.includes('viet nam') || nLoc.includes('vietnam') || nLoc.includes('toan quoc');
+}
 
 function normalizeText(str) {
   return (str || '')
@@ -898,6 +903,7 @@ function isVietnamLocation(location) {
 function provinceMatchesLocation(province, location) {
   const nLoc = normalizeText(location);
   if (!nLoc) return false;
+  if (isNationalLocation(nLoc)) return true;
   const aliases = PROVINCE_ALIASES[province] || [province];
   return aliases.some(a => nLoc.includes(normalizeText(a)));
 }
@@ -1005,15 +1011,42 @@ async function fetchRemotive() {
 }
 
 // ===== DIRECT VN JOBS (serverless) =====
-async function fetchDirectVNJobs() {
+async function fetchDirectVNJobs(keyword = 'part time') {
   try {
-    const r = await fetch(`/api/jobs?keyword=${encodeURIComponent('part time')}`);
+    const r = await fetch(`/api/jobs?keyword=${encodeURIComponent(keyword)}`);
     if (!r.ok) return [];
     const data = await r.json();
     return Array.isArray(data.jobs) ? data.jobs : [];
   } catch {
     return [];
   }
+}
+
+function buildProvinceKeywords(province) {
+  const aliases = PROVINCE_ALIASES[province] || [province];
+  const keywords = [];
+  aliases.forEach(a => {
+    keywords.push(`part time ${a}`);
+    keywords.push(`ban thoi gian ${a}`);
+    keywords.push(`bán thời gian ${a}`);
+  });
+  return keywords.join('|');
+}
+
+function mergeJobs(newJobs) {
+  if (!newJobs || !newJobs.length) return;
+  allJobs = dedup(allJobs.concat(newJobs));
+  document.getElementById('totalCount').textContent = allJobs.length + '+';
+  const sources = [...new Set(allJobs.map(j => j.source))].length;
+  document.getElementById('sourceCount').textContent = sources;
+}
+
+async function fetchProvinceJobs(province) {
+  if (!province || provinceJobsCache.has(province)) return;
+  const keyword = buildProvinceKeywords(province);
+  const jobs = await fetchDirectVNJobs(keyword);
+  provinceJobsCache.set(province, true);
+  mergeJobs(jobs);
 }
 
 // ===== CURATED VIETNAM JOBS (static fallback showing real local-style data) =====
@@ -1445,8 +1478,11 @@ document.querySelectorAll('.chip[data-industry]').forEach(btn => {
   });
 });
 
-document.getElementById('provinceSelect').addEventListener('change', (e) => {
+document.getElementById('provinceSelect').addEventListener('change', async (e) => {
   activeProvince = e.target.value || null;
+  if (activeProvince) {
+    await fetchProvinceJobs(activeProvince);
+  }
   applyFilters();
 });
 
