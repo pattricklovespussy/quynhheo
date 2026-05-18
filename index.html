@@ -1293,8 +1293,14 @@ function applyFilters() {
 
   let jobs = [...allJobs];
 
-  // Vietnam-only filter
-  jobs = jobs.filter(j => isVietnamLocation(j.location));
+  // Vietnam-only filter (fallback to all if empty)
+  const vnJobs = jobs.filter(j => isVietnamLocation(j.location));
+  if (vnJobs.length > 0) {
+    jobs = vnJobs;
+  } else {
+    document.getElementById('errorBanner').style.display = 'flex';
+    document.getElementById('errorMsg').textContent = 'Không có job tại Việt Nam từ nguồn realtime. Đang hiển thị tất cả job.';
+  }
 
   // Part-time only (fallback: if empty, relax this filter)
   let partTimeJobs = jobs.filter(isPartTimeJob);
