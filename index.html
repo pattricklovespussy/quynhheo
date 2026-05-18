@@ -937,10 +937,24 @@ function normalizeText(str) {
 }
 
 function isPartTimeJob(job) {
-  const type = (job.type || '').toLowerCase();
-  if (type.includes('part-time')) return true;
+  const type = normalizeText(job.type || '');
+  if (
+    type.includes('part time') ||
+    type.includes('part-time') ||
+    type.includes('parttime') ||
+    type.includes('ban thoi gian') ||
+    type.includes('ban-thoi-gian')
+  ) {
+    return true;
+  }
   const text = normalizeText(`${job.title || ''} ${job.excerpt || ''}`);
-  return text.includes('part time') || text.includes('part-time') || text.includes('parttime') || text.includes('ban thoi gian') || text.includes('ban-thoi-gian');
+  return (
+    text.includes('part time') ||
+    text.includes('part-time') ||
+    text.includes('parttime') ||
+    text.includes('ban thoi gian') ||
+    text.includes('ban-thoi-gian')
+  );
 }
 
 function isVietnamLocation(location) {
@@ -1279,11 +1293,14 @@ function applyFilters() {
 
   let jobs = [...allJobs];
 
-  // Part-time only
-  jobs = jobs.filter(isPartTimeJob);
-
   // Vietnam-only filter
   jobs = jobs.filter(j => isVietnamLocation(j.location));
+
+  // Part-time only (fallback: if empty, relax this filter)
+  let partTimeJobs = jobs.filter(isPartTimeJob);
+  if (partTimeJobs.length > 0) {
+    jobs = partTimeJobs;
+  }
 
   // Type filter
   if (activeType !== 'all') {
