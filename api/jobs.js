@@ -6,6 +6,21 @@ function normalizeWhitespace(str) {
   return (str || '').replace(/\s+/g, ' ').trim();
 }
 
+function normalizeText(str) {
+  return (str || '')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9\s]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function isPartTimeTitle(title) {
+  const t = normalizeText(title);
+  return t.includes('part time') || t.includes('part-time') || t.includes('parttime') || t.includes('ban thoi gian') || t.includes('ban-thoi-gian');
+}
+
 async function fetchHtml(url) {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 10000);
@@ -279,7 +294,9 @@ export default async function handler(req, res) {
         }
         if (items.length >= 40) break; // cap per source to avoid overload
       }
-      return items.map(item => mapToJob(key, item));
+      return items
+        .filter(item => isPartTimeTitle(item.title))
+        .map(item => mapToJob(key, item));
     })
   );
 
