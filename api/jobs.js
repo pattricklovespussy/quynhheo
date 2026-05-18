@@ -251,7 +251,11 @@ function mapToJob(source, item) {
 }
 
 export default async function handler(req, res) {
-  const keyword = (req.query.keyword || 'part time').toString();
+  const rawKeyword = (req.query.keyword || '').toString().trim();
+  const defaultKeywords = ['part time', 'part-time', 'ban thoi gian', 'bán thời gian', 'parttime'];
+  const keywords = (rawKeyword ? rawKeyword.split('|') : defaultKeywords)
+    .map(k => k.trim())
+    .filter(Boolean);
   const sources = [
     ['topcv', fetchTopCV],
     ['vietnamworks', fetchVietnamWorks],
@@ -267,7 +271,14 @@ export default async function handler(req, res) {
 
   const results = await Promise.allSettled(
     sources.map(async ([key, fn]) => {
-      const items = await fn(keyword);
+      let items = [];
+      for (const kw of keywords) {
+        const batch = await fn(kw);
+        if (batch && batch.length) {
+          items = items.concat(batch);
+        }
+        if (items.length >= 40) break; // cap per source to avoid overload
+      }
       return items.map(item => mapToJob(key, item));
     })
   );

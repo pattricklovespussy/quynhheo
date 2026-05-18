@@ -843,7 +843,8 @@ let activeProvince = null;
 const VN_LOCATION_KEYWORDS = [
   ...PROVINCES,
   'Hà Nội','Hồ Chí Minh','TP. Hồ Chí Minh','HCM','Đà Nẵng','Cần Thơ','Hải Phòng',
-  'Huế','Thừa Thiên Huế','Bình Dương','Bà Rịa - Vũng Tàu','Vũng Tàu','Việt Nam','Vietnam'
+  'Huế','Thừa Thiên Huế','Bình Dương','Bà Rịa - Vũng Tàu','Vũng Tàu','Việt Nam','Vietnam',
+  'Toàn quốc','Toan quoc','VN','Viet Nam'
 ];
 
 const PROVINCE_ALIASES = {
@@ -888,7 +889,9 @@ function isVietnamLocation(location) {
   const n = normalizeText(location);
   if (!n) return false;
   if (n.includes('anywhere') || n.includes('worldwide')) return false;
-  if (n.includes('remote')) return n.includes('vietnam') || n.includes('viet nam');
+  if (n.includes('remote')) {
+    return n.includes('vietnam') || n.includes('viet nam') || n.includes('toan quoc');
+  }
   return VN_LOCATION_KEYWORDS.some(k => n.includes(normalizeText(k)));
 }
 
