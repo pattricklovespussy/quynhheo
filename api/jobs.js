@@ -1,4 +1,4 @@
-import cheerio from 'cheerio';
+const cheerio = require('cheerio');
 
 const DEFAULT_UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36';
 
@@ -377,7 +377,7 @@ function mapToJob(source, item) {
   };
 }
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   const rawKeyword = (req.query.keyword || '').toString().trim();
   const defaultKeywords = ['part time', 'part-time', 'ban thoi gian', 'bán thời gian', 'parttime'];
   const keywords = (rawKeyword ? rawKeyword.split('|') : defaultKeywords)
