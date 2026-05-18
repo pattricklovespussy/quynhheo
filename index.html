@@ -643,26 +643,17 @@
     font-weight: 600;
   }
 
-  .province-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-
-  .province-chip {
-    padding: 5px 12px;
-    border-radius: 20px;
-    font-size: 12px;
-    cursor: pointer;
+  .province-select {
+    width: 100%;
+    background: var(--dark3);
     border: 1px solid var(--border);
-    background: transparent;
-    color: var(--muted);
+    color: var(--text);
+    padding: 10px 12px;
+    border-radius: 10px;
+    font-size: 13px;
     font-family: 'Be Vietnam Pro', sans-serif;
-    transition: all .15s;
+    outline: none;
   }
-
-  .province-chip:hover { border-color: #555; color: var(--text); }
-  .province-chip.active { background: rgba(232,35,58,.15); border-color: var(--red); color: #ff6b7a; }
 
   /* FOOTER */
   footer {
@@ -714,7 +705,7 @@
       <div class="stat-label">Nguồn dữ liệu</div>
     </div>
     <div class="stat-item">
-      <div class="stat-num">63</div>
+      <div class="stat-num">25</div>
       <div class="stat-label">Tỉnh thành</div>
     </div>
     <div class="stat-item">
@@ -746,7 +737,9 @@
 <main class="main">
   <div class="province-section">
     <h3>🗺️ Lọc theo tỉnh / thành phố (sau sáp nhập 2025)</h3>
-    <div class="province-grid" id="provinceGrid"></div>
+    <select class="province-select" id="provinceSelect">
+      <option value="">Tất cả tỉnh / thành</option>
+    </select>
   </div>
 
   <div id="errorBanner" class="error-banner" style="display:none">
@@ -803,32 +796,31 @@
 <script>
 // ===== DATA =====
 const PROVINCES = [
-  "An Giang (Hợp nhất Kiên Giang + An Giang)",
-  "Bắc Ninh (Hợp nhất Bắc Giang + Bắc Ninh)",
-  "Cà Mau (Hợp nhất Bạc Liêu + Cà Mau)",
-  "Cần Thơ (Hợp nhất Sóc Trăng + Hậu Giang + Cần Thơ)",
-  "Đắk Lắk (Hợp nhất Phú Yên + Đắk Lắk)",
-  "Đà Nẵng (Hợp nhất Quảng Nam + Đà Nẵng)",
-  "Đồng Nai (Hợp nhất Bình Phước + Đồng Nai - chuyển thành Thành phố Đồng Nai)",
-  "Đồng Tháp (Hợp nhất Tiền Giang + Đồng Tháp)",
-  "Gia Lai (Hợp nhất Bình Định + Gia Lai)",
-  "Hải Phòng (Hợp nhất Hải Dương + TP. Hải Phòng - Thành phố trực thuộc TW)",
-  "Hồ Chí Minh (Hợp nhất Bình Dương + TP.HCM + Bà Rịa - Vũng Tàu)",
-  "Hưng Yên (Hợp nhất Hưng Yên + Thái Bình)",
-  "Khánh Hòa (Hợp nhất Ninh Thuận + Khánh Hòa)",
-  "Lâm Đồng (Hợp nhất Đắk Nông + Lâm Đồng)",
-  "Long An (Hợp nhất Tây Ninh + Long An)",
-  "Nghệ An (không sáp nhập - đã nêu ở mục 1)",
-  "Ninh Bình (Hợp nhất Hà Nam + Nam Định + Ninh Bình)",
-  "Phú Thọ (Hợp nhất Vĩnh Phúc + Phú Thọ)",
-  "Quảng Ngãi (Hợp nhất Kon Tum + Quảng Ngãi)",
-  "Quảng Ninh (không sáp nhập - đã nêu ở mục 1)",
-  "Quảng Trị (Hợp nhất Quảng Bình + Quảng Trị)",
-  "Thái Nguyên (Hợp nhất Bắc Kạn + Thái Nguyên)",
-  "Thanh Hóa (không sáp nhập - đã nêu ở mục 1)",
-  "Tiền Giang (Hợp nhất Bến Tre + Trà Vinh + Tiền Giang)",
-  "Tuyên Quang (Hợp nhất Hà Giang + Tuyên Quang)",
-  "Toàn quốc (Remote)"
+  "An Giang",
+  "Bắc Ninh",
+  "Cà Mau",
+  "Cần Thơ",
+  "Đắk Lắk",
+  "Đà Nẵng",
+  "Đồng Nai",
+  "Đồng Tháp",
+  "Gia Lai",
+  "Hải Phòng",
+  "Hồ Chí Minh",
+  "Hưng Yên",
+  "Khánh Hòa",
+  "Lâm Đồng",
+  "Long An",
+  "Nghệ An",
+  "Ninh Bình",
+  "Phú Thọ",
+  "Quảng Ngãi",
+  "Quảng Ninh",
+  "Quảng Trị",
+  "Thái Nguyên",
+  "Thanh Hóa",
+  "Tiền Giang",
+  "Tuyên Quang"
 ];
 
 // Map industry filter → search keywords
@@ -1226,26 +1218,15 @@ function renderGrid() {
   });
 }
 
-// ===== PROVINCE CHIPS =====
+// ===== PROVINCE SELECT =====
 function buildProvinceGrid() {
-  const grid = document.getElementById('provinceGrid');
-  grid.innerHTML = '';
+  const select = document.getElementById('provinceSelect');
+  select.querySelectorAll('option:not([value=""])').forEach(o => o.remove());
   PROVINCES.forEach(p => {
-    const btn = document.createElement('button');
-    btn.className = 'province-chip';
-    btn.textContent = p;
-    btn.onclick = () => {
-      if (activeProvince === p) {
-        activeProvince = null;
-        btn.classList.remove('active');
-      } else {
-        grid.querySelectorAll('.province-chip').forEach(b => b.classList.remove('active'));
-        activeProvince = p;
-        btn.classList.add('active');
-      }
-      applyFilters();
-    };
-    grid.appendChild(btn);
+    const opt = document.createElement('option');
+    opt.value = p;
+    opt.textContent = p;
+    select.appendChild(opt);
   });
 }
 
@@ -1266,6 +1247,11 @@ document.querySelectorAll('.chip[data-industry]').forEach(btn => {
     activeIndustry = btn.dataset.industry;
     applyFilters();
   });
+});
+
+document.getElementById('provinceSelect').addEventListener('change', (e) => {
+  activeProvince = e.target.value || null;
+  applyFilters();
 });
 
 let searchTimer;
