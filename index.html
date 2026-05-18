@@ -840,6 +840,65 @@ let activeType = 'all';
 let activeIndustry = 'all';
 let activeProvince = null;
 
+const VN_LOCATION_KEYWORDS = [
+  ...PROVINCES,
+  'Hà Nội','Hồ Chí Minh','TP. Hồ Chí Minh','HCM','Đà Nẵng','Cần Thơ','Hải Phòng',
+  'Huế','Thừa Thiên Huế','Bình Dương','Bà Rịa - Vũng Tàu','Vũng Tàu','Việt Nam','Vietnam'
+];
+
+const PROVINCE_ALIASES = {
+  'An Giang': ['An Giang','Kiên Giang'],
+  'Bắc Ninh': ['Bắc Ninh','Bắc Giang'],
+  'Cà Mau': ['Cà Mau','Bạc Liêu'],
+  'Cần Thơ': ['Cần Thơ','Sóc Trăng','Hậu Giang'],
+  'Đắk Lắk': ['Đắk Lắk','Phú Yên'],
+  'Đà Nẵng': ['Đà Nẵng','Quảng Nam'],
+  'Đồng Nai': ['Đồng Nai','Bình Phước'],
+  'Đồng Tháp': ['Đồng Tháp','Tiền Giang'],
+  'Gia Lai': ['Gia Lai','Bình Định'],
+  'Hải Phòng': ['Hải Phòng','Hải Dương'],
+  'Hồ Chí Minh': ['Hồ Chí Minh','TP. Hồ Chí Minh','HCM','Bình Dương','Bà Rịa - Vũng Tàu','Vũng Tàu'],
+  'Hưng Yên': ['Hưng Yên','Thái Bình'],
+  'Khánh Hòa': ['Khánh Hòa','Ninh Thuận'],
+  'Lâm Đồng': ['Lâm Đồng','Đắk Nông'],
+  'Long An': ['Long An','Tây Ninh'],
+  'Nghệ An': ['Nghệ An'],
+  'Ninh Bình': ['Ninh Bình','Hà Nam','Nam Định'],
+  'Phú Thọ': ['Phú Thọ','Vĩnh Phúc'],
+  'Quảng Ngãi': ['Quảng Ngãi','Kon Tum'],
+  'Quảng Ninh': ['Quảng Ninh'],
+  'Quảng Trị': ['Quảng Trị','Quảng Bình'],
+  'Thái Nguyên': ['Thái Nguyên','Bắc Kạn'],
+  'Thanh Hóa': ['Thanh Hóa'],
+  'Tiền Giang': ['Tiền Giang','Bến Tre','Trà Vinh'],
+  'Tuyên Quang': ['Tuyên Quang','Hà Giang']
+};
+
+function normalizeText(str) {
+  return (str || '')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9\s]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function isVietnamLocation(location) {
+  const n = normalizeText(location);
+  if (!n) return false;
+  if (n.includes('anywhere') || n.includes('worldwide')) return false;
+  if (n.includes('remote')) return n.includes('vietnam') || n.includes('viet nam');
+  return VN_LOCATION_KEYWORDS.some(k => n.includes(normalizeText(k)));
+}
+
+function provinceMatchesLocation(province, location) {
+  const nLoc = normalizeText(location);
+  if (!nLoc) return false;
+  const aliases = PROVINCE_ALIASES[province] || [province];
+  return aliases.some(a => nLoc.includes(normalizeText(a)));
+}
+
 // ===== CORS PROXIES (try in order) =====
 const PROXIES = [
   url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
@@ -1245,10 +1304,13 @@ function applyFilters() {
 
   let jobs = [...allJobs];
 
+  // Vietnam-only filter
+  jobs = jobs.filter(j => isVietnamLocation(j.location));
+
   // Type filter
   if (activeType !== 'all') {
     if (activeType === 'remote') {
-      jobs = jobs.filter(j => j.location.toLowerCase().includes('anywhere') || j.location.toLowerCase().includes('remote') || j.location.toLowerCase().includes('worldwide') || j.type === 'remote');
+      jobs = jobs.filter(j => j.location.toLowerCase().includes('remote') || j.type === 'remote');
     } else {
       jobs = jobs.filter(j => j.type === activeType || j.type.includes(activeType));
     }
@@ -1265,13 +1327,7 @@ function applyFilters() {
 
   // Province filter
   if (activeProvince) {
-    const prov = activeProvince.toLowerCase();
-    if (prov.includes('remote') || prov.includes('toàn quốc')) {
-      jobs = jobs.filter(j => j.location.toLowerCase().includes('anywhere') || j.location.toLowerCase().includes('remote') || j.location === 'Toàn quốc (Remote)');
-    } else {
-      // For non-remote provinces, show all remote jobs too (they work from anywhere)
-      jobs = jobs.filter(j => j.location.toLowerCase().includes('anywhere') || j.location.toLowerCase().includes('remote') || j.location.toLowerCase().includes('vietnam') || j.location === 'Toàn quốc (Remote)');
-    }
+    jobs = jobs.filter(j => provinceMatchesLocation(activeProvince, j.location));
   }
 
   // Search query
