@@ -1091,6 +1091,154 @@ async function fetchDirectVNJobs(keyword = 'part time') {
   return Array.isArray(data.jobs) ? data.jobs : [];
 }
 
+// ===== TOPCV PART-TIME JOBS =====
+async function fetchTopCV(page = 1) {
+  const baseUrl = `https://www.topcv.vn/tim-viec-lam-part-time?page=${page}`;
+  const proxies = [
+    `https://corsproxy.io/?${encodeURIComponent(baseUrl)}`,
+    `https://api.allorigins.win/raw?url=${encodeURIComponent(baseUrl)}`,
+  ];
+
+  let html = null;
+  for (const proxy of proxies) {
+    try {
+      const r = await fetch(proxy, { signal: AbortSignal.timeout(12000) });
+      if (r.ok) { html = await r.text(); break; }
+    } catch(e) {}
+  }
+  if (!html) throw new Error('Không thể lấy dữ liệu từ TopCV');
+
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, 'text/html');
+  const jobs = [];
+
+  // TopCV job card selectors
+  const cards = doc.querySelectorAll('.job-item-search-result, .job-item, [data-job-id], .job-item-2, .job-item-search-result-main');
+
+  cards.forEach((card, i) => {
+    try {
+      // Title & URL
+      const titleEl = card.querySelector('.title a, h3 a, .job-title a, a.title, .job-item-title a, h2 a');
+      const title = titleEl ? titleEl.textContent.trim() : '';
+      let url = titleEl ? (titleEl.getAttribute('href') || '') : '';
+      if (url && !url.startsWith('http')) url = 'https://www.topcv.vn' + url;
+
+      // Company
+      const companyEl = card.querySelector('.company, .company-name, .label-company, .employer, a[href*="cong-ty"], .company-title');
+      const company = companyEl ? companyEl.textContent.trim() : '';
+
+      // Location
+      const locEl = card.querySelector('.address, .location, .job-address, [class*="location"], [class*="address"]');
+      const location = locEl ? locEl.textContent.trim() : 'Việt Nam';
+
+      // Salary
+      const salEl = card.querySelector('.salary, .job-salary, [class*="salary"], .label-salary');
+      const salaryText = salEl ? salEl.textContent.trim() : '';
+
+      // Logo
+      const imgEl = card.querySelector('img');
+      const logo = imgEl ? (imgEl.getAttribute('src') || imgEl.getAttribute('data-src') || '') : '';
+
+      // Date
+      const dateEl = card.querySelector('.time, .deadline, [class*="date"], [class*="time"]');
+      const dateText = dateEl ? dateEl.textContent.trim() : '';
+
+      // Excerpt / tags
+      const tagEls = card.querySelectorAll('.tag, .skill, [class*="tag"], [class*="skill"]');
+      const tags = Array.from(tagEls).map(t => t.textContent.trim()).filter(Boolean).slice(0, 5);
+
+      if (!title || !url) return;
+
+      jobs.push({
+        id: 'topcv_' + i + '_' + Date.now(),
+        title,
+        company: company || 'Không rõ',
+        logo: logo.startsWith('http') ? logo : '',
+        type: 'part-time',
+        industry: tags.join(', '),
+        location: location || 'Việt Nam',
+        excerpt: tags.join(' · ') || salaryText,
+        description: `<p><strong>Lương:</strong> ${salaryText || 'Thỏa thuận'}</p><p><strong>Kỹ năng:</strong> ${tags.join(', ') || '—'}</p>`,
+        url,
+        date: parseDateVN(dateText),
+        salaryMin: '',
+        salaryMax: '',
+        currency: 'VND',
+        tags,
+        source: 'topcv'
+      });
+    } catch(e) {}
+  });
+
+  // Fallback: try JSON-LD or script data embedded in page
+  if (jobs.length === 0) {
+    doc.querySelectorAll('script[type="application/ld+json"]').forEach(s => {
+      try {
+        const d = JSON.parse(s.textContent);
+        const items = Array.isArray(d) ? d : (d['@graph'] || [d]);
+        items.forEach((item, i) => {
+          if (item['@type'] === 'JobPosting') {
+            jobs.push({
+              id: 'topcv_ld_' + i,
+              title: item.title || '',
+              company: (item.hiringOrganization && item.hiringOrganization.name) || '',
+              logo: (item.hiringOrganization && item.hiringOrganization.logo) || '',
+              type: 'part-time',
+              industry: '',
+              location: (item.jobLocation && item.jobLocation.address && (item.jobLocation.address.addressLocality || item.jobLocation.address.addressRegion)) || 'Việt Nam',
+              excerpt: item.description ? item.description.replace(/<[^>]+>/g,'').slice(0,140) : '',
+              description: item.description || '',
+              url: item.url || '#',
+              date: item.datePosted || '',
+              salaryMin: (item.baseSalary && item.baseSalary.value && item.baseSalary.value.minValue) || '',
+              salaryMax: (item.baseSalary && item.baseSalary.value && item.baseSalary.value.maxValue) || '',
+              currency: 'VND',
+              source: 'topcv'
+            });
+          }
+        });
+      } catch(e) {}
+    });
+  }
+
+  return jobs;
+}
+
+async function fetchTopCVAllPages() {
+  let allTopCVJobs = [];
+  const MAX_PAGES = 5;
+  for (let page = 1; page <= MAX_PAGES; page++) {
+    try {
+      const jobs = await fetchTopCV(page);
+      if (!jobs || jobs.length === 0) break;
+      allTopCVJobs = allTopCVJobs.concat(jobs);
+      // Merge and render progressively
+      mergeJobs(jobs);
+      applyFilters();
+      if (jobs.length < 10) break; // last page
+    } catch(e) {
+      console.warn('TopCV page', page, 'error:', e.message);
+      break;
+    }
+    await new Promise(r => setTimeout(r, 400));
+  }
+  return allTopCVJobs;
+}
+
+function parseDateVN(str) {
+  if (!str) return '';
+  // "Còn X ngày" or "Hết hạn DD/MM/YYYY" or "DD/MM/YYYY"
+  const match = str.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
+  if (match) return `${match[3]}-${match[2].padStart(2,'0')}-${match[1].padStart(2,'0')}`;
+  const daysMatch = str.match(/(\d+)\s*ngày/);
+  if (daysMatch) {
+    const d = new Date();
+    d.setDate(d.getDate() + parseInt(daysMatch[1]));
+    return d.toISOString().split('T')[0];
+  }
+  return new Date().toISOString().split('T')[0];
+}
+
 function buildProvinceKeywords(province) {
   const aliases = PROVINCE_ALIASES[province] || [province];
   const keywords = [];
@@ -1448,10 +1596,11 @@ async function loadAllJobs() {
   let jobs = [];
 
   // Fetch from APIs concurrently
-  const [jobicyJobs, remotiveJobs, directJobs] = await Promise.allSettled([
+  const [jobicyJobs, remotiveJobs, directJobs, topCVJobs] = await Promise.allSettled([
     fetchJobicy(),
     fetchRemotive(),
-    fetchDirectVNJobs()
+    fetchDirectVNJobs(),
+    fetchTopCVAllPages()
   ]);
 
   if (jobicyJobs.status === 'fulfilled') {
@@ -1472,6 +1621,12 @@ async function loadAllJobs() {
     errors.push('VN Direct: ' + (directJobs.reason && directJobs.reason.message ? directJobs.reason.message : 'error'));
   }
 
+  if (topCVJobs.status === 'fulfilled') {
+    jobs = jobs.concat(topCVJobs.value);
+  } else {
+    errors.push('TopCV: ' + (topCVJobs.reason && topCVJobs.reason.message ? topCVJobs.reason.message : 'error'));
+  }
+
   // Append new jobs instead of resetting the list
   allJobs = dedup(allJobs.concat(jobs));
 
@@ -1490,6 +1645,13 @@ async function loadAllJobs() {
   document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString('vi-VN', {hour:'2-digit',minute:'2-digit'});
 
   document.getElementById('sourceCount').textContent = EXPECTED_SOURCES.length;
+
+  // Show TopCV fetch status
+  if (topCVJobs.status === 'rejected') {
+    document.getElementById('errorBanner').style.display = 'flex';
+    const msgEl = document.getElementById('errorMsg');
+    msgEl.textContent = (msgEl.textContent ? msgEl.textContent + ' | ' : '') + 'TopCV: không thể tải trực tiếp (CORS). Thử lại hoặc chạy qua server.';
+  }
 
   if (errors.length) {
     document.getElementById('errorBanner').style.display = 'flex';
