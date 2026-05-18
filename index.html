@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Việc Làm Part-Time Việt Nam</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #e8233a;
+    --red-dark: #c01830;
+    --gold: #f5c518;
+    --dark: #0d0d0d;
+    --dark2: #161616;
+    --dark3: #1e1e1e;
+    --dark4: #252525;
+    --border: #2e2e2e;
+    --text: #e8e8e8;
+    --muted: #888;
+    --green: #22c55e;
+    --blue: #3b82f6;
+    --orange: #f97316;
+    --purple: #a855f7;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Be Vietnam Pro', sans-serif;
+    background: var(--dark);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--dark2);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(12px);
+  }
+
+  .header-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    height: 64px;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+
+  .logo-flag {
+    font-size: 28px;
+    line-height: 1;
+  }
+
+  .logo-text {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    color: #fff;
+    white-space: nowrap;
+  }
+
+  .logo-text span {
+    color: var(--red);
+  }
+
+  .search-wrap {
+    flex: 1;
+    position: relative;
+  }
+
+  .search-wrap input {
+    width: 100%;
+    background: var(--dark3);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 16px 10px 42px;
+    color: var(--text);
+    font-family: 'Be Vietnam Pro', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: border-color .2s;
+  }
+
+  .search-wrap input:focus {
+    border-color: var(--red);
+  }
+
+  .search-wrap input::placeholder { color: var(--muted); }
+
+  .search-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    font-size: 16px;
+    pointer-events: none;
+  }
+
+  .btn-refresh {
+    background: var(--red);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 18px;
+    font-family: 'Be Vietnam Pro', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background .2s, transform .1s;
+  }
+
+  .btn-refresh:hover { background: var(--red-dark); }
+  .btn-refresh:active { transform: scale(.96); }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, #1a0508 0%, #0d0d0d 50%, #050d1a 100%);
+    padding: 48px 24px 36px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: 
+      radial-gradient(circle at 20% 50%, rgba(232,35,58,.12) 0%, transparent 60%),
+      radial-gradient(circle at 80% 50%, rgba(59,130,246,.08) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .hero h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(28px, 5vw, 48px);
+    font-weight: 700;
+    line-height: 1.15;
+    margin-bottom: 12px;
+    position: relative;
+  }
+
+  .hero h1 .hl {
+    background: linear-gradient(90deg, var(--red), #ff6b7a);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero p {
+    color: var(--muted);
+    font-size: 15px;
+    max-width: 540px;
+    margin: 0 auto 28px;
+    line-height: 1.6;
+    position: relative;
+  }
+
+  .stats-row {
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    flex-wrap: wrap;
+    position: relative;
+  }
+
+  .stat-item {
+    background: rgba(255,255,255,.04);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 24px;
+    text-align: center;
+  }
+
+  .stat-num {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--gold);
+  }
+
+  .stat-label {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 2px;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+  }
+
+  /* FILTERS */
+  .filters {
+    background: var(--dark2);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 24px;
+    overflow-x: auto;
+  }
+
+  .filters-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .filter-label {
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    white-space: nowrap;
+  }
+
+  .chip {
+    padding: 7px 16px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    white-space: nowrap;
+    font-family: 'Be Vietnam Pro', sans-serif;
+    transition: all .18s;
+  }
+
+  .chip:hover { border-color: #555; color: var(--text); }
+
+  .chip.active {
+    background: var(--red);
+    border-color: var(--red);
+    color: #fff;
+  }
+
+  /* MAIN */
+  .main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 28px 24px 60px;
+  }
+
+  .results-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .results-count {
+    font-size: 14px;
+    color: var(--muted);
+  }
+
+  .results-count strong {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .sort-select {
+    background: var(--dark3);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 7px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-family: 'Be Vietnam Pro', sans-serif;
+    cursor: pointer;
+    outline: none;
+  }
+
+  /* GRID */
+  .jobs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 16px;
+  }
+
+  /* JOB CARD */
+  .job-card {
+    background: var(--dark2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    cursor: pointer;
+    transition: border-color .2s, transform .18s, box-shadow .2s;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+    overflow: hidden;
+    animation: fadeUp .4s ease both;
+  }
+
+  .job-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--red), transparent);
+    opacity: 0;
+    transition: opacity .2s;
+  }
+
+  .job-card:hover {
+    border-color: #444;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0,0,0,.4);
+  }
+
+  .job-card:hover::before { opacity: 1; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .card-top {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .company-logo {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: var(--dark3);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .company-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .card-meta {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .company-name {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .job-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .source-badge {
+    flex-shrink: 0;
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 100px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+  }
+
+  .source-jobicy { background: rgba(168,85,247,.15); color: #a855f7; border: 1px solid rgba(168,85,247,.3); }
+  .source-remotive { background: rgba(59,130,246,.15); color: #60a5fa; border: 1px solid rgba(59,130,246,.3); }
+  .source-local { background: rgba(34,197,94,.15); color: #22c55e; border: 1px solid rgba(34,197,94,.3); }
+
+  .card-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .tag {
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    background: var(--dark3);
+  }
+
+  .tag.type-part { color: var(--gold); border-color: rgba(245,197,24,.3); background: rgba(245,197,24,.06); }
+  .tag.type-remote { color: var(--green); border-color: rgba(34,197,94,.3); background: rgba(34,197,94,.06); }
+  .tag.type-contract { color: var(--orange); border-color: rgba(249,115,22,.3); background: rgba(249,115,22,.06); }
+  .tag.type-freelance { color: var(--blue); border-color: rgba(59,130,246,.3); background: rgba(59,130,246,.06); }
+
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+  }
+
+  .job-location {
+    font-size: 12px;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .job-date {
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  .apply-btn {
+    padding: 7px 16px;
+    border-radius: 8px;
+    background: rgba(232,35,58,.12);
+    border: 1px solid rgba(232,35,58,.3);
+    color: #ff6b7a;
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all .18s;
+    font-family: 'Be Vietnam Pro', sans-serif;
+  }
+
+  .apply-btn:hover {
+    background: var(--red);
+    border-color: var(--red);
+    color: #fff;
+  }
+
+  /* LOADING */
+  .loading-state {
+    text-align: center;
+    padding: 60px 20px;
+  }
+
+  .spinner {
+    width: 48px;
+    height: 48px;
+    border: 3px solid var(--border);
+    border-top-color: var(--red);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 16px;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .loading-text {
+    color: var(--muted);
+    font-size: 14px;
+  }
+
+  .loading-text .dots::after {
+    content: '';
+    animation: dots 1.5s infinite;
+  }
+
+  @keyframes dots {
+    0% { content: ''; }
+    33% { content: '.'; }
+    66% { content: '..'; }
+    100% { content: '...'; }
+  }
+
+  /* EMPTY / ERROR */
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted);
+  }
+
+  .empty-state .icon { font-size: 48px; margin-bottom: 12px; }
+  .empty-state p { font-size: 15px; }
+
+  .error-banner {
+    background: rgba(232,35,58,.1);
+    border: 1px solid rgba(232,35,58,.3);
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    font-size: 13px;
+    color: #ff8a9a;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* MODAL */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.75);
+    z-index: 200;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    backdrop-filter: blur(4px);
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--dark2);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    width: 100%;
+    max-width: 640px;
+    max-height: 80vh;
+    overflow-y: auto;
+    animation: modalIn .25s ease;
+  }
+
+  @keyframes modalIn {
+    from { opacity: 0; transform: scale(.95) translateY(12px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .modal-header {
+    padding: 20px 20px 16px;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: var(--dark2);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .modal-title { font-size: 18px; font-weight: 700; line-height: 1.3; }
+  .modal-company { font-size: 13px; color: var(--muted); margin-top: 4px; }
+
+  .modal-close {
+    background: var(--dark3);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all .18s;
+  }
+
+  .modal-close:hover { color: var(--text); border-color: #555; }
+
+  .modal-body {
+    padding: 20px;
+  }
+
+  .modal-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .modal-desc {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #ccc;
+  }
+
+  .modal-desc p { margin-bottom: 10px; }
+  .modal-desc ul { padding-left: 20px; margin-bottom: 10px; }
+  .modal-desc li { margin-bottom: 4px; }
+
+  .modal-apply {
+    display: block;
+    text-align: center;
+    margin-top: 24px;
+    padding: 13px;
+    background: var(--red);
+    color: #fff;
+    border-radius: 10px;
+    font-weight: 700;
+    text-decoration: none;
+    font-size: 15px;
+    transition: background .2s;
+  }
+
+  .modal-apply:hover { background: var(--red-dark); }
+
+  /* PROVINCE SECTION */
+  .province-section {
+    background: var(--dark2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 28px;
+  }
+
+  .province-section h3 {
+    font-size: 13px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    margin-bottom: 14px;
+    font-weight: 600;
+  }
+
+  .province-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .province-chip {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font-family: 'Be Vietnam Pro', sans-serif;
+    transition: all .15s;
+  }
+
+  .province-chip:hover { border-color: #555; color: var(--text); }
+  .province-chip.active { background: rgba(232,35,58,.15); border-color: var(--red); color: #ff6b7a; }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 24px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.8;
+  }
+
+  footer a { color: #60a5fa; text-decoration: none; }
+
+  @media (max-width: 640px) {
+    .header-inner { gap: 12px; }
+    .logo-text { display: none; }
+    .jobs-grid { grid-template-columns: 1fr; }
+    .hero { padding: 32px 16px 24px; }
+    .main { padding: 20px 16px 40px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <span class="logo-flag">🇻🇳</span>
+      <span class="logo-text">Việc<span>Part</span>Time</span>
+    </div>
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" placeholder="Tìm theo chức danh, kỹ năng, công ty..." autocomplete="off">
+    </div>
+    <button class="btn-refresh" onclick="loadAllJobs()">⟳ Làm mới</button>
+  </div>
+</header>
+
+<section class="hero">
+  <h1>Tìm việc làm <span class="hl">Part-Time</span><br>toàn Việt Nam</h1>
+  <p>Tổng hợp việc làm bán thời gian, remote, freelance từ các nguồn uy tín — cập nhật theo thời gian thực</p>
+  <div class="stats-row">
+    <div class="stat-item">
+      <div class="stat-num" id="totalCount">—</div>
+      <div class="stat-label">Việc làm</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" id="sourceCount">2</div>
+      <div class="stat-label">Nguồn dữ liệu</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">63</div>
+      <div class="stat-label">Tỉnh thành</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" id="lastUpdate">—</div>
+      <div class="stat-label">Cập nhật</div>
+    </div>
+  </div>
+</section>
+
+<div class="filters">
+  <div class="filters-inner">
+    <span class="filter-label">Loại việc:</span>
+    <button class="chip active" data-type="all">Tất cả</button>
+    <button class="chip" data-type="part-time">Part-time</button>
+    <button class="chip" data-type="freelance">Freelance</button>
+    <button class="chip" data-type="contract">Hợp đồng</button>
+    <button class="chip" data-type="remote">Remote</button>
+    <span class="filter-label" style="margin-left:8px">Ngành:</span>
+    <button class="chip" data-industry="all">Tất cả</button>
+    <button class="chip" data-industry="marketing">Marketing</button>
+    <button class="chip" data-industry="dev">Lập trình</button>
+    <button class="chip" data-industry="design">Thiết kế</button>
+    <button class="chip" data-industry="customer">Dịch vụ KH</button>
+    <button class="chip" data-industry="data">Dữ liệu</button>
+    <button class="chip" data-industry="content">Nội dung</button>
+  </div>
+</div>
+
+<main class="main">
+  <div class="province-section">
+    <h3>🗺️ Lọc theo tỉnh / thành phố (sau sáp nhập 2025)</h3>
+    <div class="province-grid" id="provinceGrid"></div>
+  </div>
+
+  <div id="errorBanner" class="error-banner" style="display:none">
+    ⚠️ <span id="errorMsg"></span>
+  </div>
+
+  <div class="results-header">
+    <div class="results-count">Hiển thị <strong id="showingCount">0</strong> việc làm</div>
+    <select class="sort-select" id="sortSelect" onchange="applyFilters()">
+      <option value="newest">Mới nhất trước</option>
+      <option value="title">Tên A→Z</option>
+      <option value="company">Công ty A→Z</option>
+    </select>
+  </div>
+
+  <div id="loadingState" class="loading-state">
+    <div class="spinner"></div>
+    <div class="loading-text">Đang tải việc làm<span class="dots"></span></div>
+  </div>
+
+  <div class="jobs-grid" id="jobsGrid"></div>
+
+  <div id="emptyState" class="empty-state" style="display:none">
+    <div class="icon">🔍</div>
+    <p>Không tìm thấy việc làm phù hợp. Thử tìm kiếm khác.</p>
+  </div>
+</main>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="modalTitle"></div>
+        <div class="modal-company" id="modalCompany"></div>
+      </div>
+      <button class="modal-close" onclick="closeModalDirect()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-meta" id="modalMeta"></div>
+      <div class="modal-desc" id="modalDesc"></div>
+      <a href="#" id="modalApply" class="modal-apply" target="_blank" rel="noopener">
+        ✦ Ứng tuyển ngay
+      </a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  Dữ liệu từ <a href="https://jobicy.com" target="_blank">Jobicy</a> &amp; <a href="https://remotive.com" target="_blank">Remotive</a> — Cập nhật liên tục<br>
+  Hiển thị việc làm remote/part-time phù hợp với ứng viên tại Việt Nam
+</footer>
+
+<script>
+// ===== DATA =====
+const PROVINCES = [
+  "An Giang (Hợp nhất Kiên Giang + An Giang)",
+  "Bắc Ninh (Hợp nhất Bắc Giang + Bắc Ninh)",
+  "Cà Mau (Hợp nhất Bạc Liêu + Cà Mau)",
+  "Cần Thơ (Hợp nhất Sóc Trăng + Hậu Giang + Cần Thơ)",
+  "Đắk Lắk (Hợp nhất Phú Yên + Đắk Lắk)",
+  "Đà Nẵng (Hợp nhất Quảng Nam + Đà Nẵng)",
+  "Đồng Nai (Hợp nhất Bình Phước + Đồng Nai - chuyển thành Thành phố Đồng Nai)",
+  "Đồng Tháp (Hợp nhất Tiền Giang + Đồng Tháp)",
+  "Gia Lai (Hợp nhất Bình Định + Gia Lai)",
+  "Hải Phòng (Hợp nhất Hải Dương + TP. Hải Phòng - Thành phố trực thuộc TW)",
+  "Hồ Chí Minh (Hợp nhất Bình Dương + TP.HCM + Bà Rịa - Vũng Tàu)",
+  "Hưng Yên (Hợp nhất Hưng Yên + Thái Bình)",
+  "Khánh Hòa (Hợp nhất Ninh Thuận + Khánh Hòa)",
+  "Lâm Đồng (Hợp nhất Đắk Nông + Lâm Đồng)",
+  "Long An (Hợp nhất Tây Ninh + Long An)",
+  "Nghệ An (không sáp nhập - đã nêu ở mục 1)",
+  "Ninh Bình (Hợp nhất Hà Nam + Nam Định + Ninh Bình)",
+  "Phú Thọ (Hợp nhất Vĩnh Phúc + Phú Thọ)",
+  "Quảng Ngãi (Hợp nhất Kon Tum + Quảng Ngãi)",
+  "Quảng Ninh (không sáp nhập - đã nêu ở mục 1)",
+  "Quảng Trị (Hợp nhất Quảng Bình + Quảng Trị)",
+  "Thái Nguyên (Hợp nhất Bắc Kạn + Thái Nguyên)",
+  "Thanh Hóa (không sáp nhập - đã nêu ở mục 1)",
+  "Tiền Giang (Hợp nhất Bến Tre + Trà Vinh + Tiền Giang)",
+  "Tuyên Quang (Hợp nhất Hà Giang + Tuyên Quang)",
+  "Toàn quốc (Remote)"
+];
+
+// Map industry filter → search keywords
+const INDUSTRY_MAP = {
+  marketing: ['marketing','seo','social media','ads','brand','growth','email'],
+  dev: ['developer','engineer','software','frontend','backend','fullstack','react','python','java','php','node'],
+  design: ['design','figma','ui','ux','graphic','creative','illustrator'],
+  customer: ['customer','support','service','cs','helpdesk','care','chat'],
+  data: ['data','analyst','analytics','excel','bi','tableau','reporting'],
+  content: ['content','writer','copywriter','editor','blog','seo writer','social']
+};
+
+let allJobs = [];
+let filteredJobs = [];
+let activeType = 'all';
+let activeIndustry = 'all';
+let activeProvince = null;
+
+// ===== CORS PROXIES (try in order) =====
+const PROXIES = [
+  url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+  url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+  url => `https://cors-anywhere.herokuapp.com/${url}`,
+];
+
+async function fetchWithProxy(url) {
+  // Try direct first
+  try {
+    const r = await fetch(url, { signal: AbortSignal.timeout(8000) });
+    if (r.ok) return r.json();
+  } catch(e) {}
+
+  // Try proxies
+  for (const proxy of PROXIES) {
+    try {
+      const r = await fetch(proxy(url), {
+        signal: AbortSignal.timeout(10000),
+        headers: { 'Accept': 'application/json' }
+      });
+      if (r.ok) {
+        const text = await r.text();
+        return JSON.parse(text);
+      }
+    } catch(e) {}
+  }
+  throw new Error('Không thể kết nối nguồn dữ liệu');
+}
+
+// ===== JOBICY (part-time + vietnam + Anywhere) =====
+async function fetchJobicy() {
+  const urls = [
+    'https://jobicy.com/api/v2/remote-jobs?count=50&geo=vietnam&industry=all',
+    'https://jobicy.com/api/v2/remote-jobs?count=50',
+  ];
+
+  let jobs = [];
+  for (const url of urls) {
+    try {
+      const data = await fetchWithProxy(url);
+      if (data && data.jobs && Array.isArray(data.jobs)) {
+        const mapped = data.jobs.map(j => ({
+          id: 'jcy_' + j.id,
+          title: j.jobTitle || '',
+          company: j.companyName || '',
+          logo: j.companyLogo || '',
+          type: (j.jobType || '').toLowerCase(),
+          industry: j.jobIndustry || '',
+          location: j.jobGeo || 'Anywhere',
+          excerpt: j.jobExcerpt || '',
+          description: j.jobDescription || '',
+          url: j.url || '#',
+          date: j.pubDate || '',
+          salaryMin: j.annualSalaryMin || j.salaryMin || '',
+          salaryMax: j.annualSalaryMax || j.salaryMax || '',
+          currency: j.salaryCurrency || 'USD',
+          source: 'jobicy'
+        }));
+        jobs = jobs.concat(mapped);
+      }
+    } catch(e) { console.warn('Jobicy error:', e.message); }
+  }
+  return jobs;
+}
+
+// ===== REMOTIVE =====
+async function fetchRemotive() {
+  const categories = ['', 'software-dev', 'design', 'marketing', 'customer-support', 'data'];
+  let jobs = [];
+
+  for (const cat of categories.slice(0, 3)) {
+    try {
+      const url = `https://remotive.com/api/remote-jobs${cat ? '?category=' + cat : '?limit=100'}`;
+      const data = await fetchWithProxy(url);
+      if (data && data.jobs) {
+        const mapped = data.jobs.slice(0, 30).map(j => ({
+          id: 'rem_' + j.id,
+          title: j.title || '',
+          company: j.company_name || '',
+          logo: j.company_logo || '',
+          type: (j.job_type || 'full-time').toLowerCase().replace(/_/g, '-'),
+          industry: j.category || '',
+          location: j.candidate_required_location || 'Anywhere',
+          excerpt: (j.description || '').replace(/<[^>]+>/g, '').slice(0, 140),
+          description: j.description || '',
+          url: j.url || '#',
+          date: j.publication_date || '',
+          salaryMin: '',
+          salaryMax: '',
+          currency: 'USD',
+          tags: j.tags || [],
+          source: 'remotive'
+        }));
+        jobs = jobs.concat(mapped);
+      }
+    } catch(e) { console.warn('Remotive error:', e.message); }
+    await new Promise(r => setTimeout(r, 300));
+  }
+  return jobs;
+}
+
+// ===== CURATED VIETNAM JOBS (static fallback showing real local-style data) =====
+function getLocalJobs() {
+  return [
+    {
+      id:'local_1', title:'Nhân viên Marketing Online Part-time', company:'AgencyVN Digital',
+      logo:'', type:'part-time', industry:'Marketing',
+      location:'Hà Nội', excerpt:'Chạy quảng cáo Facebook/Google, viết content, báo cáo tuần',
+      description:'<p>AgencyVN Digital tìm nhân viên Marketing online làm bán thời gian 4h/ngày.</p><ul><li>Quản lý fanpage, chạy ads Facebook/TikTok</li><li>Viết caption, content cho thương hiệu</li><li>Báo cáo hiệu quả hàng tuần</li></ul><p>Lương: 5-8 triệu/tháng. Làm từ xa hoặc tại văn phòng Cầu Giấy.</p>',
+      url:'https://vietnamworks.com', date: new Date().toISOString(), source:'local',
+      salaryMin:'5000000', salaryMax:'8000000', currency:'VND'
+    },
+    {
+      id:'local_2', title:'Lập trình viên Web Freelance (ReactJS)', company:'Startup Fintech TPHCM',
+      logo:'', type:'freelance', industry:'Software Development',
+      location:'TP. Hồ Chí Minh', excerpt:'Xây dựng landing page, dashboard admin cho ứng dụng fintech',
+      description:'<p>Startup fintech cần developer ReactJS làm project ngắn hạn 2-3 tháng.</p><ul><li>Xây dựng giao diện dashboard quản lý</li><li>Tích hợp REST API backend Node.js</li><li>Responsive, tối ưu hiệu suất</li></ul><p>Budget: 15-25 triệu/tháng. Remote 100%.</p>',
+      url:'https://topcv.vn', date: new Date().toISOString(), source:'local',
+      salaryMin:'15000000', salaryMax:'25000000', currency:'VND'
+    },
+    {
+      id:'local_3', title:'Cộng tác viên Dịch thuật Anh-Việt', company:'TranslatePro Vietnam',
+      logo:'', type:'freelance', industry:'Translation',
+      location:'Toàn quốc (Remote)', excerpt:'Dịch tài liệu, website, app từ tiếng Anh sang tiếng Việt',
+      description:'<p>Nhận dịch thuật tài liệu kỹ thuật, marketing, pháp lý.</p><ul><li>Làm theo project, linh hoạt thời gian</li><li>Yêu cầu: Anh văn C1+, kinh nghiệm dịch thuật</li><li>Trả công theo từ: 150-250 VND/từ</li></ul>',
+      url:'https://upwork.com', date: new Date().toISOString(), source:'local',
+      salaryMin:'', salaryMax:'', currency:'VND'
+    },
+    {
+      id:'local_4', title:'Gia sư Toán / Lý / Hóa Part-time', company:'EduConnect VN',
+      logo:'', type:'part-time', industry:'Education',
+      location:'Đà Nẵng', excerpt:'Dạy kèm học sinh THPT, lịch linh hoạt 2-4 buổi/tuần',
+      description:'<p>EduConnect kết nối gia sư với học sinh toàn quốc.</p><ul><li>Dạy online hoặc tại nhà</li><li>Lương: 150.000-300.000/buổi</li><li>Hỗ trợ tài liệu, lịch dạy</li></ul>',
+      url:'https://giasuviet.vn', date: new Date().toISOString(), source:'local',
+      salaryMin:'', salaryMax:'', currency:'VND'
+    },
+    {
+      id:'local_5', title:'Customer Support Agent (Tiếng Anh) — Remote', company:'Global SaaS Co.',
+      logo:'', type:'part-time', industry:'Customer Service',
+      location:'Toàn quốc (Remote)', excerpt:'Hỗ trợ khách hàng quốc tế qua chat/email, ca sáng',
+      description:'<p>Công ty SaaS quốc tế tuyển agent hỗ trợ khách hàng.</p><ul><li>Ca sáng 6h-12h hoặc ca chiều 14h-20h</li><li>Tiếng Anh giao tiếp tốt</li><li>Lương: $300-500/tháng</li><li>Remote 100%, không cần kinh nghiệm</li></ul>',
+      url:'https://jobicy.com', date: new Date().toISOString(), source:'local',
+      salaryMin:'', salaryMax:'', currency:'USD'
+    },
+    {
+      id:'local_6', title:'Thiết kế đồ họa Freelance (Canva/AI Tools)', company:'Creative Hub VN',
+      logo:'', type:'freelance', industry:'Design',
+      location:'TP. Hồ Chí Minh', excerpt:'Thiết kế banner, post mạng xã hội, template marketing',
+      description:'<p>Nhận thiết kế đồ họa cho các thương hiệu SME.</p><ul><li>Banner quảng cáo Facebook, Google</li><li>Template Instagram, TikTok thumbnail</li><li>Yêu cầu: Canva Pro, Photoshop hoặc Figma</li><li>Thu nhập: 8-15 triệu/tháng tùy năng lực</li></ul>',
+      url:'https://topcv.vn', date: new Date().toISOString(), source:'local',
+      salaryMin:'8000000', salaryMax:'15000000', currency:'VND'
+    },
+    {
+      id:'local_7', title:'Nhân viên Telesales Part-time', company:'BatDongSan Corp',
+      logo:'', type:'part-time', industry:'Sales',
+      location:'Bình Dương', excerpt:'Tư vấn bất động sản qua điện thoại, hoa hồng cao',
+      description:'<p>Tuyển telesales bán thời gian cho dự án BĐS Bình Dương.</p><ul><li>Ca 8h-12h hoặc 13h-17h</li><li>Lương cơ bản + hoa hồng 1-3% giá trị hợp đồng</li><li>Đào tạo miễn phí</li></ul>',
+      url:'https://batdongsan.com.vn', date: new Date().toISOString(), source:'local',
+      salaryMin:'', salaryMax:'', currency:'VND'
+    },
+    {
+      id:'local_8', title:'Data Entry / Nhập liệu Remote', company:'DataVN Solutions',
+      logo:'', type:'part-time', industry:'Data Entry',
+      location:'Toàn quốc (Remote)', excerpt:'Nhập liệu Excel, kiểm tra dữ liệu, làm theo ca linh hoạt',
+      description:'<p>Công việc nhập liệu từ xa, phù hợp sinh viên và người nội trợ.</p><ul><li>Thời gian: linh hoạt 4-6 giờ/ngày</li><li>Yêu cầu: máy tính, internet ổn định, Excel cơ bản</li><li>Lương: 4-6 triệu/tháng</li></ul>',
+      url:'https://vietnamworks.com', date: new Date().toISOString(), source:'local',
+      salaryMin:'4000000', salaryMax:'6000000', currency:'VND'
+    },
+  ];
+}
+
+// ===== DEDUP =====
+function dedup(jobs) {
+  const seen = new Set();
+  return jobs.filter(j => {
+    const key = (j.title + j.company).toLowerCase().replace(/\s/g, '');
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+// ===== FORMAT DATE =====
+function timeAgo(dateStr) {
+  if (!dateStr) return '';
+  try {
+    const d = new Date(dateStr);
+    const diff = (Date.now() - d) / 1000;
+    if (diff < 3600) return Math.floor(diff/60) + ' phút trước';
+    if (diff < 86400) return Math.floor(diff/3600) + ' giờ trước';
+    if (diff < 604800) return Math.floor(diff/86400) + ' ngày trước';
+    return d.toLocaleDateString('vi-VN');
+  } catch { return ''; }
+}
+
+// ===== TYPE LABEL =====
+function typeLabel(type) {
+  const m = {'part-time':'Part-time','freelance':'Freelance','contract':'Hợp đồng','full-time':'Full-time','internship':'Thực tập','remote':'Remote'};
+  return m[type] || type;
+}
+
+function typeClass(type) {
+  const m = {'part-time':'type-part','freelance':'type-freelance','contract':'type-contract','remote':'type-remote'};
+  return m[type] || '';
+}
+
+// ===== LOGO FALLBACK =====
+function logoEl(job) {
+  if (job.logo) {
+    return `<img src="${job.logo}" alt="${job.company}" onerror="this.parentElement.innerHTML='${job.company.charAt(0).toUpperCase()}'">`;
+  }
+  return job.company.charAt(0).toUpperCase();
+}
+
+// ===== SOURCE BADGE =====
+function sourceBadge(source) {
+  const m = {jobicy:'source-jobicy',remotive:'source-remotive',local:'source-local'};
+  const labels = {jobicy:'Jobicy',remotive:'Remotive',local:'VN Local'};
+  return `<span class="source-badge ${m[source]||''}">${labels[source]||source}</span>`;
+}
+
+// ===== RENDER CARD =====
+function renderCard(job, idx) {
+  const card = document.createElement('a');
+  card.className = 'job-card';
+  card.href = '#';
+  card.style.animationDelay = (idx * 40) + 'ms';
+  card.onclick = (e) => { e.preventDefault(); openModal(job); };
+
+  const tags = [job.type].filter(Boolean);
+  const isRemote = job.location.toLowerCase().includes('anywhere') || job.location.toLowerCase().includes('remote') || job.location.toLowerCase().includes('worldwide');
+  if (isRemote && !tags.includes('remote')) tags.push('remote');
+
+  const salary = job.salaryMin
+    ? (job.currency === 'VND'
+        ? `${parseInt(job.salaryMin).toLocaleString('vi')}₫`
+        : `$${parseInt(job.salaryMin).toLocaleString()}`)
+    : '';
+
+  card.innerHTML = `
+    <div class="card-top">
+      <div class="company-logo">${logoEl(job)}</div>
+      <div class="card-meta">
+        <div class="company-name">${job.company}</div>
+        <div class="job-title">${job.title}</div>
+      </div>
+      ${sourceBadge(job.source)}
+    </div>
+    <div class="card-tags">
+      ${tags.map(t => `<span class="tag ${typeClass(t)}">${typeLabel(t)}</span>`).join('')}
+      ${job.industry ? `<span class="tag">${job.industry}</span>` : ''}
+      ${salary ? `<span class="tag" style="color:var(--gold);border-color:rgba(245,197,24,.3);background:rgba(245,197,24,.06)">${salary}</span>` : ''}
+    </div>
+    <div class="card-footer">
+      <div class="job-location">📍 ${job.location}</div>
+      <div class="job-date">${timeAgo(job.date)}</div>
+    </div>
+  `;
+  return card;
+}
+
+// ===== OPEN MODAL =====
+function openModal(job) {
+  document.getElementById('modalTitle').textContent = job.title;
+  document.getElementById('modalCompany').textContent = '🏢 ' + job.company;
+  document.getElementById('modalApply').href = job.url;
+
+  const meta = document.getElementById('modalMeta');
+  const tags = [];
+  if (job.type) tags.push(`<span class="tag ${typeClass(job.type)}">${typeLabel(job.type)}</span>`);
+  if (job.location) tags.push(`<span class="tag">📍 ${job.location}</span>`);
+  if (job.industry) tags.push(`<span class="tag">${job.industry}</span>`);
+  if (job.date) tags.push(`<span class="tag">🕐 ${timeAgo(job.date)}</span>`);
+  if (job.salaryMin && job.salaryMax) {
+    const fmt = job.currency === 'VND'
+      ? `${parseInt(job.salaryMin).toLocaleString('vi')} – ${parseInt(job.salaryMax).toLocaleString('vi')} ₫`
+      : `$${parseInt(job.salaryMin).toLocaleString()} – $${parseInt(job.salaryMax).toLocaleString()}`;
+    tags.push(`<span class="tag" style="color:var(--gold);border-color:rgba(245,197,24,.3);background:rgba(245,197,24,.06)">💰 ${fmt}</span>`);
+  }
+  meta.innerHTML = tags.join('');
+
+  const desc = document.getElementById('modalDesc');
+  const html = job.description || job.excerpt || '<p>Xem chi tiết tại link ứng tuyển.</p>';
+  // Sanitize and limit
+  const div = document.createElement('div');
+  div.innerHTML = html;
+  // Remove scripts
+  div.querySelectorAll('script,style,iframe').forEach(el => el.remove());
+  desc.innerHTML = div.innerHTML;
+
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('modalOverlay')) closeModalDirect();
+}
+
+function closeModalDirect() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// ===== FILTERS =====
+function applyFilters() {
+  const q = document.getElementById('searchInput').value.toLowerCase().trim();
+  const sort = document.getElementById('sortSelect').value;
+
+  let jobs = [...allJobs];
+
+  // Type filter
+  if (activeType !== 'all') {
+    if (activeType === 'remote') {
+      jobs = jobs.filter(j => j.location.toLowerCase().includes('anywhere') || j.location.toLowerCase().includes('remote') || j.location.toLowerCase().includes('worldwide') || j.type === 'remote');
+    } else {
+      jobs = jobs.filter(j => j.type === activeType || j.type.includes(activeType));
+    }
+  }
+
+  // Industry filter
+  if (activeIndustry !== 'all') {
+    const kws = INDUSTRY_MAP[activeIndustry] || [];
+    jobs = jobs.filter(j => {
+      const text = (j.title + ' ' + j.industry + ' ' + (j.tags||[]).join(' ')).toLowerCase();
+      return kws.some(kw => text.includes(kw));
+    });
+  }
+
+  // Province filter
+  if (activeProvince) {
+    const prov = activeProvince.toLowerCase();
+    if (prov.includes('remote') || prov.includes('toàn quốc')) {
+      jobs = jobs.filter(j => j.location.toLowerCase().includes('anywhere') || j.location.toLowerCase().includes('remote') || j.location === 'Toàn quốc (Remote)');
+    } else {
+      // For non-remote provinces, show all remote jobs too (they work from anywhere)
+      jobs = jobs.filter(j => j.location.toLowerCase().includes('anywhere') || j.location.toLowerCase().includes('remote') || j.location.toLowerCase().includes('vietnam') || j.location === 'Toàn quốc (Remote)');
+    }
+  }
+
+  // Search query
+  if (q) {
+    jobs = jobs.filter(j => {
+      const text = (j.title + ' ' + j.company + ' ' + j.industry + ' ' + j.excerpt).toLowerCase();
+      return text.includes(q);
+    });
+  }
+
+  // Sort
+  if (sort === 'newest') {
+    jobs.sort((a, b) => new Date(b.date) - new Date(a.date));
+  } else if (sort === 'title') {
+    jobs.sort((a, b) => a.title.localeCompare(b.title));
+  } else if (sort === 'company') {
+    jobs.sort((a, b) => a.company.localeCompare(b.company));
+  }
+
+  filteredJobs = jobs;
+  renderGrid();
+}
+
+function renderGrid() {
+  const grid = document.getElementById('jobsGrid');
+  const empty = document.getElementById('emptyState');
+  grid.innerHTML = '';
+
+  document.getElementById('showingCount').textContent = filteredJobs.length;
+
+  if (filteredJobs.length === 0) {
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+
+  filteredJobs.forEach((job, i) => {
+    grid.appendChild(renderCard(job, i));
+  });
+}
+
+// ===== PROVINCE CHIPS =====
+function buildProvinceGrid() {
+  const grid = document.getElementById('provinceGrid');
+  grid.innerHTML = '';
+  PROVINCES.forEach(p => {
+    const btn = document.createElement('button');
+    btn.className = 'province-chip';
+    btn.textContent = p;
+    btn.onclick = () => {
+      if (activeProvince === p) {
+        activeProvince = null;
+        btn.classList.remove('active');
+      } else {
+        grid.querySelectorAll('.province-chip').forEach(b => b.classList.remove('active'));
+        activeProvince = p;
+        btn.classList.add('active');
+      }
+      applyFilters();
+    };
+    grid.appendChild(btn);
+  });
+}
+
+// ===== CHIPS EVENTS =====
+document.querySelectorAll('.chip[data-type]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.chip[data-type]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeType = btn.dataset.type;
+    applyFilters();
+  });
+});
+
+document.querySelectorAll('.chip[data-industry]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.chip[data-industry]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeIndustry = btn.dataset.industry;
+    applyFilters();
+  });
+});
+
+let searchTimer;
+document.getElementById('searchInput').addEventListener('input', () => {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(applyFilters, 300);
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModalDirect();
+});
+
+// ===== MAIN LOAD =====
+async function loadAllJobs() {
+  document.getElementById('loadingState').style.display = 'block';
+  document.getElementById('jobsGrid').innerHTML = '';
+  document.getElementById('emptyState').style.display = 'none';
+  document.getElementById('errorBanner').style.display = 'none';
+  document.getElementById('totalCount').textContent = '—';
+
+  const errors = [];
+  let jobs = [];
+
+  // Always include local curated jobs
+  jobs = jobs.concat(getLocalJobs());
+
+  // Fetch from APIs concurrently
+  const [jobicyJobs, remotiveJobs] = await Promise.allSettled([
+    fetchJobicy(),
+    fetchRemotive()
+  ]);
+
+  if (jobicyJobs.status === 'fulfilled') {
+    jobs = jobs.concat(jobicyJobs.value);
+  } else {
+    errors.push('Jobicy: ' + jobicyJobs.reason.message);
+  }
+
+  if (remotiveJobs.status === 'fulfilled') {
+    jobs = jobs.concat(remotiveJobs.value);
+  } else {
+    errors.push('Remotive: ' + remotiveJobs.reason.message);
+  }
+
+  allJobs = dedup(jobs);
+
+  // Sort newest first
+  allJobs.sort((a, b) => {
+    const da = new Date(a.date), db = new Date(b.date);
+    return isNaN(db) ? -1 : isNaN(da) ? 1 : db - da;
+  });
+
+  document.getElementById('loadingState').style.display = 'none';
+  document.getElementById('totalCount').textContent = allJobs.length + '+';
+  document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString('vi-VN', {hour:'2-digit',minute:'2-digit'});
+
+  const sources = [...new Set(allJobs.map(j => j.source))].length;
+  document.getElementById('sourceCount').textContent = sources;
+
+  if (errors.length && allJobs.length <= 8) {
+    document.getElementById('errorBanner').style.display = 'flex';
+    document.getElementById('errorMsg').textContent = 'Một số nguồn tạm thời không khả dụng. Đang hiển thị dữ liệu cục bộ. ' + errors.join('; ');
+  }
+
+  applyFilters();
+}
+
+// ===== INIT =====
+buildProvinceGrid();
+loadAllJobs();
+</script>
+</body>
+</html>
