@@ -1591,6 +1591,10 @@ async function loadAllJobs() {
   const errors = [];
   let jobs = [];
 
+  // Always include local curated jobs so the grid never starts empty
+  jobs = jobs.concat(getLocalJobs());
+  jobs = jobs.concat(getVNBoardJobs());
+
   // Fetch from APIs concurrently
   const [jobicyJobs, remotiveJobs, directJobs] = await Promise.allSettled([
     fetchJobicy(),
