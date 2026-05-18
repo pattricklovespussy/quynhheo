@@ -245,6 +245,118 @@ async function fetchITviec(keyword) {
   return jobs.length ? jobs : parseItemListJsonLd(html).map(j => ({ ...j, source: 'itviec' }));
 }
 
+async function fetch123Job(keyword) {
+  const url = `https://123job.vn/tim-kiem?keyword=${encodeURIComponent(keyword)}`;
+  const html = await fetchHtml(url);
+  if (!html) return [];
+  const jobs = parseCards(html, {
+    source: '123job',
+    base: 'https://123job.vn',
+    item: '.job-item, .item-job, article',
+    title: '.job-title, h3 a, h2 a',
+    company: '.company-name, .company a',
+    location: '.location, .address',
+    url: 'a'
+  });
+  return jobs.length ? jobs : parseItemListJsonLd(html).map(j => ({ ...j, source: '123job' }));
+}
+
+async function fetchCareerLink(keyword) {
+  const url = `https://www.careerlink.vn/tim-viec-lam?keyword=${encodeURIComponent(keyword)}`;
+  const html = await fetchHtml(url);
+  if (!html) return [];
+  const jobs = parseCards(html, {
+    source: 'careerlink',
+    base: 'https://www.careerlink.vn',
+    item: '.job-item, .job, article',
+    title: '.job-title, h3 a, h2 a',
+    company: '.company-name, .company a',
+    location: '.job-location, .location, .address',
+    url: 'a'
+  });
+  return jobs.length ? jobs : parseItemListJsonLd(html).map(j => ({ ...j, source: 'careerlink' }));
+}
+
+async function fetchViecoi(keyword) {
+  const url = `https://viecoi.vn/tim-viec-lam?keyword=${encodeURIComponent(keyword)}`;
+  const html = await fetchHtml(url);
+  if (!html) return [];
+  const jobs = parseCards(html, {
+    source: 'viecoi',
+    base: 'https://viecoi.vn',
+    item: '.job-item, .item-job, article',
+    title: '.job-title, h3 a, h2 a',
+    company: '.company-name, .company a',
+    location: '.location, .address',
+    url: 'a'
+  });
+  return jobs.length ? jobs : parseItemListJsonLd(html).map(j => ({ ...j, source: 'viecoi' }));
+}
+
+async function fetchJobstreet(keyword) {
+  const url = `https://www.jobstreet.vn/vi/tim-viec-lam?keyword=${encodeURIComponent(keyword)}`;
+  const html = await fetchHtml(url);
+  if (!html) return [];
+  const jobs = parseCards(html, {
+    source: 'jobstreet',
+    base: 'https://www.jobstreet.vn',
+    item: 'article, .job-item, .job-card',
+    title: 'h3 a, h2 a, .job-title a',
+    company: '.company-name, .company a',
+    location: '.job-location, .location, .address',
+    url: 'a'
+  });
+  return jobs.length ? jobs : parseItemListJsonLd(html).map(j => ({ ...j, source: 'jobstreet' }));
+}
+
+async function fetchHRChannels(keyword) {
+  const url = `https://hrchannels.com/tim-viec-lam?keyword=${encodeURIComponent(keyword)}`;
+  const html = await fetchHtml(url);
+  if (!html) return [];
+  const jobs = parseCards(html, {
+    source: 'hrchannels',
+    base: 'https://hrchannels.com',
+    item: '.job-item, .item-job, article',
+    title: '.job-title, h3 a, h2 a',
+    company: '.company-name, .company a',
+    location: '.location, .address',
+    url: 'a'
+  });
+  return jobs.length ? jobs : parseItemListJsonLd(html).map(j => ({ ...j, source: 'hrchannels' }));
+}
+
+async function fetchYbox(keyword) {
+  const url = `https://ybox.vn/tuyen-dung?keyword=${encodeURIComponent(keyword)}`;
+  const html = await fetchHtml(url);
+  if (!html) return [];
+  const jobs = parseCards(html, {
+    source: 'ybox',
+    base: 'https://ybox.vn',
+    item: '.box-job, .job-item, article',
+    title: '.job-title, h3 a, h2 a',
+    company: '.company-name, .company a',
+    location: '.location, .address',
+    url: 'a'
+  });
+  return jobs.length ? jobs : parseItemListJsonLd(html).map(j => ({ ...j, source: 'ybox' }));
+}
+
+async function fetchGlints(keyword) {
+  const url = `https://glints.com/vn/vi/opportunities/jobs/explore?keyword=${encodeURIComponent(keyword)}`;
+  const html = await fetchHtml(url);
+  if (!html) return [];
+  const jobs = parseCards(html, {
+    source: 'glints',
+    base: 'https://glints.com',
+    item: 'article, .JobCard, .job-card',
+    title: 'h3 a, h2 a, .JobCard__title a',
+    company: '.JobCard__company, .company-name, .company a',
+    location: '.JobCard__location, .location, .address',
+    url: 'a'
+  });
+  return jobs.length ? jobs : parseItemListJsonLd(html).map(j => ({ ...j, source: 'glints' }));
+}
+
 function mapToJob(source, item) {
   return {
     id: `${source}_${item.id || item.url}`,
@@ -281,7 +393,14 @@ export default async function handler(req, res) {
     ['jobsgo', fetchJobsGo],
     ['vieclamtot', fetchViecLamTot],
     ['timviecnhanh', fetchTimViecNhanh],
-    ['itviec', fetchITviec]
+    ['itviec', fetchITviec],
+    ['123job', fetch123Job],
+    ['careerlink', fetchCareerLink],
+    ['viecoi', fetchViecoi],
+    ['jobstreet', fetchJobstreet],
+    ['hrchannels', fetchHRChannels],
+    ['ybox', fetchYbox],
+    ['glints', fetchGlints]
   ];
 
   const results = await Promise.allSettled(
