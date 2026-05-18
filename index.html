@@ -406,6 +406,7 @@
   .source-remotive { background: rgba(59,130,246,.15); color: #60a5fa; border: 1px solid rgba(59,130,246,.3); }
   .source-local { background: rgba(34,197,94,.15); color: #22c55e; border: 1px solid rgba(34,197,94,.3); }
   .source-vnboard { background: rgba(245,158,11,.15); color: #f59e0b; border: 1px solid rgba(245,158,11,.3); }
+  .source-topcv { background: rgba(0,174,103,.15); color: #00ae67; border: 1px solid rgba(0,174,103,.3); }
 
   .card-tags {
     display: flex;
@@ -1194,7 +1195,145 @@ async function fetchJobicyVN() {
   return jobs;
 }
 
-// ===== TOPCV PART-TIME JOBS =====
+// ===== TOPCV QUA ANTHROPIC API + WEB SEARCH =====
+async function fetchTopCVviaAI() {
+  const response = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 4000,
+      tools: [{ type: 'web_search_20250305', name: 'web_search' }],
+      system: `Bạn là API trả về JSON việc làm part-time từ TopCV Việt Nam.
+Tìm kiếm web để lấy danh sách việc làm part-time hiện tại trên topcv.vn.
+Chỉ trả về JSON thuần túy, không markdown, không giải thích.
+Format JSON:
+{
+  "jobs": [
+    {
+      "title": "tên vị trí",
+      "company": "tên công ty",
+      "location": "địa điểm tại Việt Nam",
+      "salary": "mức lương",
+      "url": "link topcv.vn",
+      "date": "ngày đăng YYYY-MM-DD",
+      "tags": ["tag1","tag2"],
+      "excerpt": "mô tả ngắn"
+    }
+  ]
+}`,
+      messages: [{
+        role: 'user',
+        content: 'Tìm kiếm web: site:topcv.vn việc làm part-time đang tuyển dụng 2025. Lấy ít nhất 20 job thật với link thật từ topcv.vn. Trả về JSON.'
+      }]
+    })
+  });
+
+  if (!response.ok) throw new Error('AI API lỗi ' + response.status);
+  const data = await response.json();
+
+  // Extract text from all content blocks
+  const fullText = (data.content || [])
+    .map(b => b.type === 'text' ? b.text : '')
+    .join('');
+
+  // Parse JSON from response
+  const jsonMatch = fullText.match(/\{[\s\S]*"jobs"[\s\S]*\}/);
+  if (!jsonMatch) throw new Error('Không parse được JSON từ AI');
+
+  const parsed = JSON.parse(jsonMatch[0]);
+  return (parsed.jobs || []).map((j, i) => ({
+    id: 'topcv_ai_' + i + '_' + Date.now(),
+    title: j.title || '',
+    company: j.company || '',
+    logo: '',
+    type: 'part-time',
+    industry: (j.tags || []).join(', '),
+    location: j.location || 'Việt Nam',
+    excerpt: j.excerpt || j.salary || '',
+    description: `<p><strong>Lương:</strong> ${j.salary || 'Thỏa thuận'}</p><p>${j.excerpt || ''}</p>`,
+    url: j.url || 'https://www.topcv.vn/tim-viec-lam-part-time',
+    date: j.date || new Date().toISOString().split('T')[0],
+    salaryMin: '',
+    salaryMax: '',
+    currency: 'VND',
+    tags: j.tags || [],
+    source: 'topcv'
+  })).filter(j => j.title);
+}
+
+// ===== VIETNAMWORKS QUA ANTHROPIC API + WEB SEARCH =====
+async function fetchVietnamWorksViaAI() {
+  const response = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 4000,
+      tools: [{ type: 'web_search_20250305', name: 'web_search' }],
+      system: `Bạn là API trả về JSON việc làm part-time từ các trang tuyển dụng Việt Nam.
+Tìm kiếm web để lấy danh sách việc làm part-time tại Việt Nam từ vietnamworks.com, itviec.com, jobsgo.vn, careerbuilder.vn.
+Chỉ trả về JSON thuần túy, không markdown, không giải thích.
+Format JSON:
+{
+  "jobs": [
+    {
+      "title": "tên vị trí",
+      "company": "tên công ty",
+      "location": "địa điểm tại Việt Nam",
+      "salary": "mức lương",
+      "source_site": "tên nguồn (vietnamworks/itviec/jobsgo/careerbuilder)",
+      "url": "link đến job",
+      "date": "ngày đăng YYYY-MM-DD",
+      "tags": ["tag1","tag2"],
+      "excerpt": "mô tả ngắn"
+    }
+  ]
+}`,
+      messages: [{
+        role: 'user',
+        content: 'Tìm kiếm: "part time" site:vietnamworks.com OR site:itviec.com OR site:jobsgo.vn tuyển dụng 2025. Lấy ít nhất 20 job thật với link thật. Trả về JSON.'
+      }]
+    })
+  });
+
+  if (!response.ok) throw new Error('AI API lỗi ' + response.status);
+  const data = await response.json();
+
+  const fullText = (data.content || [])
+    .map(b => b.type === 'text' ? b.text : '')
+    .join('');
+
+  const jsonMatch = fullText.match(/\{[\s\S]*"jobs"[\s\S]*\}/);
+  if (!jsonMatch) throw new Error('Không parse được JSON');
+
+  const parsed = JSON.parse(jsonMatch[0]);
+  const sourceMap = { vietnamworks:'vietnamworks', itviec:'itviec', jobsgo:'jobsgo', careerbuilder:'careerbuilder' };
+
+  return (parsed.jobs || []).map((j, i) => {
+    const src = j.source_site ? Object.keys(sourceMap).find(k => (j.source_site||'').toLowerCase().includes(k)) || 'vietnamworks' : 'vietnamworks';
+    return {
+      id: src + '_ai_' + i + '_' + Date.now(),
+      title: j.title || '',
+      company: j.company || '',
+      logo: '',
+      type: 'part-time',
+      industry: (j.tags || []).join(', '),
+      location: j.location || 'Việt Nam',
+      excerpt: j.excerpt || j.salary || '',
+      description: `<p><strong>Lương:</strong> ${j.salary || 'Thỏa thuận'}</p><p>${j.excerpt || ''}</p>`,
+      url: j.url || '#',
+      date: j.date || new Date().toISOString().split('T')[0],
+      salaryMin: '',
+      salaryMax: '',
+      currency: 'VND',
+      tags: j.tags || [],
+      source: src
+    };
+  }).filter(j => j.title);
+}
+
+
 async function fetchTopCV(page = 1) {
   const baseUrl = `https://www.topcv.vn/tim-viec-lam-part-time?page=${page}`;
   const proxies = [
@@ -1416,8 +1555,11 @@ function sourceBadge(source) {
     remoteok:'source-remotive',
     arbeitnow:'source-remotive',
     findwork:'source-remotive',
-    topcv:'source-vnboard',
+    topcv:'source-topcv',
     vietnamworks:'source-vnboard',
+    itviec:'source-vnboard',
+    jobsgo:'source-vnboard',
+    careerbuilder:'source-vnboard',
     careerbuilder:'source-vnboard',
     vieclam24h:'source-vnboard',
     timviec365:'source-vnboard',
@@ -1442,6 +1584,9 @@ function sourceBadge(source) {
     findwork:'FindWork',
     topcv:'TopCV',
     vietnamworks:'VietnamWorks',
+    itviec:'ITviec',
+    jobsgo:'JobsGO',
+    careerbuilder:'CareerBuilder',
     careerbuilder:'CareerBuilder',
     vieclam24h:'ViecLam24h',
     timviec365:'Timviec365',
@@ -1704,16 +1849,18 @@ async function loadAllJobs() {
   const errors = [];
   let jobs = [];
 
-  // Fetch từ tất cả nguồn miễn phí song song
+  // Fetch từ tất cả nguồn song song
   const results = await Promise.allSettled([
     fetchJobicyVN(),
     fetchRemotive(),
     fetchRemoteOK(),
     fetchArbeitnow(),
     fetchFindWork(),
+    fetchTopCVviaAI(),
+    fetchVietnamWorksViaAI(),
   ]);
 
-  const sourceNames = ['Jobicy', 'Remotive', 'RemoteOK', 'Arbeitnow', 'FindWork'];
+  const sourceNames = ['Jobicy', 'Remotive', 'RemoteOK', 'Arbeitnow', 'FindWork', 'TopCV (AI)', 'VietnamWorks (AI)'];
   results.forEach((res, i) => {
     if (res.status === 'fulfilled') {
       jobs = jobs.concat(res.value);
