@@ -1591,10 +1591,6 @@ async function loadAllJobs() {
   const errors = [];
   let jobs = [];
 
-  // Always include local curated jobs
-  jobs = jobs.concat(getLocalJobs());
-  jobs = jobs.concat(getVNBoardJobs());
-
   // Fetch from APIs concurrently
   const [jobicyJobs, remotiveJobs, directJobs] = await Promise.allSettled([
     fetchJobicy(),
@@ -1620,7 +1616,8 @@ async function loadAllJobs() {
     errors.push('VN Direct: ' + (directJobs.reason && directJobs.reason.message ? directJobs.reason.message : 'error'));
   }
 
-  allJobs = dedup(jobs);
+  // Append new jobs instead of resetting the list
+  allJobs = dedup(allJobs.concat(jobs));
 
   // Sort newest first
   allJobs.sort((a, b) => {
