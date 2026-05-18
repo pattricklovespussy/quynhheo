@@ -840,6 +840,29 @@ let activeType = 'all';
 let activeIndustry = 'all';
 let activeProvince = null;
 const provinceJobsCache = new Map();
+const EXPECTED_SOURCES = [
+  'jobicy',
+  'remotive',
+  'local',
+  'vnboard',
+  'topcv',
+  'vietnamworks',
+  'careerbuilder',
+  'vieclam24h',
+  'timviec365',
+  'mywork',
+  'jobsgo',
+  'vieclamtot',
+  'timviecnhanh',
+  'itviec',
+  '123job',
+  'careerlink',
+  'viecoi',
+  'jobstreet',
+  'hrchannels',
+  'ybox',
+  'glints'
+];
 
 const VN_LOCATION_KEYWORDS = [
   ...PROVINCES,
@@ -1044,8 +1067,7 @@ function mergeJobs(newJobs) {
   if (!newJobs || !newJobs.length) return;
   allJobs = dedup(allJobs.concat(newJobs));
   document.getElementById('totalCount').textContent = allJobs.length + '+';
-  const sources = [...new Set(allJobs.map(j => j.source))].length;
-  document.getElementById('sourceCount').textContent = sources;
+  document.getElementById('sourceCount').textContent = EXPECTED_SOURCES.length;
 }
 
 async function fetchProvinceJobs(province) {
@@ -1572,8 +1594,7 @@ async function loadAllJobs() {
   document.getElementById('totalCount').textContent = allJobs.length + '+';
   document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString('vi-VN', {hour:'2-digit',minute:'2-digit'});
 
-  const sources = [...new Set(allJobs.map(j => j.source))].length;
-  document.getElementById('sourceCount').textContent = sources;
+  document.getElementById('sourceCount').textContent = EXPECTED_SOURCES.length;
 
   if (errors.length && allJobs.length <= 8) {
     document.getElementById('errorBanner').style.display = 'flex';
