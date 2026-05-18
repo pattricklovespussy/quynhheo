@@ -38,6 +38,49 @@ async function fetchHtml(url) {
   }
 }
 
+async function fetchJson(url) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 10000);
+  try {
+    const res = await fetch(url, {
+      headers: { 'User-Agent': DEFAULT_UA, 'Accept': 'application/json' },
+      signal: controller.signal
+    });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    return null;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+async function fetchJobicyApi() {
+  const url = 'https://jobicy.com/api/v2/remote-jobs?count=50&geo=vietnam&industry=all';
+  const data = await fetchJson(url);
+  if (!data || !Array.isArray(data.jobs)) return [];
+  return data.jobs.map(j => ({
+    id: `jobicy_${j.id}`,
+    title: normalizeWhitespace(j.jobTitle || ''),
+    company: normalizeWhitespace(j.companyName || ''),
+    location: normalizeWhitespace(j.jobGeo || ''),
+    url: j.url || ''
+  }));
+}
+
+async function fetchRemotiveApi() {
+  const url = 'https://remotive.com/api/remote-jobs?limit=100';
+  const data = await fetchJson(url);
+  if (!data || !Array.isArray(data.jobs)) return [];
+  return data.jobs.map(j => ({
+    id: `remotive_${j.id}`,
+    title: normalizeWhitespace(j.title || ''),
+    company: normalizeWhitespace(j.company_name || ''),
+    location: normalizeWhitespace(j.candidate_required_location || ''),
+    url: j.url || ''
+  }));
+}
+
 function parseItemListJsonLd(html) {
   const $ = cheerio.load(html);
   const jobs = [];
@@ -384,6 +427,8 @@ module.exports = async function handler(req, res) {
     .map(k => k.trim())
     .filter(Boolean);
   const sources = [
+    ['jobicy', fetchJobicyApi],
+    ['remotive', fetchRemotiveApi],
     ['topcv', fetchTopCV],
     ['vietnamworks', fetchVietnamWorks],
     ['careerbuilder', fetchCareerBuilder],
