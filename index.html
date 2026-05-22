@@ -1,1835 +1,1565 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Việc Làm Part-Time Việt Nam</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --red: #e8233a;
-    --red-dark: #c01830;
-    --gold: #f5c518;
-    --dark: #0d0d0d;
-    --dark2: #161616;
-    --dark3: #1e1e1e;
-    --dark4: #252525;
-    --border: #2e2e2e;
-    --text: #e8e8e8;
-    --muted: #888;
-    --green: #22c55e;
-    --blue: #3b82f6;
-    --orange: #f97316;
-    --purple: #a855f7;
-  }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    font-family: 'Be Vietnam Pro', sans-serif;
-    background: var(--dark);
-    color: var(--text);
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
-
-  /* HEADER */
-  header {
-    background: var(--dark2);
-    border-bottom: 1px solid var(--border);
-    padding: 0 24px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    backdrop-filter: blur(12px);
-  }
-
-  .header-inner {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    height: 64px;
-  }
-
-  .logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-shrink: 0;
-  }
-
-  .logo-flag {
-    font-size: 28px;
-    line-height: 1;
-  }
-
-  .logo-text {
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 700;
-    font-size: 18px;
-    color: #fff;
-    white-space: nowrap;
-  }
-
-  .logo-text span {
-    color: var(--red);
-  }
-
-  .search-wrap {
-    flex: 1;
-    position: relative;
-  }
-
-  .search-wrap input {
-    width: 100%;
-    background: var(--dark3);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 10px 16px 10px 42px;
-    color: var(--text);
-    font-family: 'Be Vietnam Pro', sans-serif;
-    font-size: 14px;
-    outline: none;
-    transition: border-color .2s;
-  }
-
-  .search-wrap input:focus {
-    border-color: var(--red);
-  }
-
-  .search-wrap input::placeholder { color: var(--muted); }
-
-  .search-icon {
-    position: absolute;
-    left: 14px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--muted);
-    font-size: 16px;
-    pointer-events: none;
-  }
-
-  .btn-refresh {
-    background: var(--red);
-    color: #fff;
-    border: none;
-    border-radius: 10px;
-    padding: 10px 18px;
-    font-family: 'Be Vietnam Pro', sans-serif;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: background .2s, transform .1s;
-  }
-
-  .btn-refresh:hover { background: var(--red-dark); }
-  .btn-refresh:active { transform: scale(.96); }
-
-  /* HERO */
-  .hero {
-    background: linear-gradient(135deg, #1a0508 0%, #0d0d0d 50%, #050d1a 100%);
-    padding: 48px 24px 36px;
-    text-align: center;
-    border-bottom: 1px solid var(--border);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .hero::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: 
-      radial-gradient(circle at 20% 50%, rgba(232,35,58,.12) 0%, transparent 60%),
-      radial-gradient(circle at 80% 50%, rgba(59,130,246,.08) 0%, transparent 60%);
-    pointer-events: none;
-  }
-
-  .hero h1 {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: clamp(28px, 5vw, 48px);
-    font-weight: 700;
-    line-height: 1.15;
-    margin-bottom: 12px;
-    position: relative;
-  }
-
-  .hero h1 .hl {
-    background: linear-gradient(90deg, var(--red), #ff6b7a);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .hero p {
-    color: var(--muted);
-    font-size: 15px;
-    max-width: 540px;
-    margin: 0 auto 28px;
-    line-height: 1.6;
-    position: relative;
-  }
-
-  .stats-row {
-    display: flex;
-    gap: 24px;
-    justify-content: center;
-    flex-wrap: wrap;
-    position: relative;
-  }
-
-  .stat-item {
-    background: rgba(255,255,255,.04);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 12px 24px;
-    text-align: center;
-  }
-
-  .stat-num {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 22px;
-    font-weight: 700;
-    color: var(--gold);
-  }
-
-  .stat-label {
-    font-size: 11px;
-    color: var(--muted);
-    margin-top: 2px;
-    text-transform: uppercase;
-    letter-spacing: .06em;
-  }
-
-  /* FILTERS */
-  .filters {
-    background: var(--dark2);
-    border-bottom: 1px solid var(--border);
-    padding: 14px 24px;
-    overflow-x: auto;
-  }
-
-  .filters-inner {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-
-  .filter-label {
-    font-size: 12px;
-    color: var(--muted);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: .08em;
-    white-space: nowrap;
-  }
-
-  .chip {
-    padding: 7px 16px;
-    border-radius: 100px;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    border: 1px solid var(--border);
-    background: transparent;
-    color: var(--muted);
-    white-space: nowrap;
-    font-family: 'Be Vietnam Pro', sans-serif;
-    transition: all .18s;
-  }
-
-  .chip:hover { border-color: #555; color: var(--text); }
-
-  .chip.active {
-    background: var(--red);
-    border-color: var(--red);
-    color: #fff;
-  }
-
-  /* MAIN */
-  .main {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 28px 24px 60px;
-  }
-
-  .results-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-    gap: 12px;
-  }
-
-  .results-count {
-    font-size: 14px;
-    color: var(--muted);
-  }
-
-  .results-count strong {
-    color: var(--text);
-    font-weight: 600;
-  }
-
-  .sort-select {
-    background: var(--dark3);
-    border: 1px solid var(--border);
-    color: var(--text);
-    padding: 7px 14px;
-    border-radius: 8px;
-    font-size: 13px;
-    font-family: 'Be Vietnam Pro', sans-serif;
-    cursor: pointer;
-    outline: none;
-  }
-
-  /* GRID */
-  .jobs-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-    gap: 16px;
-  }
-
-  /* JOB CARD */
-  .job-card {
-    background: var(--dark2);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 20px;
-    cursor: pointer;
-    transition: border-color .2s, transform .18s, box-shadow .2s;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    text-decoration: none;
-    color: inherit;
-    position: relative;
-    overflow: hidden;
-    animation: fadeUp .4s ease both;
-  }
-
-  .job-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, var(--red), transparent);
-    opacity: 0;
-    transition: opacity .2s;
-  }
-
-  .job-card:hover {
-    border-color: #444;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 32px rgba(0,0,0,.4);
-  }
-
-  .job-card:hover::before { opacity: 1; }
-
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(16px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .card-top {
-    display: flex;
-    gap: 12px;
-    align-items: flex-start;
-  }
-
-  .company-logo {
-    width: 44px;
-    height: 44px;
-    border-radius: 10px;
-    background: var(--dark3);
-    border: 1px solid var(--border);
-    overflow: hidden;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    font-weight: 700;
-    color: var(--text);
-  }
-
-  .company-logo img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-  }
-
-  .card-meta {
-    flex: 1;
-    min-width: 0;
-  }
-
-  .company-name {
-    font-size: 12px;
-    color: var(--muted);
-    margin-bottom: 4px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .job-title {
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--text);
-    line-height: 1.3;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  .source-badge {
-    flex-shrink: 0;
-    font-size: 10px;
-    padding: 3px 8px;
-    border-radius: 100px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: .06em;
-  }
-
-  .source-jobicy { background: rgba(168,85,247,.15); color: #a855f7; border: 1px solid rgba(168,85,247,.3); }
-  .source-remotive { background: rgba(59,130,246,.15); color: #60a5fa; border: 1px solid rgba(59,130,246,.3); }
-  .source-local { background: rgba(34,197,94,.15); color: #22c55e; border: 1px solid rgba(34,197,94,.3); }
-  .source-vnboard { background: rgba(245,158,11,.15); color: #f59e0b; border: 1px solid rgba(245,158,11,.3); }
-  .source-topcv { background: rgba(0,174,103,.15); color: #00ae67; border: 1px solid rgba(0,174,103,.3); }
-
-  .card-tags {
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-  }
-
-  .tag {
-    font-size: 11px;
-    padding: 4px 10px;
-    border-radius: 6px;
-    border: 1px solid var(--border);
-    color: var(--muted);
-    background: var(--dark3);
-  }
-
-  .tag.type-part { color: var(--gold); border-color: rgba(245,197,24,.3); background: rgba(245,197,24,.06); }
-  .tag.type-remote { color: var(--green); border-color: rgba(34,197,94,.3); background: rgba(34,197,94,.06); }
-  .tag.type-contract { color: var(--orange); border-color: rgba(249,115,22,.3); background: rgba(249,115,22,.06); }
-  .tag.type-freelance { color: var(--blue); border-color: rgba(59,130,246,.3); background: rgba(59,130,246,.06); }
-
-  .card-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-top: 12px;
-    border-top: 1px solid var(--border);
-  }
-
-  .job-location {
-    font-size: 12px;
-    color: var(--muted);
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
-
-  .job-date {
-    font-size: 11px;
-    color: var(--muted);
-  }
-
-  .apply-btn {
-    padding: 7px 16px;
-    border-radius: 8px;
-    background: rgba(232,35,58,.12);
-    border: 1px solid rgba(232,35,58,.3);
-    color: #ff6b7a;
-    font-size: 12px;
-    font-weight: 600;
-    text-decoration: none;
-    transition: all .18s;
-    font-family: 'Be Vietnam Pro', sans-serif;
-  }
-
-  .apply-btn:hover {
-    background: var(--red);
-    border-color: var(--red);
-    color: #fff;
-  }
-
-  /* LOADING */
-  .loading-state {
-    text-align: center;
-    padding: 60px 20px;
-  }
-
-  .spinner {
-    width: 48px;
-    height: 48px;
-    border: 3px solid var(--border);
-    border-top-color: var(--red);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin: 0 auto 16px;
-  }
-
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  .loading-text {
-    color: var(--muted);
-    font-size: 14px;
-  }
-
-  .scan-progress {
-    width: min(360px, 90%);
-    margin: 16px auto 0;
-    background: var(--dark3);
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    overflow: hidden;
-    height: 10px;
-  }
-
-  .scan-progress .bar {
-    height: 100%;
-    width: 0%;
-    background: linear-gradient(90deg, var(--red), #ff6b7a);
-    transition: width .2s ease;
-  }
-
-  .scan-percent {
-    margin-top: 8px;
-    font-size: 12px;
-    color: var(--muted);
-  }
-
-  .loading-text .dots::after {
-    content: '';
-    animation: dots 1.5s infinite;
-  }
-
-  @keyframes dots {
-    0% { content: ''; }
-    33% { content: '.'; }
-    66% { content: '..'; }
-    100% { content: '...'; }
-  }
-
-  /* EMPTY / ERROR */
-  .empty-state {
-    text-align: center;
-    padding: 60px 20px;
-    color: var(--muted);
-  }
-
-  .empty-state .icon { font-size: 48px; margin-bottom: 12px; }
-  .empty-state p { font-size: 15px; }
-
-  .error-banner {
-    background: rgba(232,35,58,.1);
-    border: 1px solid rgba(232,35,58,.3);
-    border-radius: 10px;
-    padding: 12px 16px;
-    margin-bottom: 20px;
-    font-size: 13px;
-    color: #ff8a9a;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  /* MODAL */
-  .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,.75);
-    z-index: 200;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    backdrop-filter: blur(4px);
-  }
-
-  .modal-overlay.open { display: flex; }
-
-  .modal {
-    background: var(--dark2);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    width: 100%;
-    max-width: 640px;
-    max-height: 80vh;
-    overflow-y: auto;
-    animation: modalIn .25s ease;
-  }
-
-  @keyframes modalIn {
-    from { opacity: 0; transform: scale(.95) translateY(12px); }
-    to { opacity: 1; transform: scale(1) translateY(0); }
-  }
-
-  .modal-header {
-    padding: 20px 20px 16px;
-    border-bottom: 1px solid var(--border);
-    position: sticky;
-    top: 0;
-    background: var(--dark2);
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 16px;
-  }
-
-  .modal-title { font-size: 18px; font-weight: 700; line-height: 1.3; }
-  .modal-company { font-size: 13px; color: var(--muted); margin-top: 4px; }
-
-  .modal-close {
-    background: var(--dark3);
-    border: 1px solid var(--border);
-    color: var(--muted);
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    transition: all .18s;
-  }
-
-  .modal-close:hover { color: var(--text); border-color: #555; }
-
-  .modal-body {
-    padding: 20px;
-  }
-
-  .modal-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 16px;
-  }
-
-  .modal-desc {
-    font-size: 14px;
-    line-height: 1.7;
-    color: #ccc;
-  }
-
-  .modal-desc p { margin-bottom: 10px; }
-  .modal-desc ul { padding-left: 20px; margin-bottom: 10px; }
-  .modal-desc li { margin-bottom: 4px; }
-
-  .modal-apply {
-    display: block;
-    text-align: center;
-    margin-top: 24px;
-    padding: 13px;
-    background: var(--red);
-    color: #fff;
-    border-radius: 10px;
-    font-weight: 700;
-    text-decoration: none;
-    font-size: 15px;
-    transition: background .2s;
-  }
-
-  .modal-apply:hover { background: var(--red-dark); }
-
-  /* PROVINCE SECTION */
-  .province-section {
-    background: var(--dark2);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 20px;
-    margin-bottom: 28px;
-  }
-
-  .province-section h3 {
-    font-size: 13px;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: .08em;
-    margin-bottom: 14px;
-    font-weight: 600;
-  }
-
-  .province-select {
-    width: 100%;
-    background: var(--dark3);
-    border: 1px solid var(--border);
-    color: var(--text);
-    padding: 10px 12px;
-    border-radius: 10px;
-    font-size: 13px;
-    font-family: 'Be Vietnam Pro', sans-serif;
-    outline: none;
-  }
-
-  /* FOOTER */
-  footer {
-    border-top: 1px solid var(--border);
-    padding: 24px;
-    text-align: center;
-    color: var(--muted);
-    font-size: 12px;
-    line-height: 1.8;
-  }
-
-  footer a { color: #60a5fa; text-decoration: none; }
-
-  @media (max-width: 640px) {
-    .header-inner { gap: 12px; }
-    .logo-text { display: none; }
-    .jobs-grid { grid-template-columns: 1fr; }
-    .hero { padding: 32px 16px 24px; }
-    .main { padding: 20px 16px 40px; }
-  }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TradeX - Cộng Đồng Trading Việt</title>
+    <style>
+        /* ===== RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0e17;
+            --bg-secondary: #111827;
+            --bg-card: #1a1f2e;
+            --accent: #00d4aa;
+            --accent-red: #ef4444;
+            --accent-gold: #f59e0b;
+            --text-primary: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --border: #1e293b;
+            --gradient-1: linear-gradient(135deg, #00d4aa, #0ea5e9);
+            --gradient-2: linear-gradient(135deg, #f59e0b, #ef4444);
+            --shadow-glow: 0 0 30px rgba(0, 212, 170, 0.15);
+            --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.4);
+            --radius: 16px;
+            --radius-sm: 10px;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --font-mono: 'Courier New', 'SF Mono', monospace;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* ===== PARTICLES BACKGROUND ===== */
+        #particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: var(--accent);
+            animation: floatUp linear infinite;
+            opacity: 0;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(100vh) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.6;
+            }
+            90% {
+                opacity: 0.2;
+            }
+            100% {
+                transform: translateY(-10vh) scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        /* ===== MAIN CONTAINER ===== */
+        .app-container {
+            position: relative;
+            z-index: 1;
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* ===== NAVBAR ===== */
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.6rem;
+            font-weight: 800;
+            text-decoration: none;
+            color: #fff;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+            background: var(--gradient-1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            animation: logoPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes logoPulse {
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(0, 212, 170, 0.5);
+            }
+            50% {
+                box-shadow: 0 0 0 16px rgba(0, 212, 170, 0);
+            }
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: var(--transition);
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .btn {
+            padding: 10px 22px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+        .btn-primary {
+            background: var(--gradient-1);
+            color: #000;
+            box-shadow: 0 4px 15px rgba(0, 212, 170, 0.3);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(0, 212, 170, 0.5);
+        }
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--border);
+            color: #fff;
+        }
+        .btn-outline:hover {
+            border-color: var(--accent);
+            background: rgba(0, 212, 170, 0.05);
+        }
+        .btn-ghost {
+            background: transparent;
+            color: var(--text-secondary);
+        }
+        .btn-ghost:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 60px 0;
+            gap: 50px;
+            flex-wrap: wrap;
+        }
+        .hero-content {
+            flex: 1;
+            min-width: 280px;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0, 212, 170, 0.1);
+            border: 1px solid rgba(0, 212, 170, 0.3);
+            color: var(--accent);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            animation: badgeGlow 2s ease-in-out infinite;
+        }
+        @keyframes badgeGlow {
+            0%,
+            100% {
+                border-color: rgba(0, 212, 170, 0.3);
+            }
+            50% {
+                border-color: rgba(0, 212, 170, 0.8);
+            }
+        }
+        .hero-badge .dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+            animation: blink 1s infinite;
+        }
+        @keyframes blink {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.3;
+            }
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 16px;
+        }
+        .hero h1 .highlight {
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            max-width: 480px;
+            margin-bottom: 30px;
+        }
+        .hero-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        /* Hero Chart Animation */
+        .hero-chart {
+            flex: 1;
+            min-width: 300px;
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 28px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-card);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-chart::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at center, rgba(0, 212, 170, 0.04) 0%, transparent 60%);
+            animation: chartGlow 4s ease-in-out infinite;
+        }
+        @keyframes chartGlow {
+            0%,
+            100% {
+                transform: translate(0, 0);
+            }
+            50% {
+                transform: translate(5%, 3%);
+            }
+        }
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        .chart-pair {
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+        .chart-price {
+            font-family: var(--font-mono);
+            font-weight: 700;
+            font-size: 1.4rem;
+            color: var(--accent);
+        }
+        .chart-change {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: var(--accent);
+            background: rgba(0, 212, 170, 0.1);
+            padding: 3px 10px;
+            border-radius: 6px;
+        }
+
+        .chart-canvas-wrap {
+            position: relative;
+            z-index: 1;
+        }
+        #liveChart {
+            width: 100%;
+            height: 220px;
+            display: block;
+        }
+
+        /* ===== STATS ===== */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin: 30px 0;
+        }
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 20px 24px;
+            transition: var(--transition);
+        }
+        .stat-card:hover {
+            border-color: var(--accent);
+            box-shadow: var(--shadow-glow);
+            transform: translateY(-2px);
+        }
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+        .stat-value {
+            font-family: var(--font-mono);
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        .stat-value.up {
+            color: var(--accent);
+        }
+        .stat-value.down {
+            color: var(--accent-red);
+        }
+
+        /* ===== COINS TABLE ===== */
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        .section-subtitle {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .coins-table-wrap {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow-x: auto;
+            box-shadow: var(--shadow-card);
+            margin-bottom: 40px;
+        }
+        .coins-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px;
+        }
+        .coins-table th {
+            text-align: left;
+            padding: 14px 18px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border);
+            font-weight: 600;
+        }
+        .coins-table td {
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.95rem;
+        }
+        .coins-table tbody tr {
+            transition: var(--transition);
+        }
+        .coins-table tbody tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+        .coin-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .coin-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+        .coin-icon.btc {
+            background: #f7931a22;
+            color: #f7931a;
+        }
+        .coin-icon.eth {
+            background: #627eea22;
+            color: #627eea;
+        }
+        .coin-icon.sol {
+            background: #9945ff22;
+            color: #9945ff;
+        }
+        .coin-icon.bnb {
+            background: #f0b90b22;
+            color: #f0b90b;
+        }
+        .coin-name {
+            font-weight: 600;
+        }
+        .coin-symbol {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+        .price-cell {
+            font-family: var(--font-mono);
+            font-weight: 600;
+        }
+        .change-cell {
+            font-family: var(--font-mono);
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 6px;
+            display: inline-block;
+        }
+        .change-cell.up {
+            color: var(--accent);
+            background: rgba(0, 212, 170, 0.08);
+        }
+        .change-cell.down {
+            color: var(--accent-red);
+            background: rgba(239, 68, 68, 0.08);
+        }
+        .chart-mini {
+            width: 80px;
+            height: 36px;
+        }
+
+        /* ===== COMMUNITY / AUTH SECTION ===== */
+        .community-section {
+            display: flex;
+            gap: 30px;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+        .community-card {
+            flex: 1;
+            min-width: 300px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 32px;
+            box-shadow: var(--shadow-card);
+            transition: var(--transition);
+        }
+        .community-card:hover {
+            border-color: var(--accent);
+        }
+
+        /* Auth Form */
+        .auth-tabs {
+            display: flex;
+            gap: 4px;
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            padding: 4px;
+            margin-bottom: 24px;
+        }
+        .auth-tab {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            transition: var(--transition);
+            border: none;
+            background: transparent;
+        }
+        .auth-tab.active {
+            background: var(--accent);
+            color: #000;
+        }
+
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .auth-form.hidden {
+            display: none;
+        }
+        .input-group {
+            position: relative;
+        }
+        .input-group .icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 13px 14px 13px 42px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 0.95rem;
+            transition: var(--transition);
+            outline: none;
+        }
+        .input-group input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(0, 212, 170, 0.1);
+        }
+        .input-group input::placeholder {
+            color: #4a5568;
+        }
+
+        .auth-form .btn {
+            width: 100%;
+            justify-content: center;
+            padding: 13px;
+            font-size: 1rem;
+        }
+
+        .auth-divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin: 8px 0;
+        }
+        .auth-divider::before,
+        .auth-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .social-btn {
+            width: 100%;
+            padding: 11px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--bg-secondary);
+            color: #fff;
+            cursor: pointer;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+        .social-btn:hover {
+            border-color: var(--accent);
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        /* Community Feed */
+        .feed-card {
+            flex: 1;
+            min-width: 300px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: var(--shadow-card);
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        .feed-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .feed-item {
+            display: flex;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+            animation: slideIn 0.4s ease-out;
+        }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        .feed-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.8rem;
+        }
+        .feed-content .feed-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .feed-content .feed-time {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+        .feed-content .feed-text {
+            font-size: 0.9rem;
+            margin-top: 4px;
+            color: var(--text-primary);
+        }
+        .feed-tag {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 6px;
+        }
+        .feed-tag.buy {
+            background: rgba(0, 212, 170, 0.15);
+            color: var(--accent);
+        }
+        .feed-tag.sell {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--accent-red);
+        }
+
+        /* ===== MODAL OVERLAY ===== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(6px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        .modal-overlay.hidden {
+            display: none;
+        }
+        .modal {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 36px;
+            width: 90%;
+            max-width: 440px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+            animation: modalPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        @keyframes modalPop {
+            from {
+                opacity: 0;
+                transform: scale(0.85) translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+        .modal-close {
+            float: right;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 6px;
+            transition: var(--transition);
+        }
+        .modal-close:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .modal-logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* ===== TOAST ===== */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--bg-card);
+            border: 1px solid var(--accent);
+            border-radius: 12px;
+            padding: 14px 22px;
+            z-index: 2000;
+            color: #fff;
+            font-weight: 500;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            animation: toastIn 0.4s ease-out, toastOut 0.4s ease-in 2.5s forwards;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        @keyframes toastIn {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        @keyframes toastOut {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            text-align: center;
+            padding: 30px 0;
+            border-top: 1px solid var(--border);
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-top: 40px;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .hero {
+                flex-direction: column;
+                padding: 30px 0;
+            }
+            .hero h1 {
+                font-size: 2rem;
+            }
+            .hero-chart {
+                width: 100%;
+            }
+            .navbar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .nav-links {
+                width: 100%;
+                overflow-x: auto;
+                flex-wrap: nowrap;
+            }
+            .community-section {
+                flex-direction: column;
+            }
+        }
+
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+    </style>
 </head>
 <body>
 
-<header>
-  <div class="header-inner">
-    <div class="logo">
-      <span class="logo-flag">🇻🇳</span>
-      <span class="logo-text">Việc<span>Part</span>Time</span>
+    <!-- ===== PARTICLES ===== -->
+    <div id="particles"></div>
+
+    <!-- ===== APP ===== -->
+    <div class="app-container">
+
+        <!-- NAVBAR -->
+        <nav class="navbar">
+            <a href="#" class="logo">
+                <div class="logo-icon">📈</div>
+                Trade<span style="color:var(--accent)">X</span>
+            </a>
+            <div class="nav-links">
+                <a href="#" class="active">Bảng Giá</a>
+                <a href="#">Giao Dịch</a>
+                <a href="#">Phân Tích</a>
+                <a href="#">Học Viện</a>
+                <button class="btn btn-outline" onclick="openAuthModal('login')">Đăng Nhập</button>
+                <button class="btn btn-primary" onclick="openAuthModal('register')">Đăng Ký</button>
+            </div>
+        </nav>
+
+        <!-- HERO -->
+        <section class="hero">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <span class="dot"></span> Thị trường đang mở cửa
+                </div>
+                <h1>Giao Dịch Thông Minh<br>Cùng <span class="highlight">Cộng Đồng</span></h1>
+                <p>Theo dõi biểu đồ real-time, chia sẻ tín hiệu và kết nối với hàng nghìn trader Việt Nam trên một nền tảng duy nhất.</p>
+                <div class="hero-actions">
+                    <button class="btn btn-primary" onclick="openAuthModal('register')">🚀 Bắt Đầu Miễn Phí</button>
+                    <button class="btn btn-outline">▶ Xem Demo</button>
+                </div>
+            </div>
+            <div class="hero-chart">
+                <div class="chart-header">
+                    <div>
+                        <span class="chart-pair">BTC/USDT</span>
+                        <span class="chart-change" id="heroChange">+2.34%</span>
+                    </div>
+                    <span class="chart-price" id="heroPrice">$68,245.50</span>
+                </div>
+                <div class="chart-canvas-wrap">
+                    <canvas id="liveChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- STATS -->
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="stat-label">📊 Khối Lượng 24h</div>
+                <div class="stat-value up" id="statVolume">$2.84T</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">🔥 Bitcoin Dominance</div>
+                <div class="stat-value" style="color:#f7931a">48.7%</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">😱 Fear & Greed</div>
+                <div class="stat-value" style="color:var(--accent-gold)" id="statFear">72 - Tham Lam</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">👥 Trader Online</div>
+                <div class="stat-value up" id="statOnline">12,847</div>
+            </div>
+        </div>
+
+        <!-- COINS TABLE -->
+        <h3 class="section-title">🔥 Top Tiền Mã Hóa</h3>
+        <p class="section-subtitle">Cập nhật giá real-time với animation</p>
+        <div class="coins-table-wrap">
+            <table class="coins-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Tên</th>
+                        <th>Giá</th>
+                        <th>Thay Đổi 24h</th>
+                        <th>Biểu Đồ 7d</th>
+                        <th>Vốn Hóa</th>
+                    </tr>
+                </thead>
+                <tbody id="coinsBody"></tbody>
+            </table>
+        </div>
+
+        <!-- COMMUNITY & AUTH -->
+        <h3 class="section-title">👥 Cộng Đồng Trader</h3>
+        <p class="section-subtitle">Đăng nhập để tham gia thảo luận và nhận tín hiệu</p>
+        <div class="community-section">
+            <!-- Auth Card -->
+            <div class="community-card" id="authCard">
+                <div class="auth-tabs">
+                    <button class="auth-tab active" onclick="switchAuthTab('login')">Đăng Nhập</button>
+                    <button class="auth-tab" onclick="switchAuthTab('register')">Đăng Ký</button>
+                </div>
+                <!-- Login Form -->
+                <form class="auth-form" id="loginForm" onsubmit="handleLogin(event)">
+                    <div class="input-group">
+                        <span class="icon">📧</span>
+                        <input type="email" placeholder="Email của bạn" required id="loginEmail">
+                    </div>
+                    <div class="input-group">
+                        <span class="icon">🔒</span>
+                        <input type="password" placeholder="Mật khẩu" required id="loginPassword">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Đăng Nhập</button>
+                </form>
+                <!-- Register Form -->
+                <form class="auth-form hidden" id="registerForm" onsubmit="handleRegister(event)">
+                    <div class="input-group">
+                        <span class="icon">👤</span>
+                        <input type="text" placeholder="Tên người dùng" required id="regUsername">
+                    </div>
+                    <div class="input-group">
+                        <span class="icon">📧</span>
+                        <input type="email" placeholder="Email của bạn" required id="regEmail">
+                    </div>
+                    <div class="input-group">
+                        <span class="icon">🔒</span>
+                        <input type="password" placeholder="Mật khẩu (tối thiểu 6 ký tự)" required minlength="6" id="regPassword">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Tạo Tài Khoản</button>
+                </form>
+                <div class="auth-divider">hoặc tiếp tục với</div>
+                <button class="social-btn" onclick="socialLogin('Google')">
+                    🟢 Google
+                </button>
+                <button class="social-btn" style="margin-top:8px" onclick="socialLogin('Discord')">
+                    🔵 Discord
+                </button>
+            </div>
+
+            <!-- Community Feed -->
+            <div class="feed-card">
+                <div class="feed-header">
+                    <strong>💬 Bảng Tin Cộng Đồng</strong>
+                    <span style="font-size:0.8rem;color:var(--accent)">● Live</span>
+                </div>
+                <div id="feedContainer">
+                    <!-- Dynamic feed items -->
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="footer">
+            © 2026 TradeX — Nền tảng giao dịch & cộng đồng trading Việt Nam. Không phải lời khuyên đầu tư.
+        </div>
     </div>
-    <div class="search-wrap">
-      <span class="search-icon">🔍</span>
-      <input type="text" id="searchInput" placeholder="Tìm theo chức danh, kỹ năng, công ty..." autocomplete="off">
+
+    <!-- ===== AUTH MODAL ===== -->
+    <div class="modal-overlay hidden" id="authModal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeAuthModal()">✕</button>
+            <div class="modal-logo">
+                <div class="logo-icon" style="margin:0 auto 10px">📈</div>
+                <h3>Trade<span style="color:var(--accent)">X</span></h3>
+            </div>
+            <div class="auth-tabs">
+                <button class="auth-tab active" id="modalTabLogin" onclick="switchModalTab('login')">Đăng Nhập</button>
+                <button class="auth-tab" id="modalTabRegister" onclick="switchModalTab('register')">Đăng Ký</button>
+            </div>
+            <form class="auth-form" id="modalLoginForm" onsubmit="handleLogin(event)">
+                <div class="input-group">
+                    <span class="icon">📧</span>
+                    <input type="email" placeholder="Email của bạn" required id="modalLoginEmail">
+                </div>
+                <div class="input-group">
+                    <span class="icon">🔒</span>
+                    <input type="password" placeholder="Mật khẩu" required id="modalLoginPassword">
+                </div>
+                <button type="submit" class="btn btn-primary">Đăng Nhập</button>
+            </form>
+            <form class="auth-form hidden" id="modalRegisterForm" onsubmit="handleRegister(event)">
+                <div class="input-group">
+                    <span class="icon">👤</span>
+                    <input type="text" placeholder="Tên người dùng" required id="modalRegUsername">
+                </div>
+                <div class="input-group">
+                    <span class="icon">📧</span>
+                    <input type="email" placeholder="Email của bạn" required id="modalRegEmail">
+                </div>
+                <div class="input-group">
+                    <span class="icon">🔒</span>
+                    <input type="password" placeholder="Mật khẩu (tối thiểu 6 ký tự)" required minlength="6" id="modalRegPassword">
+                </div>
+                <button type="submit" class="btn btn-primary">Tạo Tài Khoản</button>
+            </form>
+            <div class="auth-divider">hoặc tiếp tục với</div>
+            <button class="social-btn" onclick="socialLogin('Google')">🟢 Google</button>
+            <button class="social-btn" style="margin-top:8px" onclick="socialLogin('Discord')">🔵 Discord</button>
+        </div>
     </div>
-    <button class="btn-refresh" onclick="loadAllJobs()">⟳ Quét Việc Làm</button>
-  </div>
-</header>
 
-<section class="hero">
-  <h1>Tìm việc làm <span class="hl">Part-Time</span><br>toàn Việt Nam</h1>
-  <p>Tổng hợp việc làm bán thời gian, remote, freelance từ các nguồn uy tín — cập nhật theo thời gian thực</p>
-  <div class="stats-row">
-    <div class="stat-item">
-      <div class="stat-num" id="totalCount">—</div>
-      <div class="stat-label">Việc làm</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-num" id="sourceCount">2</div>
-      <div class="stat-label">Nguồn dữ liệu</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-num">25</div>
-      <div class="stat-label">Tỉnh thành</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-num" id="lastUpdate">—</div>
-      <div class="stat-label">Cập nhật</div>
-    </div>
-  </div>
-</section>
+    <!-- ===== SCRIPTS ===== -->
+    <script>
+        // ============ PARTICLES ============
+        function createParticles() {
+            const container = document.getElementById('particles');
+            const count = 50;
+            for (let i = 0; i < count; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                const size = Math.random() * 4 + 2;
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDuration = Math.random() * 15 + 10 + 's';
+                particle.style.animationDelay = Math.random() * 10 + 's';
+                particle.style.background = Math.random() > 0.5 ? 'var(--accent)' : '#0ea5e9';
+                container.appendChild(particle);
+            }
+        }
+        createParticles();
 
-<div class="filters">
-  <div class="filters-inner">
-    <span class="filter-label">Loại việc:</span>
-    <button class="chip active" data-type="all">Tất cả</button>
-    <button class="chip" data-type="part-time">Part-time</button>
-    <button class="chip" data-type="freelance">Freelance</button>
-    <button class="chip" data-type="contract">Hợp đồng</button>
-    <button class="chip" data-type="remote">Remote</button>
-    <span class="filter-label" style="margin-left:8px">Ngành:</span>
-    <button class="chip" data-industry="all">Tất cả</button>
-    <button class="chip" data-industry="marketing">Marketing</button>
-    <button class="chip" data-industry="dev">Lập trình</button>
-    <button class="chip" data-industry="design">Thiết kế</button>
-    <button class="chip" data-industry="customer">Dịch vụ KH</button>
-    <button class="chip" data-industry="data">Dữ liệu</button>
-    <button class="chip" data-industry="content">Nội dung</button>
-  </div>
-</div>
+        // ============ LIVE CHART (Canvas) ============
+        const canvas = document.getElementById('liveChart');
+        const ctx = canvas.getContext('2d');
+        let chartData = [];
+        const maxPoints = 80;
 
-<main class="main">
-  <div class="province-section">
-    <h3>🗺️ Lọc theo tỉnh / thành phố (sau sáp nhập 2025)</h3>
-    <select class="province-select" id="provinceSelect">
-      <option value="">Tất cả tỉnh / thành</option>
-    </select>
-  </div>
-
-  <div id="errorBanner" class="error-banner" style="display:none">
-    ⚠️ <span id="errorMsg"></span>
-  </div>
-
-  <div class="results-header">
-    <div class="results-count">Hiển thị <strong id="showingCount">0</strong> việc làm</div>
-    <select class="sort-select" id="sortSelect" onchange="applyFilters()">
-      <option value="newest">Mới nhất trước</option>
-      <option value="title">Tên A→Z</option>
-      <option value="company">Công ty A→Z</option>
-    </select>
-  </div>
-
-  <div id="loadingState" class="loading-state">
-    <div class="spinner"></div>
-    <div class="loading-text">Đang quét việc làm<span class="dots"></span></div>
-    <div class="scan-progress"><div class="bar" id="scanBar"></div></div>
-    <div class="scan-percent" id="scanPercent">0%</div>
-  </div>
-
-  <div class="jobs-grid" id="jobsGrid"></div>
-
-  <div id="emptyState" class="empty-state" style="display:none">
-    <div class="icon">🔍</div>
-    <p>Không tìm thấy việc làm phù hợp. Thử tìm kiếm khác.</p>
-  </div>
-</main>
-
-<!-- MODAL -->
-<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
-  <div class="modal" id="modal">
-    <div class="modal-header">
-      <div>
-        <div class="modal-title" id="modalTitle"></div>
-        <div class="modal-company" id="modalCompany"></div>
-      </div>
-      <button class="modal-close" onclick="closeModalDirect()">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="modal-meta" id="modalMeta"></div>
-      <div class="modal-desc" id="modalDesc"></div>
-      <a href="#" id="modalApply" class="modal-apply" target="_blank" rel="noopener">
-        ✦ Ứng tuyển ngay
-      </a>
-    </div>
-  </div>
-</div>
-
-<footer>
-  Dữ liệu từ <a href="https://jobicy.com" target="_blank">Jobicy</a> &amp; <a href="https://remotive.com" target="_blank">Remotive</a> &amp; <a href="https://www.vietnamworks.com" target="_blank">VietnamWorks</a> &amp; <a href="https://topcv.vn" target="_blank">TopCV</a> &amp; <a href="https://careerbuilder.vn" target="_blank">CareerBuilder</a> &amp; <a href="https://mywork.com.vn" target="_blank">MyWork</a> &amp; <a href="https://timviec365.vn" target="_blank">Timviec365</a> &amp; <a href="https://vieclam24h.vn" target="_blank">ViecLam24h</a> &amp; <a href="https://itviec.com" target="_blank">ITviec</a> &amp; <a href="https://jobsgo.vn" target="_blank">JobsGO</a> &amp; <a href="https://topdev.vn" target="_blank">TopDev</a> &amp; <a href="https://vieclamtot.com" target="_blank">ViecLamTot</a> &amp; <a href="https://timviecnhanh.com" target="_blank">TimViecNhanh</a> &amp; <a href="https://123job.vn" target="_blank">123job</a> &amp; <a href="https://www.careerlink.vn" target="_blank">CareerLink</a> &amp; <a href="https://viecoi.vn" target="_blank">Viecoi</a> &amp; <a href="https://www.jobstreet.vn" target="_blank">Jobstreet</a> &amp; <a href="https://hrchannels.com" target="_blank">HRchannels</a> &amp; <a href="https://ybox.vn" target="_blank">Ybox</a> &amp; <a href="https://glints.com/vn" target="_blank">Glints</a> — Made by patrick w love <br>
-  Hiển thị việc làm remote/part-time phù hợp với ứng viên tại Việt Nam
-</footer>
-
-<script>
-// ===== DATA =====
-const PROVINCES = [
-  "An Giang",
-  "Bắc Ninh",
-  "Cà Mau",
-  "Cần Thơ",
-  "Đắk Lắk",
-  "Đà Nẵng",
-  "Đồng Nai",
-  "Đồng Tháp",
-  "Gia Lai",
-  "Hải Phòng",
-  "Hồ Chí Minh",
-  "Hưng Yên",
-  "Khánh Hòa",
-  "Lâm Đồng",
-  "Long An",
-  "Nghệ An",
-  "Ninh Bình",
-  "Phú Thọ",
-  "Quảng Ngãi",
-  "Quảng Ninh",
-  "Quảng Trị",
-  "Thái Nguyên",
-  "Thanh Hóa",
-  "Tiền Giang",
-  "Tuyên Quang"
-];
-
-// Map industry filter → search keywords
-const INDUSTRY_MAP = {
-  marketing: ['marketing','seo','social media','ads','brand','growth','email'],
-  dev: ['developer','engineer','software','frontend','backend','fullstack','react','python','java','php','node'],
-  design: ['design','figma','ui','ux','graphic','creative','illustrator'],
-  customer: ['customer','support','service','cs','helpdesk','care','chat'],
-  data: ['data','analyst','analytics','excel','bi','tableau','reporting'],
-  content: ['content','writer','copywriter','editor','blog','seo writer','social']
-};
-
-let allJobs = [];
-let filteredJobs = [];
-let activeType = 'all';
-let activeIndustry = 'all';
-let activeProvince = null;
-const provinceJobsCache = new Map();
-const EXPECTED_SOURCES = [
-  'jobicy', 'remotive', 'remoteok', 'arbeitnow', 'findwork',
-  'topcv', 'vietnamworks', 'careerbuilder', 'vieclam24h', 'timviec365',
-  'mywork', 'jobsgo', 'vieclamtot', 'timviecnhanh', 'itviec',
-  '123job', 'careerlink', 'viecoi', 'jobstreet', 'hrchannels', 'ybox', 'glints'
-];
-
-const VN_LOCATION_KEYWORDS = [
-  ...PROVINCES,
-  'Hà Nội','Hồ Chí Minh','TP. Hồ Chí Minh','HCM','Đà Nẵng','Cần Thơ','Hải Phòng',
-  'Huế','Thừa Thiên Huế','Bình Dương','Bà Rịa - Vũng Tàu','Vũng Tàu','Việt Nam','Vietnam',
-  'Toàn quốc','Toan quoc','VN','Viet Nam'
-];
-
-const PROVINCE_ALIASES = {
-  'An Giang': ['An Giang','Kiên Giang'],
-  'Bắc Ninh': ['Bắc Ninh','Bắc Giang'],
-  'Cà Mau': ['Cà Mau','Bạc Liêu'],
-  'Cần Thơ': ['Cần Thơ','Can Tho','Sóc Trăng','Hậu Giang'],
-  'Đắk Lắk': ['Đắk Lắk','Phú Yên'],
-  'Đà Nẵng': ['Đà Nẵng','Da Nang','Quảng Nam'],
-  'Đồng Nai': ['Đồng Nai','Bình Phước'],
-  'Đồng Tháp': ['Đồng Tháp','Tiền Giang'],
-  'Gia Lai': ['Gia Lai','Bình Định'],
-  'Hải Phòng': ['Hải Phòng','Hai Phong','Hải Dương'],
-  'Hồ Chí Minh': ['Hồ Chí Minh','Ho Chi Minh','Ho Chi Minh City','TP. Hồ Chí Minh','TP HCM','TP.HCM','TPHCM','HCM','Bình Dương','Bà Rịa - Vũng Tàu','Ba Ria Vung Tau','Vũng Tàu'],
-  'Hưng Yên': ['Hưng Yên','Thái Bình'],
-  'Khánh Hòa': ['Khánh Hòa','Khanh Hoa','Ninh Thuận'],
-  'Lâm Đồng': ['Lâm Đồng','Đắk Nông'],
-  'Long An': ['Long An','Tây Ninh'],
-  'Nghệ An': ['Nghệ An'],
-  'Ninh Bình': ['Ninh Bình','Hà Nam','Nam Định'],
-  'Phú Thọ': ['Phú Thọ','Vĩnh Phúc'],
-  'Quảng Ngãi': ['Quảng Ngãi','Kon Tum'],
-  'Quảng Ninh': ['Quảng Ninh'],
-  'Quảng Trị': ['Quảng Trị','Quảng Bình'],
-  'Thái Nguyên': ['Thái Nguyên','Bắc Kạn'],
-  'Thanh Hóa': ['Thanh Hóa'],
-  'Tiền Giang': ['Tiền Giang','Bến Tre','Trà Vinh'],
-  'Tuyên Quang': ['Tuyên Quang','Hà Giang']
-};
-
-function isNationalLocation(nLoc) {
-  return nLoc.includes('viet nam') || nLoc.includes('vietnam') || nLoc.includes('toan quoc');
-}
-
-function normalizeText(str) {
-  return (str || '')
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^a-z0-9\s]/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
-}
-
-function isPartTimeJob(job) {
-  const type = normalizeText(job.type || '');
-  if (
-    type.includes('part time') ||
-    type.includes('part-time') ||
-    type.includes('parttime') ||
-    type.includes('ban thoi gian') ||
-    type.includes('ban-thoi-gian')
-  ) {
-    return true;
-  }
-  const text = normalizeText(`${job.title || ''} ${job.excerpt || ''}`);
-  return (
-    text.includes('part time') ||
-    text.includes('part-time') ||
-    text.includes('parttime') ||
-    text.includes('ban thoi gian') ||
-    text.includes('ban-thoi-gian')
-  );
-}
-
-function isVietnamLocation(location) {
-  const n = normalizeText(location);
-  if (!n) return false;
-  if (n.includes('anywhere') || n.includes('worldwide')) return false;
-  if (n.includes('remote')) {
-    return n.includes('vietnam') || n.includes('viet nam') || n.includes('toan quoc');
-  }
-  return VN_LOCATION_KEYWORDS.some(k => n.includes(normalizeText(k)));
-}
-
-function provinceMatchesLocation(province, location) {
-  const nLoc = normalizeText(location);
-  if (!nLoc) return false;
-  if (isNationalLocation(nLoc)) return true;
-  const aliases = PROVINCE_ALIASES[province] || [province];
-  return aliases.some(a => nLoc.includes(normalizeText(a)));
-}
-
-// ===== CORS PROXIES (try in order) =====
-const PROXIES = [
-  url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
-  url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
-  url => `https://cors-anywhere.herokuapp.com/${url}`,
-];
-
-async function fetchWithProxy(url) {
-  // Try direct first
-  try {
-    const r = await fetch(url, { signal: AbortSignal.timeout(8000) });
-    if (r.ok) return r.json();
-  } catch(e) {}
-
-  // Try proxies
-  for (const proxy of PROXIES) {
-    try {
-      const r = await fetch(proxy(url), {
-        signal: AbortSignal.timeout(10000),
-        headers: { 'Accept': 'application/json' }
-      });
-      if (r.ok) {
-        const text = await r.text();
-        return JSON.parse(text);
-      }
-    } catch(e) {}
-  }
-  throw new Error('Không thể kết nối nguồn dữ liệu');
-}
-
-// ===== JOBICY (part-time + vietnam + Anywhere) =====
-async function fetchJobicy() {
-  const urls = [
-    'https://jobicy.com/api/v2/remote-jobs?count=50&geo=vietnam&industry=all',
-    'https://jobicy.com/api/v2/remote-jobs?count=50',
-  ];
-
-  let jobs = [];
-  for (const url of urls) {
-    try {
-      const data = await fetchWithProxy(url);
-      if (data && data.jobs && Array.isArray(data.jobs)) {
-        const mapped = data.jobs.map(j => ({
-          id: 'jcy_' + j.id,
-          title: j.jobTitle || '',
-          company: j.companyName || '',
-          logo: j.companyLogo || '',
-          type: (j.jobType || '').toLowerCase(),
-          industry: j.jobIndustry || '',
-          location: j.jobGeo || 'Anywhere',
-          excerpt: j.jobExcerpt || '',
-          description: j.jobDescription || '',
-          url: j.url || '#',
-          date: j.pubDate || '',
-          salaryMin: j.annualSalaryMin || j.salaryMin || '',
-          salaryMax: j.annualSalaryMax || j.salaryMax || '',
-          currency: j.salaryCurrency || 'USD',
-          source: 'jobicy'
-        }));
-        jobs = jobs.concat(mapped);
-      }
-    } catch(e) { console.warn('Jobicy error:', e.message); }
-  }
-  return jobs;
-}
-
-// ===== REMOTIVE =====
-async function fetchRemotive() {
-  const categories = ['', 'software-dev', 'design', 'marketing', 'customer-support', 'data'];
-  let jobs = [];
-
-  for (const cat of categories.slice(0, 3)) {
-    try {
-      const url = `https://remotive.com/api/remote-jobs${cat ? '?category=' + cat : '?limit=100'}`;
-      const data = await fetchWithProxy(url);
-      if (data && data.jobs) {
-        const mapped = data.jobs.slice(0, 30).map(j => ({
-          id: 'rem_' + j.id,
-          title: j.title || '',
-          company: j.company_name || '',
-          logo: j.company_logo || '',
-          type: (j.job_type || 'full-time').toLowerCase().replace(/_/g, '-'),
-          industry: j.category || '',
-          location: j.candidate_required_location || 'Anywhere',
-          excerpt: (j.description || '').replace(/<[^>]+>/g, '').slice(0, 140),
-          description: j.description || '',
-          url: j.url || '#',
-          date: j.publication_date || '',
-          salaryMin: '',
-          salaryMax: '',
-          currency: 'USD',
-          tags: j.tags || [],
-          source: 'remotive'
-        }));
-        jobs = jobs.concat(mapped);
-      }
-    } catch(e) { console.warn('Remotive error:', e.message); }
-    await new Promise(r => setTimeout(r, 300));
-  }
-  return jobs;
-}
-
-// ===== DIRECT VN JOBS (serverless) =====
-async function fetchDirectVNJobs(keyword = 'part time') {
-  if (window.location.protocol === 'file:') {
-    throw new Error('Realtime cần chạy qua server (không chạy bằng file://)');
-  }
-  const apiUrl = `${window.location.origin}/api/jobs?keyword=${encodeURIComponent(keyword)}`;
-  const r = await fetch(apiUrl, { cache: 'no-store' });
-  if (!r.ok) {
-    throw new Error(`Không truy cập được /api/jobs (${r.status})`);
-  }
-  const data = await r.json();
-  return Array.isArray(data.jobs) ? data.jobs : [];
-}
-
-// ===== REMOTEOK (free, no key, CORS open) =====
-async function fetchRemoteOK() {
-  const url = 'https://remoteok.com/api?tag=part-time';
-  const r = await fetch(url, {
-    signal: AbortSignal.timeout(12000),
-    headers: { 'Accept': 'application/json' }
-  });
-  if (!r.ok) throw new Error('RemoteOK lỗi ' + r.status);
-  const data = await r.json();
-  // First element is legal notice, skip
-  return (Array.isArray(data) ? data.slice(1) : []).map(j => ({
-    id: 'rok_' + j.id,
-    title: j.position || '',
-    company: j.company || '',
-    logo: j.company_logo || '',
-    type: 'part-time',
-    industry: (j.tags || []).slice(0,3).join(', '),
-    location: j.location || 'Remote',
-    excerpt: j.description ? j.description.replace(/<[^>]+>/g,'').slice(0,140) : '',
-    description: j.description || '',
-    url: j.url || ('https://remoteok.com/remote-jobs/' + j.slug),
-    date: j.date || '',
-    salaryMin: j.salary_min || '',
-    salaryMax: j.salary_max || '',
-    currency: 'USD',
-    tags: j.tags || [],
-    source: 'remoteok'
-  })).filter(j => j.title);
-}
-
-// ===== ARBEITNOW (free, no key, CORS open) =====
-async function fetchArbeitnow() {
-  const url = 'https://www.arbeitnow.com/api/job-board-api?page=1';
-  const r = await fetch(url, { signal: AbortSignal.timeout(12000) });
-  if (!r.ok) throw new Error('Arbeitnow lỗi ' + r.status);
-  const data = await r.json();
-  return (data.data || []).map(j => ({
-    id: 'arb_' + j.slug,
-    title: j.title || '',
-    company: j.company_name || '',
-    logo: j.company_logo || '',
-    type: j.job_types && j.job_types.length ? j.job_types[0].toLowerCase().replace(/\s/g,'-') : 'part-time',
-    industry: (j.tags || []).slice(0,3).join(', '),
-    location: j.location || 'Remote',
-    excerpt: j.description ? j.description.replace(/<[^>]+>/g,'').slice(0,140) : '',
-    description: j.description || '',
-    url: j.url || '',
-    date: j.created_at ? new Date(j.created_at * 1000).toISOString() : '',
-    salaryMin: '',
-    salaryMax: '',
-    currency: 'USD',
-    tags: j.tags || [],
-    source: 'arbeitnow'
-  })).filter(j => j.title && j.url);
-}
-
-// ===== FINDWORK (free, no key) =====
-async function fetchFindWork() {
-  const url = 'https://findwork.dev/api/jobs/?employment_type=part_time&order_by=-date';
-  const r = await fetch(url, { signal: AbortSignal.timeout(12000) });
-  if (!r.ok) throw new Error('FindWork lỗi ' + r.status);
-  const data = await r.json();
-  return (data.results || []).map(j => ({
-    id: 'fw_' + j.id,
-    title: j.role || '',
-    company: j.company_name || '',
-    logo: j.company_logo || '',
-    type: 'part-time',
-    industry: (j.keywords || []).slice(0,3).join(', '),
-    location: j.location || 'Remote',
-    excerpt: j.text ? j.text.replace(/<[^>]+>/g,'').slice(0,140) : '',
-    description: j.text || '',
-    url: j.url || '',
-    date: j.date_posted || '',
-    salaryMin: '',
-    salaryMax: '',
-    currency: 'USD',
-    tags: j.keywords || [],
-    source: 'findwork'
-  })).filter(j => j.title && j.url);
-}
-
-// ===== JOBICY VIETNAM mở rộng =====
-async function fetchJobicyVN() {
-  const urls = [
-    'https://jobicy.com/api/v2/remote-jobs?count=100&geo=vietnam',
-    'https://jobicy.com/api/v2/remote-jobs?count=100&tag=part-time',
-    'https://jobicy.com/api/v2/remote-jobs?count=100',
-  ];
-  let jobs = [];
-  for (const url of urls) {
-    try {
-      const data = await fetchWithProxy(url);
-      if (data && data.jobs) {
-        jobs = jobs.concat(data.jobs.map(j => ({
-          id: 'jcy2_' + j.id,
-          title: j.jobTitle || '',
-          company: j.companyName || '',
-          logo: j.companyLogo || '',
-          type: (j.jobType || 'part-time').toLowerCase(),
-          industry: j.jobIndustry || '',
-          location: j.jobGeo || 'Anywhere',
-          excerpt: j.jobExcerpt || '',
-          description: j.jobDescription || '',
-          url: j.url || '#',
-          date: j.pubDate || '',
-          salaryMin: j.annualSalaryMin || '',
-          salaryMax: j.annualSalaryMax || '',
-          currency: j.salaryCurrency || 'USD',
-          source: 'jobicy'
-        })));
-      }
-    } catch(e) {}
-    await new Promise(r => setTimeout(r, 200));
-  }
-  return jobs;
-}
-
-// ===== TOPCV QUA ANTHROPIC API + WEB SEARCH =====
-async function fetchTopCVviaAI() {
-  const response = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'anthropic-dangerous-direct-browser-access': 'true' },
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 4000,
-      tools: [{ type: 'web_search_20250305', name: 'web_search' }],
-      system: `Bạn là API lấy dữ liệu việc làm part-time tại Việt Nam từ topcv.vn.
-Chỉ lấy việc làm TẠI VIỆT NAM (Hà Nội, TP.HCM, Đà Nẵng, các tỉnh thành VN). KHÔNG lấy job remote quốc tế, không lấy job nước ngoài.
-Trả về JSON thuần túy không markdown không giải thích:
-{"jobs":[{"title":"","company":"","location":"tên tỉnh/thành VN","salary":"","url":"link topcv.vn","date":"YYYY-MM-DD","tags":[],"excerpt":""}]}`,
-      messages: [{
-        role: 'user',
-        content: 'Tìm trên topcv.vn: việc làm part-time bán thời gian tại Việt Nam đang tuyển 2025. Lấy 30 job thật, địa điểm phải là tỉnh thành Việt Nam (HCM, Hà Nội, Đà Nẵng...). Trả về JSON.'
-      }]
-    })
-  });
-  if (!response.ok) throw new Error('API lỗi ' + response.status);
-  const data = await response.json();
-  const fullText = (data.content || []).map(b => b.type === 'text' ? b.text : '').join('');
-  const jsonMatch = fullText.match(/\{[\s\S]*"jobs"[\s\S]*\}/);
-  if (!jsonMatch) throw new Error('Không parse được JSON');
-  const parsed = JSON.parse(jsonMatch[0]);
-  return (parsed.jobs || []).map((j, i) => ({
-    id: 'topcv_ai_' + i + '_' + Date.now(),
-    title: j.title || '',
-    company: j.company || '',
-    logo: '',
-    type: 'part-time',
-    industry: (j.tags || []).join(', '),
-    location: j.location || 'Việt Nam',
-    excerpt: j.excerpt || j.salary || '',
-    description: `<p><strong>Lương:</strong> ${j.salary || 'Thỏa thuận'}</p><p>${j.excerpt || ''}</p>`,
-    url: j.url || 'https://www.topcv.vn/tim-viec-lam-part-time',
-    date: j.date || new Date().toISOString().split('T')[0],
-    salaryMin: '', salaryMax: '', currency: 'VND',
-    tags: j.tags || [],
-    source: 'topcv'
-  })).filter(j => j.title);
-}
-
-// ===== VIETNAMWORKS / ITVIEC / JOBSGO QUA ANTHROPIC API =====
-async function fetchVietnamWorksViaAI() {
-  const response = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'anthropic-dangerous-direct-browser-access': 'true' },
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 4000,
-      tools: [{ type: 'web_search_20250305', name: 'web_search' }],
-      system: `Bạn là API lấy dữ liệu việc làm part-time tại Việt Nam từ nhiều trang tuyển dụng VN.
-Chỉ lấy việc làm TẠI VIỆT NAM (địa điểm phải là tỉnh thành Việt Nam). KHÔNG lấy job remote quốc tế, KHÔNG lấy job ở nước ngoài.
-Trả về JSON thuần túy không markdown không giải thích:
-{"jobs":[{"title":"","company":"","location":"tên tỉnh/thành VN","salary":"","source_site":"vietnamworks hoặc itviec hoặc jobsgo hoặc careerbuilder","url":"","date":"YYYY-MM-DD","tags":[],"excerpt":""}]}`,
-      messages: [{
-        role: 'user',
-        content: 'Tìm trên vietnamworks.com, itviec.com, jobsgo.vn, careerbuilder.vn: việc làm part-time bán thời gian tại Việt Nam đang tuyển 2025. Địa điểm phải ở VN (HCM, Hà Nội, Đà Nẵng, Bình Dương...). Lấy 30 job thật. Trả về JSON.'
-      }]
-    })
-  });
-  if (!response.ok) throw new Error('API lỗi ' + response.status);
-  const data = await response.json();
-  const fullText = (data.content || []).map(b => b.type === 'text' ? b.text : '').join('');
-  const jsonMatch = fullText.match(/\{[\s\S]*"jobs"[\s\S]*\}/);
-  if (!jsonMatch) throw new Error('Không parse được JSON');
-  const parsed = JSON.parse(jsonMatch[0]);
-  const srcKey = s => ['vietnamworks','itviec','jobsgo','careerbuilder'].find(k => (s||'').toLowerCase().includes(k)) || 'vietnamworks';
-  return (parsed.jobs || []).map((j, i) => {
-    const src = srcKey(j.source_site);
-    return {
-      id: src + '_ai_' + i + '_' + Date.now(),
-      title: j.title || '',
-      company: j.company || '',
-      logo: '',
-      type: 'part-time',
-      industry: (j.tags || []).join(', '),
-      location: j.location || 'Việt Nam',
-      excerpt: j.excerpt || j.salary || '',
-      description: `<p><strong>Lương:</strong> ${j.salary || 'Thỏa thuận'}</p><p>${j.excerpt || ''}</p>`,
-      url: j.url || '#',
-      date: j.date || new Date().toISOString().split('T')[0],
-      salaryMin: '', salaryMax: '', currency: 'VND',
-      tags: j.tags || [],
-      source: src
-    };
-  }).filter(j => j.title);
-}
-
-
-async function fetchTopCV(page = 1) {
-  const baseUrl = `https://www.topcv.vn/tim-viec-lam-part-time?page=${page}`;
-  const proxies = [
-    `https://corsproxy.io/?${encodeURIComponent(baseUrl)}`,
-    `https://api.allorigins.win/raw?url=${encodeURIComponent(baseUrl)}`,
-  ];
-
-  let html = null;
-  for (const proxy of proxies) {
-    try {
-      const r = await fetch(proxy, { signal: AbortSignal.timeout(12000) });
-      if (r.ok) { html = await r.text(); break; }
-    } catch(e) {}
-  }
-  if (!html) throw new Error('Không thể lấy dữ liệu từ TopCV');
-
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(html, 'text/html');
-  const jobs = [];
-
-  // TopCV job card selectors
-  const cards = doc.querySelectorAll('.job-item-search-result, .job-item, [data-job-id], .job-item-2, .job-item-search-result-main');
-
-  cards.forEach((card, i) => {
-    try {
-      // Title & URL
-      const titleEl = card.querySelector('.title a, h3 a, .job-title a, a.title, .job-item-title a, h2 a');
-      const title = titleEl ? titleEl.textContent.trim() : '';
-      let url = titleEl ? (titleEl.getAttribute('href') || '') : '';
-      if (url && !url.startsWith('http')) url = 'https://www.topcv.vn' + url;
-
-      // Company
-      const companyEl = card.querySelector('.company, .company-name, .label-company, .employer, a[href*="cong-ty"], .company-title');
-      const company = companyEl ? companyEl.textContent.trim() : '';
-
-      // Location
-      const locEl = card.querySelector('.address, .location, .job-address, [class*="location"], [class*="address"]');
-      const location = locEl ? locEl.textContent.trim() : 'Việt Nam';
-
-      // Salary
-      const salEl = card.querySelector('.salary, .job-salary, [class*="salary"], .label-salary');
-      const salaryText = salEl ? salEl.textContent.trim() : '';
-
-      // Logo
-      const imgEl = card.querySelector('img');
-      const logo = imgEl ? (imgEl.getAttribute('src') || imgEl.getAttribute('data-src') || '') : '';
-
-      // Date
-      const dateEl = card.querySelector('.time, .deadline, [class*="date"], [class*="time"]');
-      const dateText = dateEl ? dateEl.textContent.trim() : '';
-
-      // Excerpt / tags
-      const tagEls = card.querySelectorAll('.tag, .skill, [class*="tag"], [class*="skill"]');
-      const tags = Array.from(tagEls).map(t => t.textContent.trim()).filter(Boolean).slice(0, 5);
-
-      if (!title || !url) return;
-
-      jobs.push({
-        id: 'topcv_' + i + '_' + Date.now(),
-        title,
-        company: company || 'Không rõ',
-        logo: logo.startsWith('http') ? logo : '',
-        type: 'part-time',
-        industry: tags.join(', '),
-        location: location || 'Việt Nam',
-        excerpt: tags.join(' · ') || salaryText,
-        description: `<p><strong>Lương:</strong> ${salaryText || 'Thỏa thuận'}</p><p><strong>Kỹ năng:</strong> ${tags.join(', ') || '—'}</p>`,
-        url,
-        date: parseDateVN(dateText),
-        salaryMin: '',
-        salaryMax: '',
-        currency: 'VND',
-        tags,
-        source: 'topcv'
-      });
-    } catch(e) {}
-  });
-
-  // Fallback: try JSON-LD or script data embedded in page
-  if (jobs.length === 0) {
-    doc.querySelectorAll('script[type="application/ld+json"]').forEach(s => {
-      try {
-        const d = JSON.parse(s.textContent);
-        const items = Array.isArray(d) ? d : (d['@graph'] || [d]);
-        items.forEach((item, i) => {
-          if (item['@type'] === 'JobPosting') {
-            jobs.push({
-              id: 'topcv_ld_' + i,
-              title: item.title || '',
-              company: (item.hiringOrganization && item.hiringOrganization.name) || '',
-              logo: (item.hiringOrganization && item.hiringOrganization.logo) || '',
-              type: 'part-time',
-              industry: '',
-              location: (item.jobLocation && item.jobLocation.address && (item.jobLocation.address.addressLocality || item.jobLocation.address.addressRegion)) || 'Việt Nam',
-              excerpt: item.description ? item.description.replace(/<[^>]+>/g,'').slice(0,140) : '',
-              description: item.description || '',
-              url: item.url || '#',
-              date: item.datePosted || '',
-              salaryMin: (item.baseSalary && item.baseSalary.value && item.baseSalary.value.minValue) || '',
-              salaryMax: (item.baseSalary && item.baseSalary.value && item.baseSalary.value.maxValue) || '',
-              currency: 'VND',
-              source: 'topcv'
-            });
-          }
+        function resizeCanvas() {
+            const rect = canvas.parentElement.getBoundingClientRect();
+            canvas.width = rect.width;
+            canvas.height = 220;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', () => {
+            resizeCanvas();
+            drawChart();
         });
-      } catch(e) {}
-    });
-  }
 
-  return jobs;
-}
+        // Seed initial data
+        let basePrice = 68245.50;
+        for (let i = 0; i < maxPoints; i++) {
+            basePrice += (Math.random() - 0.48) * 300;
+            chartData.push(basePrice);
+        }
 
-async function fetchTopCVAllPages() {
-  let allTopCVJobs = [];
-  const MAX_PAGES = 5;
-  for (let page = 1; page <= MAX_PAGES; page++) {
-    try {
-      const jobs = await fetchTopCV(page);
-      if (!jobs || jobs.length === 0) break;
-      allTopCVJobs = allTopCVJobs.concat(jobs);
-      // Merge and render progressively
-      mergeJobs(jobs);
-      applyFilters();
-      if (jobs.length < 10) break; // last page
-    } catch(e) {
-      console.warn('TopCV page', page, 'error:', e.message);
-      break;
-    }
-    await new Promise(r => setTimeout(r, 400));
-  }
-  return allTopCVJobs;
-}
+        function drawChart() {
+            const w = canvas.width;
+            const h = canvas.height;
+            ctx.clearRect(0, 0, w, h);
 
-function parseDateVN(str) {
-  if (!str) return '';
-  // "Còn X ngày" or "Hết hạn DD/MM/YYYY" or "DD/MM/YYYY"
-  const match = str.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
-  if (match) return `${match[3]}-${match[2].padStart(2,'0')}-${match[1].padStart(2,'0')}`;
-  const daysMatch = str.match(/(\d+)\s*ngày/);
-  if (daysMatch) {
-    const d = new Date();
-    d.setDate(d.getDate() + parseInt(daysMatch[1]));
-    return d.toISOString().split('T')[0];
-  }
-  return new Date().toISOString().split('T')[0];
-}
+            if (chartData.length < 2) return;
 
-function buildProvinceKeywords(province) {
-  const aliases = PROVINCE_ALIASES[province] || [province];
-  const keywords = [];
-  aliases.forEach(a => {
-    keywords.push(`part time ${a}`);
-    keywords.push(`ban thoi gian ${a}`);
-    keywords.push(`bán thời gian ${a}`);
-  });
-  return keywords.join('|');
-}
+            const min = Math.min(...chartData) * 0.998;
+            const max = Math.max(...chartData) * 1.002;
+            const range = max - min || 1;
 
-function mergeJobs(newJobs) {
-  if (!newJobs || !newJobs.length) return;
-  allJobs = dedup(allJobs.concat(newJobs));
-  document.getElementById('totalCount').textContent = allJobs.length + '+';
-  document.getElementById('sourceCount').textContent = EXPECTED_SOURCES.length;
-}
+            const stepX = w / (chartData.length - 1);
 
-async function fetchProvinceJobs(province) {
-  if (!province || provinceJobsCache.has(province)) return;
-  const keyword = buildProvinceKeywords(province);
-  const jobs = await fetchDirectVNJobs(keyword);
-  provinceJobsCache.set(province, true);
-  mergeJobs(jobs);
-}
+            // Gradient fill
+            const gradient = ctx.createLinearGradient(0, 0, 0, h);
+            gradient.addColorStop(0, 'rgba(0, 212, 170, 0.25)');
+            gradient.addColorStop(1, 'rgba(0, 212, 170, 0.0)');
 
+            // Draw fill
+            ctx.beginPath();
+            ctx.moveTo(0, h);
+            chartData.forEach((val, i) => {
+                const x = i * stepX;
+                const y = h - ((val - min) / range) * (h - 20);
+                ctx.lineTo(x, y);
+            });
+            ctx.lineTo(w, h);
+            ctx.closePath();
+            ctx.fillStyle = gradient;
+            ctx.fill();
 
-// ===== DEDUP =====
-function dedup(jobs) {
-  const seen = new Set();
-  return jobs.filter(j => {
-    const key = (j.title + j.company).toLowerCase().replace(/\s/g, '');
-    if (seen.has(key)) return false;
-    seen.add(key);
-    return true;
-  });
-}
+            // Draw line
+            ctx.beginPath();
+            chartData.forEach((val, i) => {
+                const x = i * stepX;
+                const y = h - ((val - min) / range) * (h - 20);
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            });
+            ctx.strokeStyle = '#00d4aa';
+            ctx.lineWidth = 2.5;
+            ctx.shadowColor = 'rgba(0, 212, 170, 0.5)';
+            ctx.shadowBlur = 12;
+            ctx.stroke();
+            ctx.shadowBlur = 0;
 
-// ===== FORMAT DATE =====
-function timeAgo(dateStr) {
-  if (!dateStr) return '';
-  try {
-    const d = new Date(dateStr);
-    return d.toLocaleDateString('vi-VN');
-  } catch { return ''; }
-}
+            // Draw glow dot at end
+            const lastX = (chartData.length - 1) * stepX;
+            const lastY = h - ((chartData[chartData.length - 1] - min) / range) * (h - 20);
+            ctx.beginPath();
+            ctx.arc(lastX, lastY, 6, 0, Math.PI * 2);
+            ctx.fillStyle = '#00d4aa';
+            ctx.shadowColor = 'rgba(0, 212, 170, 0.8)';
+            ctx.shadowBlur = 20;
+            ctx.fill();
+            ctx.shadowBlur = 0;
+        }
 
-// ===== TYPE LABEL =====
-function typeLabel(type) {
-  const m = {'part-time':'Part-time','freelance':'Freelance','contract':'Hợp đồng','full-time':'Full-time','internship':'Thực tập','remote':'Remote'};
-  return m[type] || type;
-}
+        function updateChart() {
+            const last = chartData[chartData.length - 1];
+            const change = (Math.random() - 0.48) * 400;
+            const newVal = Math.max(last + change, last * 0.95);
+            chartData.push(newVal);
+            if (chartData.length > maxPoints) chartData.shift();
 
-function typeClass(type) {
-  const m = {'part-time':'type-part','freelance':'type-freelance','contract':'type-contract','remote':'type-remote'};
-  return m[type] || '';
-}
+            // Update hero price display
+            const price = newVal;
+            const oldPrice = parseFloat(document.getElementById('heroPrice').textContent.replace(/[$,]/g, ''));
+            document.getElementById('heroPrice').textContent = '$' + price.toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+            const pctChange = ((price - 68000) / 68000 * 100);
+            const changeEl = document.getElementById('heroChange');
+            changeEl.textContent = (pctChange >= 0 ? '+' : '') + pctChange.toFixed(2) + '%';
+            changeEl.style.color = pctChange >= 0 ? 'var(--accent)' : 'var(--accent-red)';
+            changeEl.style.background = pctChange >= 0 ?
+                'rgba(0,212,170,0.1)' : 'rgba(239,68,68,0.1)';
 
-// ===== LOGO FALLBACK =====
-function logoEl(job) {
-  if (job.logo) {
-    return `<img src="${job.logo}" alt="${job.company}" onerror="this.parentElement.innerHTML='${job.company.charAt(0).toUpperCase()}'">`;
-  }
-  return job.company.charAt(0).toUpperCase();
-}
+            drawChart();
+        }
 
-// ===== SOURCE BADGE =====
-function sourceBadge(source) {
-  const m = {
-    jobicy:'source-jobicy',
-    remotive:'source-remotive',
-    remoteok:'source-remotive',
-    arbeitnow:'source-remotive',
-    findwork:'source-remotive',
-    topcv:'source-topcv',
-    vietnamworks:'source-vnboard',
-    itviec:'source-vnboard',
-    jobsgo:'source-vnboard',
-    careerbuilder:'source-vnboard',
-    careerbuilder:'source-vnboard',
-    vieclam24h:'source-vnboard',
-    timviec365:'source-vnboard',
-    mywork:'source-vnboard',
-    jobsgo:'source-vnboard',
-    vieclamtot:'source-vnboard',
-    timviecnhanh:'source-vnboard',
-    itviec:'source-vnboard',
-    '123job':'source-vnboard',
-    careerlink:'source-vnboard',
-    viecoi:'source-vnboard',
-    jobstreet:'source-vnboard',
-    hrchannels:'source-vnboard',
-    ybox:'source-vnboard',
-    glints:'source-vnboard'
-  };
-  const labels = {
-    jobicy:'Jobicy',
-    remotive:'Remotive',
-    remoteok:'RemoteOK',
-    arbeitnow:'Arbeitnow',
-    findwork:'FindWork',
-    topcv:'TopCV',
-    vietnamworks:'VietnamWorks',
-    itviec:'ITviec',
-    jobsgo:'JobsGO',
-    careerbuilder:'CareerBuilder',
-    careerbuilder:'CareerBuilder',
-    vieclam24h:'ViecLam24h',
-    timviec365:'Timviec365',
-    mywork:'MyWork',
-    jobsgo:'JobsGO',
-    vieclamtot:'ViecLamTot',
-    timviecnhanh:'TimViecNhanh',
-    itviec:'ITviec',
-    '123job':'123job',
-    careerlink:'CareerLink',
-    viecoi:'Viecoi',
-    jobstreet:'Jobstreet',
-    hrchannels:'HRchannels',
-    ybox:'Ybox',
-    glints:'Glints'
-  };
-  return `<span class="source-badge ${m[source]||''}">${labels[source]||source}</span>`;
-}
+        // Initial draw
+        drawChart();
 
-// ===== RENDER CARD =====
-function renderCard(job, idx) {
-  const card = document.createElement('a');
-  card.className = 'job-card';
-  card.href = '#';
-  card.style.animationDelay = (idx * 40) + 'ms';
-  card.onclick = (e) => { e.preventDefault(); openModal(job); };
+        // Animate chart
+        setInterval(updateChart, 1500);
 
-  const tags = [job.type].filter(Boolean);
-  const isRemote = job.location.toLowerCase().includes('anywhere') || job.location.toLowerCase().includes('remote') || job.location.toLowerCase().includes('worldwide');
-  if (isRemote && !tags.includes('remote')) tags.push('remote');
+        // ============ COINS DATA ============
+        const coinsData = [
+            { id: 1, name: 'Bitcoin', symbol: 'BTC', iconClass: 'btc', price: 68245.50, change: 2.34, marketCap: '1.34T',
+                color: '#f7931a' },
+            { id: 2, name: 'Ethereum', symbol: 'ETH', iconClass: 'eth', price: 3420.18, change: -1.22, marketCap: '410B',
+                color: '#627eea' },
+            { id: 3, name: 'Solana', symbol: 'SOL', iconClass: 'sol', price: 187.65, change: 5.67, marketCap: '82B',
+                color: '#9945ff' },
+            { id: 4, name: 'BNB', symbol: 'BNB', iconClass: 'bnb', price: 612.30, change: 0.89, marketCap: '94B',
+                color: '#f0b90b' },
+            { id: 5, name: 'Ripple', symbol: 'XRP', iconClass: 'btc', price: 0.6234, change: -0.45, marketCap: '34B',
+                color: '#fff' },
+        ];
 
-  const salary = job.salaryMin
-    ? (job.currency === 'VND'
-        ? `${parseInt(job.salaryMin).toLocaleString('vi')}₫`
-        : `$${parseInt(job.salaryMin).toLocaleString()}`)
-    : '';
+        function renderCoinsTable() {
+            const tbody = document.getElementById('coinsBody');
+            tbody.innerHTML = coinsData.map((coin, idx) => {
+                const iconLetter = coin.symbol.charAt(0);
+                const isUp = coin.change >= 0;
+                const miniChartId = 'miniChart' + coin.id;
+                return `
+                        <tr>
+                            <td>${idx + 1}</td>
+                            <td>
+                                <div class="coin-info">
+                                    <div class="coin-icon ${coin.iconClass}">${iconLetter}</div>
+                                    <div>
+                                        <div class="coin-name">${coin.name}</div>
+                                        <div class="coin-symbol">${coin.symbol}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="price-cell" id="price${coin.id}">$${coin.price.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2})}</td>
+                            <td><span class="change-cell ${isUp ? 'up' : 'down'}" id="change${coin.id}">${isUp ? '+' : ''}${coin.change.toFixed(2)}%</span></td>
+                            <td><canvas class="chart-mini" id="${miniChartId}"></canvas></td>
+                            <td>$${coin.marketCap}</td>
+                        </tr>
+                    `;
+            }).join('');
 
-  card.innerHTML = `
-    <div class="card-top">
-      <div class="company-logo">${logoEl(job)}</div>
-      <div class="card-meta">
-        <div class="company-name">${job.company}</div>
-        <div class="job-title">${job.title}</div>
-      </div>
-      ${sourceBadge(job.source)}
-    </div>
-    <div class="card-tags">
-      ${tags.map(t => `<span class="tag ${typeClass(t)}">${typeLabel(t)}</span>`).join('')}
-      ${job.industry ? `<span class="tag">${job.industry}</span>` : ''}
-      ${salary ? `<span class="tag" style="color:var(--gold);border-color:rgba(245,197,24,.3);background:rgba(245,197,24,.06)">${salary}</span>` : ''}
-    </div>
-    <div class="card-footer">
-      <div class="job-location">📍 ${job.location}</div>
-      <div class="job-date">${timeAgo(job.date)}</div>
-    </div>
-  `;
-  return card;
-}
+            // Draw mini charts
+            coinsData.forEach(coin => {
+                drawMiniChart('miniChart' + coin.id, coin.change);
+            });
+        }
 
-// ===== OPEN MODAL =====
-function openModal(job) {
-  document.getElementById('modalTitle').textContent = job.title;
-  document.getElementById('modalCompany').textContent = '🏢 ' + job.company;
-  document.getElementById('modalApply').href = job.url;
+        function drawMiniChart(canvasId, trend) {
+            const c = document.getElementById(canvasId);
+            if (!c) return;
+            const w = 80;
+            const h = 36;
+            c.width = w;
+            c.height = h;
+            const cx = c.getContext('2d');
 
-  const meta = document.getElementById('modalMeta');
-  const tags = [];
-  if (job.type) tags.push(`<span class="tag ${typeClass(job.type)}">${typeLabel(job.type)}</span>`);
-  if (job.location) tags.push(`<span class="tag">📍 ${job.location}</span>`);
-  if (job.industry) tags.push(`<span class="tag">${job.industry}</span>`);
-  if (job.date) tags.push(`<span class="tag">🕐 ${timeAgo(job.date)}</span>`);
-  if (job.salaryMin && job.salaryMax) {
-    const fmt = job.currency === 'VND'
-      ? `${parseInt(job.salaryMin).toLocaleString('vi')} – ${parseInt(job.salaryMax).toLocaleString('vi')} ₫`
-      : `$${parseInt(job.salaryMin).toLocaleString()} – $${parseInt(job.salaryMax).toLocaleString()}`;
-    tags.push(`<span class="tag" style="color:var(--gold);border-color:rgba(245,197,24,.3);background:rgba(245,197,24,.06)">💰 ${fmt}</span>`);
-  }
-  meta.innerHTML = tags.join('');
+            const points = [];
+            let val = 50;
+            for (let i = 0; i < 20; i++) {
+                val += (Math.random() - 0.5) * 10 + (trend > 0 ? 0.6 : -0.6);
+                val = Math.max(5, Math.min(95, val));
+                points.push(val);
+            }
 
-  const desc = document.getElementById('modalDesc');
-  const html = job.description || job.excerpt || '<p>Xem chi tiết tại link ứng tuyển.</p>';
-  // Sanitize and limit
-  const div = document.createElement('div');
-  div.innerHTML = html;
-  // Remove scripts
-  div.querySelectorAll('script,style,iframe').forEach(el => el.remove());
-  desc.innerHTML = div.innerHTML;
+            const stepX = w / (points.length - 1);
+            const color = trend >= 0 ? '#00d4aa' : '#ef4444';
 
-  document.getElementById('modalOverlay').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
+            cx.beginPath();
+            points.forEach((v, i) => {
+                const x = i * stepX;
+                const y = h - (v / 100) * h;
+                if (i === 0) cx.moveTo(x, y);
+                else cx.lineTo(x, y);
+            });
+            cx.strokeStyle = color;
+            cx.lineWidth = 1.5;
+            cx.stroke();
+        }
 
-function closeModal(e) {
-  if (e.target === document.getElementById('modalOverlay')) closeModalDirect();
-}
+        function animateCoinPrices() {
+            coinsData.forEach(coin => {
+                const fluctuation = (Math.random() - 0.5) * coin.price * 0.002;
+                coin.price += fluctuation;
+                const changeFluctuation = (Math.random() - 0.5) * 0.15;
+                coin.change += changeFluctuation;
 
-function closeModalDirect() {
-  document.getElementById('modalOverlay').classList.remove('open');
-  document.body.style.overflow = '';
-}
+                const priceEl = document.getElementById('price' + coin.id);
+                const changeEl = document.getElementById('change' + coin.id);
+                if (priceEl) {
+                    priceEl.textContent = '$' + coin.price.toLocaleString('en-US', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    });
+                    priceEl.style.transform = 'scale(1.03)';
+                    setTimeout(() => priceEl.style.transform = 'scale(1)', 150);
+                }
+                if (changeEl) {
+                    const isUp = coin.change >= 0;
+                    changeEl.textContent = (isUp ? '+' : '') + coin.change.toFixed(2) + '%';
+                    changeEl.className = 'change-cell ' + (isUp ? 'up' : 'down');
+                }
+            });
+        }
 
-// ===== FILTERS =====
-function applyFilters() {
-  const q = document.getElementById('searchInput').value.toLowerCase().trim();
-  const sort = document.getElementById('sortSelect').value;
+        renderCoinsTable();
+        setInterval(animateCoinPrices, 3000);
 
-  let jobs = [...allJobs];
+        // ============ COMMUNITY FEED ============
+        const feedMessages = [
+            { name: 'TraderMinh', avatar: '#f7931a', initials: 'TM', time: '2 phút trước',
+                text: 'BTC vừa phá kháng cự $68K! Tôi đã long từ $67.2K, target $70K.', tag: 'buy', tagText: 'MUA' },
+            { name: 'CryptoLan', avatar: '#627eea', initials: 'CL', time: '5 phút trước',
+                text: 'ETH đang tích lũy đẹp quanh $3,400. Chờ breakout lên $3,600.', tag: 'buy', tagText: 'MUA' },
+            { name: 'SolanaKing', avatar: '#9945ff', initials: 'SK', time: '8 phút trước',
+                text: 'SOL +5.6% hôm nay! Hệ sinh thái Solana đang cực hot.', tag: 'buy', tagText: 'MUA' },
+            { name: 'RiskManager', avatar: '#ef4444', initials: 'RM', time: '12 phút trước',
+                text: 'Chốt lời 30% XRP. Chờ pullback về $0.58 để vào lại.', tag: 'sell', tagText: 'BÁN' },
+            { name: 'NewbieTrader', avatar: '#f59e0b', initials: 'NT', time: '15 phút trước',
+                text: 'Mọi người nghĩ sao về BNB? Có nên hold qua tuần không ạ?', tag: 'buy', tagText: 'HỎI' },
+        ];
 
-  // Type filter
-  if (activeType !== 'all') {
-    if (activeType === 'remote') {
-      jobs = jobs.filter(j => (j.location||'').toLowerCase().includes('remote') || j.type === 'remote');
-    } else {
-      jobs = jobs.filter(j => (j.type||'').includes(activeType));
-    }
-  }
+        function renderFeed() {
+            const container = document.getElementById('feedContainer');
+            container.innerHTML = feedMessages.map(msg => `
+                    <div class="feed-item">
+                        <div class="feed-avatar" style="background:${msg.avatar}22;color:${msg.avatar}">${msg.initials}</div>
+                        <div class="feed-content">
+                            <span class="feed-name">${msg.name}</span>
+                            <span class="feed-time">· ${msg.time}</span>
+                            <div class="feed-text">${msg.text}</div>
+                            <span class="feed-tag ${msg.tag}">${msg.tagText}</span>
+                        </div>
+                    </div>
+                `).join('');
+        }
+        renderFeed();
 
-  // Industry filter
-  if (activeIndustry !== 'all') {
-    const kws = INDUSTRY_MAP[activeIndustry] || [];
-    jobs = jobs.filter(j => {
-      const text = (j.title + ' ' + j.industry + ' ' + (j.tags||[]).join(' ')).toLowerCase();
-      return kws.some(kw => text.includes(kw));
-    });
-  }
+        // Simulate live feed
+        setInterval(() => {
+            const fakeNames = ['TraderTín', 'HolderVN', 'PumpMaster', 'ChartGuy', 'CoinHunter'];
+            const fakeTexts = [
+                'Vừa bắt được con sóng SOL, lời 15% rồi! 🚀',
+                'Ai đang hold BTC qua đêm không?',
+                'Phân tích kỹ thuật: BTC đang tạo Bull Flag trên khung 4H.',
+                'Cẩn thận! Volume đang giảm, có thể sắp có dump.',
+                'Mình mới vào trade, xin mn chỉ giáo thêm về RSI ạ.',
+            ];
+            const name = fakeNames[Math.floor(Math.random() * fakeNames.length)];
+            const text = fakeTexts[Math.floor(Math.random() * fakeTexts.length)];
+            const isBuy = Math.random() > 0.4;
+            const colors = ['#f7931a', '#627eea', '#9945ff', '#f59e0b', '#00d4aa'];
+            const color = colors[Math.floor(Math.random() * colors.length)];
 
-  // Province filter
-  if (activeProvince) {
-    jobs = jobs.filter(j => provinceMatchesLocation(activeProvince, j.location));
-  }
+            const newMsg = {
+                name,
+                avatar: color,
+                initials: name.slice(0, 2).toUpperCase(),
+                time: 'Vừa xong',
+                text,
+                tag: isBuy ? 'buy' : 'sell',
+                tagText: isBuy ? 'MUA' : 'BÁN'
+            };
 
-  // Search query
-  if (q) {
-    jobs = jobs.filter(j => {
-      const text = (j.title + ' ' + j.company + ' ' + j.industry + ' ' + j.excerpt).toLowerCase();
-      return text.includes(q);
-    });
-  }
+            feedMessages.unshift(newMsg);
+            if (feedMessages.length > 15) feedMessages.pop();
+            renderFeed();
 
-  // Sort
-  if (sort === 'newest') {
-    jobs.sort((a, b) => new Date(b.date) - new Date(a.date));
-  } else if (sort === 'title') {
-    jobs.sort((a, b) => a.title.localeCompare(b.title));
-  } else if (sort === 'company') {
-    jobs.sort((a, b) => a.company.localeCompare(b.company));
-  }
+            // Update online count
+            const onlineEl = document.getElementById('statOnline');
+            const online = 12000 + Math.floor(Math.random() * 2000);
+            onlineEl.textContent = online.toLocaleString();
+        }, 8000);
 
-  filteredJobs = jobs;
-  renderGrid();
-}
+        // ============ AUTH SYSTEM ============
+        let currentUser = null;
 
-function renderGrid() {
-  const grid = document.getElementById('jobsGrid');
-  const empty = document.getElementById('emptyState');
-  grid.innerHTML = '';
+        function switchAuthTab(tab) {
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            const tabs = document.querySelectorAll('#authCard .auth-tab');
 
-  document.getElementById('showingCount').textContent = filteredJobs.length;
+            tabs.forEach(t => t.classList.remove('active'));
 
-  if (filteredJobs.length === 0) {
-    empty.style.display = 'block';
-    return;
-  }
-  empty.style.display = 'none';
+            if (tab === 'login') {
+                loginForm.classList.remove('hidden');
+                registerForm.classList.add('hidden');
+                tabs[0].classList.add('active');
+            } else {
+                loginForm.classList.add('hidden');
+                registerForm.classList.remove('hidden');
+                tabs[1].classList.add('active');
+            }
+        }
 
-  filteredJobs.forEach((job, i) => {
-    grid.appendChild(renderCard(job, i));
-  });
-}
+        function switchModalTab(tab) {
+            const loginForm = document.getElementById('modalLoginForm');
+            const registerForm = document.getElementById('modalRegisterForm');
+            const tabLogin = document.getElementById('modalTabLogin');
+            const tabRegister = document.getElementById('modalTabRegister');
 
-function setScanProgress(value) {
-  const v = Math.max(0, Math.min(100, value));
-  const bar = document.getElementById('scanBar');
-  const percent = document.getElementById('scanPercent');
-  if (bar) bar.style.width = v + '%';
-  if (percent) percent.textContent = v + '%';
-}
+            tabLogin.classList.remove('active');
+            tabRegister.classList.remove('active');
 
-// ===== PROVINCE SELECT =====
-function buildProvinceGrid() {
-  const select = document.getElementById('provinceSelect');
-  select.querySelectorAll('option:not([value=""])').forEach(o => o.remove());
-  PROVINCES.forEach(p => {
-    const opt = document.createElement('option');
-    opt.value = p;
-    opt.textContent = p;
-    select.appendChild(opt);
-  });
-}
+            if (tab === 'login') {
+                loginForm.classList.remove('hidden');
+                registerForm.classList.add('hidden');
+                tabLogin.classList.add('active');
+            } else {
+                loginForm.classList.add('hidden');
+                registerForm.classList.remove('hidden');
+                tabRegister.classList.add('active');
+            }
+        }
 
-// ===== CHIPS EVENTS =====
-document.querySelectorAll('.chip[data-type]').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.chip[data-type]').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    activeType = btn.dataset.type;
-    applyFilters();
-  });
-});
+        function openAuthModal(tab) {
+            document.getElementById('authModal').classList.remove('hidden');
+            switchModalTab(tab);
+        }
 
-document.querySelectorAll('.chip[data-industry]').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.chip[data-industry]').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    activeIndustry = btn.dataset.industry;
-    applyFilters();
-  });
-});
+        function closeAuthModal() {
+            document.getElementById('authModal').classList.add('hidden');
+        }
 
-document.getElementById('provinceSelect').addEventListener('change', async (e) => {
-  activeProvince = e.target.value || null;
-  if (activeProvince) {
-    await fetchProvinceJobs(activeProvince);
-  }
-  applyFilters();
-});
+        // Close modal on overlay click
+        document.getElementById('authModal').addEventListener('click', function(e) {
+            if (e.target === this) closeAuthModal();
+        });
 
-let searchTimer;
-document.getElementById('searchInput').addEventListener('input', () => {
-  clearTimeout(searchTimer);
-  searchTimer = setTimeout(applyFilters, 300);
-});
+        // Close modal on Escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeAuthModal();
+        });
 
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeModalDirect();
-});
+        function showToast(message, type = 'success') {
+            const existing = document.querySelector('.toast');
+            if (existing) existing.remove();
 
-// ===== MAIN LOAD =====
-async function loadAllJobs() {
-  document.getElementById('loadingState').style.display = 'block';
-  setScanProgress(0);
-  document.getElementById('jobsGrid').innerHTML = '';
-  document.getElementById('emptyState').style.display = 'none';
-  document.getElementById('errorBanner').style.display = 'none';
-  document.getElementById('totalCount').textContent = '—';
-  allJobs = [];
+            const toast = document.createElement('div');
+            toast.classList.add('toast');
+            toast.innerHTML = (type === 'success' ? '✅ ' : 'ℹ️ ') + message;
+            toast.style.borderColor = type === 'success' ? 'var(--accent)' : '#f59e0b';
+            document.body.appendChild(toast);
 
-  let progress = 0;
-  const progressTimer = setInterval(() => {
-    if (progress < 85) {
-      progress += Math.floor(Math.random() * 4) + 2;
-      setScanProgress(progress);
-    }
-  }, 300);
+            setTimeout(() => toast.remove(), 3000);
+        }
 
-  const errors = [];
-  let jobs = [];
+        function handleLogin(e) {
+            e.preventDefault();
+            const emailInput = document.getElementById('loginEmail') || document.getElementById('modalLoginEmail');
+            const email = emailInput.value.trim();
 
-  // Chỉ dùng nguồn Việt Nam
-  const results = await Promise.allSettled([
-    fetchTopCVviaAI(),
-    fetchVietnamWorksViaAI(),
-  ]);
+            if (!email) {
+                showToast('Vui lòng nhập email!', 'info');
+                return;
+            }
 
-  const sourceNames = ['TopCV', 'VietnamWorks/ITviec/JobsGO'];
-  results.forEach((res, i) => {
-    if (res.status === 'fulfilled') {
-      jobs = jobs.concat(res.value);
-    } else {
-      errors.push(sourceNames[i] + ': ' + (res.reason && res.reason.message ? res.reason.message : 'lỗi'));
-    }
-  });
+            // Simulate login
+            currentUser = {
+                email: email,
+                username: email.split('@')[0],
+                avatar: '#' + Math.floor(Math.random() * 16777215).toString(16),
+                initials: email.substring(0, 2).toUpperCase(),
+            };
 
-  allJobs = dedup(jobs);
+            // Save to localStorage
+            localStorage.setItem('tradex_user', JSON.stringify(currentUser));
 
-  allJobs.sort((a, b) => {
-    const da = new Date(a.date), db = new Date(b.date);
-    return isNaN(db) ? -1 : isNaN(da) ? 1 : db - da;
-  });
+            showToast('Đăng nhập thành công! Chào mừng, ' + currentUser.username + '! 🎉');
+            closeAuthModal();
+            updateUIForLoggedInUser();
+        }
 
-  clearInterval(progressTimer);
-  setScanProgress(100);
-  setTimeout(() => {
-    document.getElementById('loadingState').style.display = 'none';
-  }, 300);
+        function handleRegister(e) {
+            e.preventDefault();
+            const usernameInput = document.getElementById('regUsername') || document.getElementById('modalRegUsername');
+            const emailInput = document.getElementById('regEmail') || document.getElementById('modalRegEmail');
+            const username = usernameInput.value.trim();
+            const email = emailInput.value.trim();
 
-  document.getElementById('totalCount').textContent = allJobs.length + '+';
-  document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString('vi-VN', {hour:'2-digit',minute:'2-digit'});
-  document.getElementById('sourceCount').textContent = '2';
+            if (!username || !email) {
+                showToast('Vui lòng điền đầy đủ thông tin!', 'info');
+                return;
+            }
 
-  if (errors.length) {
-    document.getElementById('errorBanner').style.display = 'flex';
-    document.getElementById('errorMsg').textContent = 'Lỗi tải dữ liệu: ' + errors.join('; ');
-  }
+            // Simulate registration
+            currentUser = {
+                email: email,
+                username: username,
+                avatar: '#' + Math.floor(Math.random() * 16777215).toString(16),
+                initials: username.substring(0, 2).toUpperCase(),
+            };
 
-  applyFilters();
-}
+            localStorage.setItem('tradex_user', JSON.stringify(currentUser));
 
-// ===== INIT =====
-buildProvinceGrid();
-loadAllJobs();
-</script>
+            showToast('Đăng ký thành công! Chào mừng, ' + username + '! 🚀');
+            closeAuthModal();
+            updateUIForLoggedInUser();
+        }
+
+        function socialLogin(provider) {
+            const mockUser = {
+                email: 'user@' + provider.toLowerCase() + '.com',
+                username: provider + '_User',
+                avatar: provider === 'Google' ? '#4285f4' : '#5865f2',
+                initials: provider.substring(0, 2).toUpperCase(),
+            };
+
+            currentUser = mockUser;
+            localStorage.setItem('tradex_user', JSON.stringify(currentUser));
+
+            showToast('Đăng nhập với ' + provider + ' thành công! 🎉');
+            closeAuthModal();
+            updateUIForLoggedInUser();
+        }
+
+        function handleLogout() {
+            currentUser = null;
+            localStorage.removeItem('tradex_user');
+            showToast('Đã đăng xuất. Hẹn gặp lại! 👋');
+            updateUIForLoggedInUser();
+        }
+
+        function updateUIForLoggedInUser() {
+            const navLinks = document.querySelector('.nav-links');
+            const existingLogout = navLinks.querySelector('.user-menu');
+            if (existingLogout) existingLogout.remove();
+
+            if (currentUser) {
+                // Remove login/register buttons
+                const loginBtn = navLinks.querySelector('button.btn-outline');
+                const registerBtn = navLinks.querySelector('button.btn-primary');
+                if (loginBtn) loginBtn.style.display = 'none';
+                if (registerBtn) registerBtn.style.display = 'none';
+
+                // Add user menu
+                const userMenu = document.createElement('div');
+                userMenu.className = 'user-menu';
+                userMenu.style.cssText = 'display:flex;align-items:center;gap:8px;';
+                userMenu.innerHTML = `
+                        <span style="background:${currentUser.avatar};width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.75rem;color:#fff">${currentUser.initials}</span>
+                        <span style="font-weight:600;font-size:0.9rem">${currentUser.username}</span>
+                        <button class="btn btn-ghost" onclick="handleLogout()" style="font-size:0.8rem">Đăng xuất</button>
+                    `;
+                navLinks.appendChild(userMenu);
+            } else {
+                const loginBtn = navLinks.querySelector('button.btn-outline');
+                const registerBtn = navLinks.querySelector('button.btn-primary');
+                if (loginBtn) loginBtn.style.display = '';
+                if (registerBtn) registerBtn.style.display = '';
+            }
+        }
+
+        // Check for existing session on load
+        window.addEventListener('DOMContentLoaded', () => {
+            const saved = localStorage.getItem('tradex_user');
+            if (saved) {
+                try {
+                    currentUser = JSON.parse(saved);
+                    updateUIForLoggedInUser();
+                } catch (e) {
+                    localStorage.removeItem('tradex_user');
+                }
+            }
+        });
+
+        // ============ DYNAMIC STAT UPDATES ============
+        setInterval(() => {
+            const volume = (2.5 + Math.random() * 0.8).toFixed(2);
+            document.getElementById('statVolume').textContent = '$' + volume + 'T';
+
+            const fear = Math.floor(60 + Math.random() * 20);
+            const fearText = fear >= 70 ? 'Tham Lam' : fear >= 50 ? 'Trung Lập' : 'Sợ Hãi';
+            document.getElementById('statFear').textContent = fear + ' - ' + fearText;
+            const fearEl = document.getElementById('statFear');
+            if (fear >= 70) fearEl.style.color = '#f59e0b';
+            else if (fear >= 50) fearEl.style.color = '#94a3b8';
+            else fearEl.style.color = '#ef4444';
+        }, 5000);
+
+        console.log('🚀 TradeX đã sẵn sàng! Chào mừng đến với nền tảng giao dịch & cộng đồng.');
+        console.log('💡 Tính năng: Biểu đồ real-time | Bảng giá | Đăng nhập/Đăng ký | Cộng đồng feed | Animation');
+    </script>
 </body>
 </html>
