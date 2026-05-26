@@ -1,1565 +1,1001 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TradeX - Cộng Đồng Trading Việt</title>
-    <style>
-        /* ===== RESET & BASE ===== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trà Sữa Rewards 🧋</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #FFF8F0;
+    --brown: #5C3317;
+    --brown-light: #8B5E3C;
+    --brown-mid: #6F4328;
+    --pearl: #F5EBD8;
+    --boba: #3D1F0A;
+    --green: #4A7C59;
+    --green-light: #E8F5EE;
+    --pink: #E8A598;
+    --pink-light: #FDF0EE;
+    --gold: #D4A843;
+    --gold-light: #FEF3D7;
+    --white: #FFFFFF;
+    --text: #2C1810;
+    --text-muted: #8B6E5A;
+    --radius: 20px;
+    --shadow: 0 8px 32px rgba(92,51,23,0.12);
+    --shadow-lg: 0 16px 48px rgba(92,51,23,0.18);
+  }
 
-        :root {
-            --bg-primary: #0a0e17;
-            --bg-secondary: #111827;
-            --bg-card: #1a1f2e;
-            --accent: #00d4aa;
-            --accent-red: #ef4444;
-            --accent-gold: #f59e0b;
-            --text-primary: #e2e8f0;
-            --text-secondary: #94a3b8;
-            --border: #1e293b;
-            --gradient-1: linear-gradient(135deg, #00d4aa, #0ea5e9);
-            --gradient-2: linear-gradient(135deg, #f59e0b, #ef4444);
-            --shadow-glow: 0 0 30px rgba(0, 212, 170, 0.15);
-            --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.4);
-            --radius: 16px;
-            --radius-sm: 10px;
-            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            --font-mono: 'Courier New', 'SF Mono', monospace;
-        }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            min-height: 100vh;
-            overflow-x: hidden;
-            line-height: 1.6;
-        }
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
 
-        /* ===== PARTICLES BACKGROUND ===== */
-        #particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            pointer-events: none;
-        }
+  /* === DECORATIVE BACKGROUND === */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 40% at 10% 20%, rgba(212,168,67,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 50% at 90% 80%, rgba(232,165,152,0.1) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 60% at 50% 50%, rgba(245,235,216,0.6) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
 
-        .particle {
-            position: absolute;
-            border-radius: 50%;
-            background: var(--accent);
-            animation: floatUp linear infinite;
-            opacity: 0;
-        }
+  .floating-deco {
+    position: fixed;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.06;
+    font-size: 80px;
+    user-select: none;
+    animation: floatDeco 8s ease-in-out infinite;
+  }
+  .fd1 { top: 5%; left: 2%; animation-delay: 0s; }
+  .fd2 { top: 15%; right: 3%; animation-delay: 2s; font-size: 60px; }
+  .fd3 { bottom: 20%; left: 1%; animation-delay: 4s; font-size: 50px; }
+  .fd4 { bottom: 10%; right: 5%; animation-delay: 1s; font-size: 70px; }
+  .fd5 { top: 45%; left: 5%; animation-delay: 3s; font-size: 40px; }
 
-        @keyframes floatUp {
-            0% {
-                transform: translateY(100vh) scale(0);
-                opacity: 0;
-            }
-            10% {
-                opacity: 0.6;
-            }
-            90% {
-                opacity: 0.2;
-            }
-            100% {
-                transform: translateY(-10vh) scale(1.5);
-                opacity: 0;
-            }
-        }
+  @keyframes floatDeco {
+    0%,100% { transform: translateY(0px) rotate(-5deg); }
+    50% { transform: translateY(-20px) rotate(5deg); }
+  }
 
-        /* ===== MAIN CONTAINER ===== */
-        .app-container {
-            position: relative;
-            z-index: 1;
-            max-width: 1300px;
-            margin: 0 auto;
-            padding: 0 24px;
-        }
+  /* === WRAPPER === */
+  .app {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+  }
 
-        /* ===== NAVBAR ===== */
-        .navbar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 20px 0;
-            border-bottom: 1px solid var(--border);
-            flex-wrap: wrap;
-            gap: 16px;
-        }
+  .container {
+    width: 100%;
+    max-width: 480px;
+  }
 
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 1.6rem;
-            font-weight: 800;
-            text-decoration: none;
-            color: #fff;
-            letter-spacing: -0.5px;
-        }
+  /* === SCREENS === */
+  .screen { display: none; }
+  .screen.active { display: block; }
 
-        .logo-icon {
-            width: 42px;
-            height: 42px;
-            background: var(--gradient-1);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.3rem;
-            animation: logoPulse 2s ease-in-out infinite;
-        }
+  /* === LOGIN === */
+  .login-wrap {
+    text-align: center;
+  }
 
-        @keyframes logoPulse {
-            0%,
-            100% {
-                box-shadow: 0 0 0 0 rgba(0, 212, 170, 0.5);
-            }
-            50% {
-                box-shadow: 0 0 0 16px rgba(0, 212, 170, 0);
-            }
-        }
+  .logo-area {
+    margin-bottom: 2rem;
+    animation: dropIn 0.6s ease both;
+  }
 
-        .nav-links {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        .nav-links a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            padding: 8px 16px;
-            border-radius: 8px;
-            transition: var(--transition);
-            font-weight: 500;
-            font-size: 0.95rem;
-        }
-        .nav-links a:hover,
-        .nav-links a.active {
-            color: #fff;
-            background: rgba(255, 255, 255, 0.05);
-        }
+  .logo-bubble {
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(135deg, var(--brown-light), var(--brown));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    font-size: 48px;
+    box-shadow: 0 8px 24px rgba(92,51,23,0.3), inset 0 2px 4px rgba(255,255,255,0.15);
+    position: relative;
+  }
 
-        .btn {
-            padding: 10px 22px;
-            border-radius: 10px;
-            border: none;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: var(--transition);
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            white-space: nowrap;
-        }
-        .btn-primary {
-            background: var(--gradient-1);
-            color: #000;
-            box-shadow: 0 4px 15px rgba(0, 212, 170, 0.3);
-        }
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 25px rgba(0, 212, 170, 0.5);
-        }
-        .btn-outline {
-            background: transparent;
-            border: 2px solid var(--border);
-            color: #fff;
-        }
-        .btn-outline:hover {
-            border-color: var(--accent);
-            background: rgba(0, 212, 170, 0.05);
-        }
-        .btn-ghost {
-            background: transparent;
-            color: var(--text-secondary);
-        }
-        .btn-ghost:hover {
-            color: #fff;
-            background: rgba(255, 255, 255, 0.05);
-        }
+  .logo-bubble::after {
+    content: '';
+    position: absolute;
+    top: -8px; left: -8px; right: -8px; bottom: -8px;
+    border-radius: 50%;
+    border: 2px dashed rgba(92,51,23,0.2);
+    animation: spin 20s linear infinite;
+  }
 
-        /* ===== HERO SECTION ===== */
-        .hero {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 60px 0;
-            gap: 50px;
-            flex-wrap: wrap;
-        }
-        .hero-content {
-            flex: 1;
-            min-width: 280px;
-        }
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(0, 212, 170, 0.1);
-            border: 1px solid rgba(0, 212, 170, 0.3);
-            color: var(--accent);
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-bottom: 20px;
-            animation: badgeGlow 2s ease-in-out infinite;
-        }
-        @keyframes badgeGlow {
-            0%,
-            100% {
-                border-color: rgba(0, 212, 170, 0.3);
-            }
-            50% {
-                border-color: rgba(0, 212, 170, 0.8);
-            }
-        }
-        .hero-badge .dot {
-            width: 8px;
-            height: 8px;
-            background: var(--accent);
-            border-radius: 50%;
-            animation: blink 1s infinite;
-        }
-        @keyframes blink {
-            0%,
-            100% {
-                opacity: 1;
-            }
-            50% {
-                opacity: 0.3;
-            }
-        }
+  @keyframes spin { to { transform: rotate(360deg); } }
 
-        .hero h1 {
-            font-size: 3rem;
-            font-weight: 800;
-            line-height: 1.2;
-            margin-bottom: 16px;
-        }
-        .hero h1 .highlight {
-            background: var(--gradient-1);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .hero p {
-            color: var(--text-secondary);
-            font-size: 1.1rem;
-            max-width: 480px;
-            margin-bottom: 30px;
-        }
-        .hero-actions {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
+  .brand-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 900;
+    color: var(--brown);
+    line-height: 1;
+  }
 
-        /* Hero Chart Animation */
-        .hero-chart {
-            flex: 1;
-            min-width: 300px;
-            background: var(--bg-card);
-            border-radius: var(--radius);
-            padding: 28px;
-            border: 1px solid var(--border);
-            box-shadow: var(--shadow-card);
-            position: relative;
-            overflow: hidden;
-        }
-        .hero-chart::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle at center, rgba(0, 212, 170, 0.04) 0%, transparent 60%);
-            animation: chartGlow 4s ease-in-out infinite;
-        }
-        @keyframes chartGlow {
-            0%,
-            100% {
-                transform: translate(0, 0);
-            }
-            50% {
-                transform: translate(5%, 3%);
-            }
-        }
-        .chart-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            position: relative;
-            z-index: 1;
-        }
-        .chart-pair {
-            font-weight: 700;
-            font-size: 1.2rem;
-        }
-        .chart-price {
-            font-family: var(--font-mono);
-            font-weight: 700;
-            font-size: 1.4rem;
-            color: var(--accent);
-        }
-        .chart-change {
-            font-family: var(--font-mono);
-            font-size: 0.85rem;
-            color: var(--accent);
-            background: rgba(0, 212, 170, 0.1);
-            padding: 3px 10px;
-            border-radius: 6px;
-        }
+  .brand-sub {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 6px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
 
-        .chart-canvas-wrap {
-            position: relative;
-            z-index: 1;
-        }
-        #liveChart {
-            width: 100%;
-            height: 220px;
-            display: block;
-        }
+  .login-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 2rem;
+    box-shadow: var(--shadow-lg);
+    border: 1.5px solid rgba(92,51,23,0.08);
+    animation: slideUp 0.5s 0.2s ease both;
+  }
 
-        /* ===== STATS ===== */
-        .stats-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
-            margin: 30px 0;
-        }
-        .stat-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            padding: 20px 24px;
-            transition: var(--transition);
-        }
-        .stat-card:hover {
-            border-color: var(--accent);
-            box-shadow: var(--shadow-glow);
-            transform: translateY(-2px);
-        }
-        .stat-label {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 6px;
-        }
-        .stat-value {
-            font-family: var(--font-mono);
-            font-size: 1.8rem;
-            font-weight: 700;
-        }
-        .stat-value.up {
-            color: var(--accent);
-        }
-        .stat-value.down {
-            color: var(--accent-red);
-        }
+  .login-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    color: var(--brown);
+    margin-bottom: 1.5rem;
+  }
 
-        /* ===== COINS TABLE ===== */
-        .section-title {
-            font-size: 1.4rem;
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
-        .section-subtitle {
-            color: var(--text-secondary);
-            margin-bottom: 20px;
-        }
+  .field {
+    margin-bottom: 1rem;
+    text-align: left;
+  }
 
-        .coins-table-wrap {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            overflow-x: auto;
-            box-shadow: var(--shadow-card);
-            margin-bottom: 40px;
-        }
-        .coins-table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 600px;
-        }
-        .coins-table th {
-            text-align: left;
-            padding: 14px 18px;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-            color: var(--text-secondary);
-            border-bottom: 1px solid var(--border);
-            font-weight: 600;
-        }
-        .coins-table td {
-            padding: 14px 18px;
-            border-bottom: 1px solid var(--border);
-            font-size: 0.95rem;
-        }
-        .coins-table tbody tr {
-            transition: var(--transition);
-        }
-        .coins-table tbody tr:hover {
-            background: rgba(255, 255, 255, 0.02);
-        }
-        .coin-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .coin-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 0.9rem;
-        }
-        .coin-icon.btc {
-            background: #f7931a22;
-            color: #f7931a;
-        }
-        .coin-icon.eth {
-            background: #627eea22;
-            color: #627eea;
-        }
-        .coin-icon.sol {
-            background: #9945ff22;
-            color: #9945ff;
-        }
-        .coin-icon.bnb {
-            background: #f0b90b22;
-            color: #f0b90b;
-        }
-        .coin-name {
-            font-weight: 600;
-        }
-        .coin-symbol {
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-        }
-        .price-cell {
-            font-family: var(--font-mono);
-            font-weight: 600;
-        }
-        .change-cell {
-            font-family: var(--font-mono);
-            font-weight: 600;
-            padding: 4px 10px;
-            border-radius: 6px;
-            display: inline-block;
-        }
-        .change-cell.up {
-            color: var(--accent);
-            background: rgba(0, 212, 170, 0.08);
-        }
-        .change-cell.down {
-            color: var(--accent-red);
-            background: rgba(239, 68, 68, 0.08);
-        }
-        .chart-mini {
-            width: 80px;
-            height: 36px;
-        }
+  .field label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    display: block;
+    margin-bottom: 6px;
+  }
 
-        /* ===== COMMUNITY / AUTH SECTION ===== */
-        .community-section {
-            display: flex;
-            gap: 30px;
-            margin: 40px 0;
-            flex-wrap: wrap;
-        }
-        .community-card {
-            flex: 1;
-            min-width: 300px;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 32px;
-            box-shadow: var(--shadow-card);
-            transition: var(--transition);
-        }
-        .community-card:hover {
-            border-color: var(--accent);
-        }
+  .field input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1.5px solid rgba(92,51,23,0.15);
+    border-radius: 12px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 15px;
+    color: var(--text);
+    background: var(--cream);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
 
-        /* Auth Form */
-        .auth-tabs {
-            display: flex;
-            gap: 4px;
-            background: var(--bg-secondary);
-            border-radius: 10px;
-            padding: 4px;
-            margin-bottom: 24px;
-        }
-        .auth-tab {
-            flex: 1;
-            padding: 10px;
-            text-align: center;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            transition: var(--transition);
-            border: none;
-            background: transparent;
-        }
-        .auth-tab.active {
-            background: var(--accent);
-            color: #000;
-        }
+  .field input:focus {
+    border-color: var(--brown-light);
+    box-shadow: 0 0 0 3px rgba(139,94,60,0.12);
+  }
 
-        .auth-form {
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-        }
-        .auth-form.hidden {
-            display: none;
-        }
-        .input-group {
-            position: relative;
-        }
-        .input-group .icon {
-            position: absolute;
-            left: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-secondary);
-            font-size: 1rem;
-        }
-        .input-group input {
-            width: 100%;
-            padding: 13px 14px 13px 42px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            color: #fff;
-            font-size: 0.95rem;
-            transition: var(--transition);
-            outline: none;
-        }
-        .input-group input:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(0, 212, 170, 0.1);
-        }
-        .input-group input::placeholder {
-            color: #4a5568;
-        }
+  .btn-login {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, var(--brown-light), var(--brown));
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    cursor: pointer;
+    margin-top: 0.5rem;
+    box-shadow: 0 4px 16px rgba(92,51,23,0.3);
+    transition: transform 0.15s, box-shadow 0.15s;
+    letter-spacing: 0.02em;
+  }
 
-        .auth-form .btn {
-            width: 100%;
-            justify-content: center;
-            padding: 13px;
-            font-size: 1rem;
-        }
+  .btn-login:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(92,51,23,0.35); }
+  .btn-login:active { transform: scale(0.98); }
 
-        .auth-divider {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-            margin: 8px 0;
-        }
-        .auth-divider::before,
-        .auth-divider::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: var(--border);
-        }
+  .login-hint {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 12px;
+  }
 
-        .social-btn {
-            width: 100%;
-            padding: 11px;
-            border-radius: 10px;
-            border: 1px solid var(--border);
-            background: var(--bg-secondary);
-            color: #fff;
-            cursor: pointer;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            transition: var(--transition);
-            font-size: 0.9rem;
-        }
-        .social-btn:hover {
-            border-color: var(--accent);
-            background: rgba(255, 255, 255, 0.03);
-        }
+  /* === MAIN APP === */
+  .app-header {
+    background: linear-gradient(135deg, var(--brown) 0%, var(--brown-mid) 50%, var(--brown-light) 100%);
+    border-radius: var(--radius) var(--radius) 0 0;
+    padding: 1.5rem 1.5rem 2.5rem;
+    color: white;
+    position: relative;
+    overflow: hidden;
+    animation: dropIn 0.4s ease both;
+  }
 
-        /* Community Feed */
-        .feed-card {
-            flex: 1;
-            min-width: 300px;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 24px;
-            box-shadow: var(--shadow-card);
-            max-height: 500px;
-            overflow-y: auto;
-        }
-        .feed-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        .feed-item {
-            display: flex;
-            gap: 12px;
-            padding: 12px 0;
-            border-bottom: 1px solid var(--border);
-            animation: slideIn 0.4s ease-out;
-        }
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateX(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-        .feed-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 0.8rem;
-        }
-        .feed-content .feed-name {
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-        .feed-content .feed-time {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-        }
-        .feed-content .feed-text {
-            font-size: 0.9rem;
-            margin-top: 4px;
-            color: var(--text-primary);
-        }
-        .feed-tag {
-            display: inline-block;
-            padding: 3px 10px;
-            border-radius: 6px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            margin-top: 6px;
-        }
-        .feed-tag.buy {
-            background: rgba(0, 212, 170, 0.15);
-            color: var(--accent);
-        }
-        .feed-tag.sell {
-            background: rgba(239, 68, 68, 0.15);
-            color: var(--accent-red);
-        }
+  .app-header::before {
+    content: '🧋';
+    position: absolute;
+    right: -10px; top: -10px;
+    font-size: 100px;
+    opacity: 0.08;
+    transform: rotate(-20deg);
+  }
 
-        /* ===== MODAL OVERLAY ===== */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(6px);
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            animation: fadeIn 0.3s ease;
-        }
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-        .modal-overlay.hidden {
-            display: none;
-        }
-        .modal {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 36px;
-            width: 90%;
-            max-width: 440px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
-            animation: modalPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-        @keyframes modalPop {
-            from {
-                opacity: 0;
-                transform: scale(0.85) translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1) translateY(0);
-            }
-        }
-        .modal-close {
-            float: right;
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            font-size: 1.5rem;
-            cursor: pointer;
-            padding: 4px 8px;
-            border-radius: 6px;
-            transition: var(--transition);
-        }
-        .modal-close:hover {
-            color: #fff;
-            background: rgba(255, 255, 255, 0.05);
-        }
-        .modal-logo {
-            text-align: center;
-            margin-bottom: 20px;
-        }
+  .app-header::after {
+    content: '🍱';
+    position: absolute;
+    right: 60px; bottom: -20px;
+    font-size: 80px;
+    opacity: 0.07;
+    transform: rotate(10deg);
+  }
 
-        /* ===== TOAST ===== */
-        .toast {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: var(--bg-card);
-            border: 1px solid var(--accent);
-            border-radius: 12px;
-            padding: 14px 22px;
-            z-index: 2000;
-            color: #fff;
-            font-weight: 500;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            animation: toastIn 0.4s ease-out, toastOut 0.4s ease-in 2.5s forwards;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        @keyframes toastIn {
-            from {
-                opacity: 0;
-                transform: translateX(100px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-        @keyframes toastOut {
-            from {
-                opacity: 1;
-                transform: translateX(0);
-            }
-            to {
-                opacity: 0;
-                transform: translateX(100px);
-            }
-        }
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.2rem;
+  }
 
-        /* ===== FOOTER ===== */
-        .footer {
-            text-align: center;
-            padding: 30px 0;
-            border-top: 1px solid var(--border);
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-            margin-top: 40px;
-        }
+  .header-greeting {
+    font-size: 13px;
+    opacity: 0.75;
+    letter-spacing: 0.05em;
+  }
 
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 768px) {
-            .hero {
-                flex-direction: column;
-                padding: 30px 0;
-            }
-            .hero h1 {
-                font-size: 2rem;
-            }
-            .hero-chart {
-                width: 100%;
-            }
-            .navbar {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .nav-links {
-                width: 100%;
-                overflow-x: auto;
-                flex-wrap: nowrap;
-            }
-            .community-section {
-                flex-direction: column;
-            }
-        }
+  .header-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.2;
+  }
 
-        /* ===== SCROLLBAR ===== */
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--border);
-            border-radius: 3px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #555;
-        }
-    </style>
+  .btn-logout {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: white;
+    border-radius: 10px;
+    padding: 6px 14px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+    white-space: nowrap;
+  }
+  .btn-logout:hover { background: rgba(255,255,255,0.25); }
+
+  /* voucher hero cards */
+  .voucher-hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .vcard {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 16px;
+    padding: 1rem;
+    text-align: center;
+    backdrop-filter: blur(4px);
+    transition: transform 0.2s;
+  }
+  .vcard:hover { transform: scale(1.02); }
+
+  .vcard-icon { font-size: 28px; margin-bottom: 4px; }
+  .vcard-count { font-size: 36px; font-weight: 800; line-height: 1; }
+  .vcard-label { font-size: 11px; opacity: 0.75; margin-top: 3px; letter-spacing: 0.05em; text-transform: uppercase; }
+
+  /* === BODY PANEL === */
+  .body-panel {
+    background: var(--white);
+    border-radius: 0 0 var(--radius) var(--radius);
+    box-shadow: var(--shadow-lg);
+    border: 1.5px solid rgba(92,51,23,0.07);
+    border-top: none;
+    overflow: hidden;
+  }
+
+  /* === TABS === */
+  .tabs {
+    display: flex;
+    border-bottom: 1.5px solid rgba(92,51,23,0.08);
+    background: var(--pearl);
+  }
+
+  .tab {
+    flex: 1;
+    padding: 14px 8px;
+    font-size: 12px;
+    font-weight: 700;
+    text-align: center;
+    cursor: pointer;
+    color: var(--text-muted);
+    border: none;
+    background: transparent;
+    transition: color 0.2s, background 0.2s;
+    font-family: 'Nunito', sans-serif;
+    letter-spacing: 0.03em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+  }
+
+  .tab .tab-icon { font-size: 18px; }
+  .tab.active {
+    color: var(--brown);
+    background: var(--white);
+    border-top: 3px solid var(--brown-light);
+  }
+
+  .tab-content { display: none; padding: 1.5rem; }
+  .tab-content.active { display: block; }
+
+  /* === SECTION HEADER === */
+  .sec-head {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    color: var(--brown);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .sec-head span { font-size: 20px; }
+
+  /* === ACTION BUTTONS === */
+  .action-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 1.5rem;
+  }
+
+  .action-btn {
+    border: none;
+    border-radius: 14px;
+    padding: 14px 10px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    transition: transform 0.15s, box-shadow 0.15s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .action-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+  .action-btn:active { transform: scale(0.97); }
+
+  .action-btn .btn-icon { font-size: 28px; }
+
+  .btn-ts {
+    background: linear-gradient(135deg, #8B5E3C, #5C3317);
+    color: white;
+    box-shadow: 0 4px 14px rgba(92,51,23,0.25);
+  }
+
+  .btn-food {
+    background: linear-gradient(135deg, #4A7C59, #2D5A40);
+    color: white;
+    box-shadow: 0 4px 14px rgba(74,124,89,0.25);
+  }
+
+  /* === EXCHANGE BANNER === */
+  .exchange-banner {
+    background: var(--gold-light);
+    border: 1.5px solid rgba(212,168,67,0.3);
+    border-radius: 16px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .exchange-banner .ex-icon { font-size: 32px; flex-shrink: 0; }
+  .exchange-banner .ex-text { flex: 1; }
+  .exchange-banner .ex-text p { font-size: 12px; color: var(--text-muted); }
+  .exchange-banner .ex-text strong { color: var(--brown); font-size: 14px; }
+
+  .btn-exchange {
+    width: 100%;
+    padding: 13px;
+    background: linear-gradient(135deg, var(--gold), #B8921F);
+    color: var(--boba);
+    border: none;
+    border-radius: 14px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 15px;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(212,168,67,0.35);
+    transition: transform 0.15s, box-shadow 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .btn-exchange:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(212,168,67,0.4); }
+  .btn-exchange:active { transform: scale(0.98); }
+
+  /* === SCORE TAB === */
+  .score-section {
+    background: var(--pearl);
+    border-radius: 16px;
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .score-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 12px;
+  }
+
+  .score-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+
+  .score-btn {
+    aspect-ratio: 1;
+    border: 2px solid rgba(92,51,23,0.15);
+    border-radius: 12px;
+    background: var(--white);
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--brown);
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .score-btn:hover { border-color: var(--brown-light); background: var(--gold-light); }
+  .score-btn.selected {
+    background: linear-gradient(135deg, var(--brown-light), var(--brown));
+    border-color: transparent;
+    color: white;
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(92,51,23,0.3);
+  }
+
+  .score-preview {
+    background: var(--white);
+    border: 1.5px solid rgba(212,168,67,0.35);
+    border-radius: 12px;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: var(--brown);
+    font-weight: 600;
+    text-align: center;
+    display: none;
+    animation: popIn 0.2s ease;
+  }
+
+  @keyframes popIn {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  /* reward table */
+  .reward-table {
+    background: var(--white);
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1.5px solid rgba(92,51,23,0.08);
+    margin-bottom: 1.5rem;
+  }
+
+  .reward-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+    border-bottom: 1px solid rgba(92,51,23,0.06);
+    font-size: 13px;
+  }
+  .reward-row:last-child { border-bottom: none; }
+  .reward-row .pts { color: var(--text-muted); }
+  .reward-row .reward { font-weight: 700; color: var(--green); }
+  .reward-row.special { background: var(--gold-light); }
+  .reward-row.special .reward { color: var(--brown); }
+
+  .btn-confirm-score {
+    width: 100%;
+    padding: 13px;
+    background: linear-gradient(135deg, var(--green), #2D5A40);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 15px;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(74,124,89,0.3);
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .btn-confirm-score:hover { transform: translateY(-2px); }
+  .btn-confirm-score:active { transform: scale(0.98); }
+
+  /* === HISTORY === */
+  .history-empty {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--text-muted);
+  }
+  .history-empty .he-icon { font-size: 48px; margin-bottom: 8px; }
+  .history-empty p { font-size: 14px; }
+
+  .history-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(92,51,23,0.07);
+  }
+  .history-item:last-child { border-bottom: none; }
+
+  .hi-icon {
+    width: 40px; height: 40px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .hi-icon.use-ts { background: var(--pearl); }
+  .hi-icon.use-food { background: var(--green-light); }
+  .hi-icon.exchange { background: var(--gold-light); }
+  .hi-icon.score { background: var(--pink-light); }
+
+  .hi-body { flex: 1; }
+  .hi-text { font-size: 13px; font-weight: 600; color: var(--text); }
+  .hi-time { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+  .hi-badge {
+    font-size: 12px;
+    font-weight: 800;
+    padding: 4px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+  .hi-badge.minus { background: var(--pink-light); color: #C05050; }
+  .hi-badge.plus { background: var(--green-light); color: var(--green); }
+  .hi-badge.ex { background: var(--gold-light); color: var(--brown); }
+
+  /* === FOOD MENU decoration === */
+  .food-deco {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+  }
+  .food-chip {
+    background: var(--pearl);
+    border-radius: 20px;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--brown-mid);
+    display: flex; align-items: center; gap: 4px;
+  }
+  .food-chip span { font-size: 16px; }
+
+  /* === TOAST === */
+  .toast-wrap {
+    position: fixed;
+    bottom: 24px; left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .toast {
+    background: var(--boba);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 50px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    white-space: nowrap;
+    display: flex; align-items: center; gap: 8px;
+    opacity: 0;
+    transform: translateY(20px) scale(0.9);
+    transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  }
+
+  .toast.show {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  .toast.success { background: #27500A; }
+  .toast.error { background: #7A1F1F; }
+  .toast.gold { background: #6B4800; }
+
+  /* === ANIMATIONS === */
+  @keyframes dropIn {
+    from { transform: translateY(-20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  @keyframes slideUp {
+    from { transform: translateY(30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  .pulse {
+    animation: pulse 0.4s ease;
+  }
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+    100% { transform: scale(1); }
+  }
+</style>
 </head>
 <body>
 
-    <!-- ===== PARTICLES ===== -->
-    <div id="particles"></div>
+<div class="floating-deco fd1">🧋</div>
+<div class="floating-deco fd2">🍜</div>
+<div class="floating-deco fd3">🍱</div>
+<div class="floating-deco fd4">🧋</div>
+<div class="floating-deco fd5">🍙</div>
 
-    <!-- ===== APP ===== -->
-    <div class="app-container">
+<div class="app">
+<div class="container">
 
-        <!-- NAVBAR -->
-        <nav class="navbar">
-            <a href="#" class="logo">
-                <div class="logo-icon">📈</div>
-                Trade<span style="color:var(--accent)">X</span>
-            </a>
-            <div class="nav-links">
-                <a href="#" class="active">Bảng Giá</a>
-                <a href="#">Giao Dịch</a>
-                <a href="#">Phân Tích</a>
-                <a href="#">Học Viện</a>
-                <button class="btn btn-outline" onclick="openAuthModal('login')">Đăng Nhập</button>
-                <button class="btn btn-primary" onclick="openAuthModal('register')">Đăng Ký</button>
-            </div>
-        </nav>
+<!-- ===== LOGIN ===== -->
+<div id="screen-login" class="screen active login-wrap">
+  <div class="logo-area">
+    <div class="logo-bubble">🧋</div>
+    <div class="brand-name">Boba & Bites</div>
+    <div class="brand-sub">Rewards Program</div>
+  </div>
+  <div class="login-card">
+    <h3>Chào mừng trở lại! 👋</h3>
+    <div class="field">
+      <label>Tên đăng nhập</label>
+      <input type="text" id="login-user" placeholder="Nhập tên của bạn..." />
+    </div>
+    <div class="field">
+      <label>Mật khẩu</label>
+      <input type="password" id="login-pass" placeholder="••••••••" />
+    </div>
+    <button class="btn-login" onclick="doLogin()">Đăng nhập ngay ✨</button>
+    <p class="login-hint">Nhập bất kỳ thông tin nào để thử nghiệm</p>
+  </div>
+</div>
 
-        <!-- HERO -->
-        <section class="hero">
-            <div class="hero-content">
-                <div class="hero-badge">
-                    <span class="dot"></span> Thị trường đang mở cửa
-                </div>
-                <h1>Giao Dịch Thông Minh<br>Cùng <span class="highlight">Cộng Đồng</span></h1>
-                <p>Theo dõi biểu đồ real-time, chia sẻ tín hiệu và kết nối với hàng nghìn trader Việt Nam trên một nền tảng duy nhất.</p>
-                <div class="hero-actions">
-                    <button class="btn btn-primary" onclick="openAuthModal('register')">🚀 Bắt Đầu Miễn Phí</button>
-                    <button class="btn btn-outline">▶ Xem Demo</button>
-                </div>
-            </div>
-            <div class="hero-chart">
-                <div class="chart-header">
-                    <div>
-                        <span class="chart-pair">BTC/USDT</span>
-                        <span class="chart-change" id="heroChange">+2.34%</span>
-                    </div>
-                    <span class="chart-price" id="heroPrice">$68,245.50</span>
-                </div>
-                <div class="chart-canvas-wrap">
-                    <canvas id="liveChart"></canvas>
-                </div>
-            </div>
-        </section>
+<!-- ===== MAIN ===== -->
+<div id="screen-main" class="screen">
 
-        <!-- STATS -->
-        <div class="stats-row">
-            <div class="stat-card">
-                <div class="stat-label">📊 Khối Lượng 24h</div>
-                <div class="stat-value up" id="statVolume">$2.84T</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">🔥 Bitcoin Dominance</div>
-                <div class="stat-value" style="color:#f7931a">48.7%</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">😱 Fear & Greed</div>
-                <div class="stat-value" style="color:var(--accent-gold)" id="statFear">72 - Tham Lam</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">👥 Trader Online</div>
-                <div class="stat-value up" id="statOnline">12,847</div>
-            </div>
-        </div>
+  <!-- HEADER -->
+  <div class="app-header">
+    <div class="header-top">
+      <div>
+        <div class="header-greeting">Xin chào trở lại,</div>
+        <div class="header-name" id="welcome-name">Bạn ơi~</div>
+      </div>
+      <button class="btn-logout" onclick="doLogout()">Đăng xuất</button>
+    </div>
+    <div class="voucher-hero">
+      <div class="vcard">
+        <div class="vcard-icon">🧋</div>
+        <div class="vcard-count" id="ts-count">100</div>
+        <div class="vcard-label">Phiếu Trà Sữa</div>
+      </div>
+      <div class="vcard">
+        <div class="vcard-icon">🍱</div>
+        <div class="vcard-count" id="food-count">0</div>
+        <div class="vcard-label">Phiếu Đồ Ăn</div>
+      </div>
+    </div>
+  </div>
 
-        <!-- COINS TABLE -->
-        <h3 class="section-title">🔥 Top Tiền Mã Hóa</h3>
-        <p class="section-subtitle">Cập nhật giá real-time với animation</p>
-        <div class="coins-table-wrap">
-            <table class="coins-table">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Tên</th>
-                        <th>Giá</th>
-                        <th>Thay Đổi 24h</th>
-                        <th>Biểu Đồ 7d</th>
-                        <th>Vốn Hóa</th>
-                    </tr>
-                </thead>
-                <tbody id="coinsBody"></tbody>
-            </table>
-        </div>
+  <!-- BODY -->
+  <div class="body-panel">
 
-        <!-- COMMUNITY & AUTH -->
-        <h3 class="section-title">👥 Cộng Đồng Trader</h3>
-        <p class="section-subtitle">Đăng nhập để tham gia thảo luận và nhận tín hiệu</p>
-        <div class="community-section">
-            <!-- Auth Card -->
-            <div class="community-card" id="authCard">
-                <div class="auth-tabs">
-                    <button class="auth-tab active" onclick="switchAuthTab('login')">Đăng Nhập</button>
-                    <button class="auth-tab" onclick="switchAuthTab('register')">Đăng Ký</button>
-                </div>
-                <!-- Login Form -->
-                <form class="auth-form" id="loginForm" onsubmit="handleLogin(event)">
-                    <div class="input-group">
-                        <span class="icon">📧</span>
-                        <input type="email" placeholder="Email của bạn" required id="loginEmail">
-                    </div>
-                    <div class="input-group">
-                        <span class="icon">🔒</span>
-                        <input type="password" placeholder="Mật khẩu" required id="loginPassword">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Đăng Nhập</button>
-                </form>
-                <!-- Register Form -->
-                <form class="auth-form hidden" id="registerForm" onsubmit="handleRegister(event)">
-                    <div class="input-group">
-                        <span class="icon">👤</span>
-                        <input type="text" placeholder="Tên người dùng" required id="regUsername">
-                    </div>
-                    <div class="input-group">
-                        <span class="icon">📧</span>
-                        <input type="email" placeholder="Email của bạn" required id="regEmail">
-                    </div>
-                    <div class="input-group">
-                        <span class="icon">🔒</span>
-                        <input type="password" placeholder="Mật khẩu (tối thiểu 6 ký tự)" required minlength="6" id="regPassword">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Tạo Tài Khoản</button>
-                </form>
-                <div class="auth-divider">hoặc tiếp tục với</div>
-                <button class="social-btn" onclick="socialLogin('Google')">
-                    🟢 Google
-                </button>
-                <button class="social-btn" style="margin-top:8px" onclick="socialLogin('Discord')">
-                    🔵 Discord
-                </button>
-            </div>
-
-            <!-- Community Feed -->
-            <div class="feed-card">
-                <div class="feed-header">
-                    <strong>💬 Bảng Tin Cộng Đồng</strong>
-                    <span style="font-size:0.8rem;color:var(--accent)">● Live</span>
-                </div>
-                <div id="feedContainer">
-                    <!-- Dynamic feed items -->
-                </div>
-            </div>
-        </div>
-
-        <!-- FOOTER -->
-        <div class="footer">
-            © 2026 TradeX — Nền tảng giao dịch & cộng đồng trading Việt Nam. Không phải lời khuyên đầu tư.
-        </div>
+    <!-- TABS -->
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('vouchers',this)">
+        <span class="tab-icon">🎟️</span> Phiếu
+      </button>
+      <button class="tab" onclick="switchTab('score',this)">
+        <span class="tab-icon">⭐</span> Điểm
+      </button>
+      <button class="tab" onclick="switchTab('history',this)">
+        <span class="tab-icon">📋</span> Lịch sử
+      </button>
     </div>
 
-    <!-- ===== AUTH MODAL ===== -->
-    <div class="modal-overlay hidden" id="authModal">
-        <div class="modal">
-            <button class="modal-close" onclick="closeAuthModal()">✕</button>
-            <div class="modal-logo">
-                <div class="logo-icon" style="margin:0 auto 10px">📈</div>
-                <h3>Trade<span style="color:var(--accent)">X</span></h3>
-            </div>
-            <div class="auth-tabs">
-                <button class="auth-tab active" id="modalTabLogin" onclick="switchModalTab('login')">Đăng Nhập</button>
-                <button class="auth-tab" id="modalTabRegister" onclick="switchModalTab('register')">Đăng Ký</button>
-            </div>
-            <form class="auth-form" id="modalLoginForm" onsubmit="handleLogin(event)">
-                <div class="input-group">
-                    <span class="icon">📧</span>
-                    <input type="email" placeholder="Email của bạn" required id="modalLoginEmail">
-                </div>
-                <div class="input-group">
-                    <span class="icon">🔒</span>
-                    <input type="password" placeholder="Mật khẩu" required id="modalLoginPassword">
-                </div>
-                <button type="submit" class="btn btn-primary">Đăng Nhập</button>
-            </form>
-            <form class="auth-form hidden" id="modalRegisterForm" onsubmit="handleRegister(event)">
-                <div class="input-group">
-                    <span class="icon">👤</span>
-                    <input type="text" placeholder="Tên người dùng" required id="modalRegUsername">
-                </div>
-                <div class="input-group">
-                    <span class="icon">📧</span>
-                    <input type="email" placeholder="Email của bạn" required id="modalRegEmail">
-                </div>
-                <div class="input-group">
-                    <span class="icon">🔒</span>
-                    <input type="password" placeholder="Mật khẩu (tối thiểu 6 ký tự)" required minlength="6" id="modalRegPassword">
-                </div>
-                <button type="submit" class="btn btn-primary">Tạo Tài Khoản</button>
-            </form>
-            <div class="auth-divider">hoặc tiếp tục với</div>
-            <button class="social-btn" onclick="socialLogin('Google')">🟢 Google</button>
-            <button class="social-btn" style="margin-top:8px" onclick="socialLogin('Discord')">🔵 Discord</button>
+    <!-- TAB: VOUCHERS -->
+    <div id="tab-vouchers" class="tab-content active">
+      <div class="sec-head"><span>🎟️</span> Sử dụng phiếu</div>
+
+      <div class="food-deco">
+        <div class="food-chip"><span>🧋</span> Trà sữa</div>
+        <div class="food-chip"><span>🍜</span> Hủ tiếu xào</div>
+        <div class="food-chip"><span>🥟</span> Há cảo/ há cảo chiên</div>
+        <div class="food-chip"><span>🍛</span> Cơm tấm</div>
+        <div class="food-chip"><span>🫘</span> Lạp xưởng</div>
+        <div class="food-chip"><span>🧋</span> Sữa tươi chân trâu đường đen</div>
+      </div>
+
+      <div class="action-grid">
+        <button class="action-btn btn-ts" onclick="useVoucher('ts')">
+          <span class="btn-icon">🧋</span>
+          Dùng 1 phiếu<br>Trà Sữa
+        </button>
+        <button class="action-btn btn-food" onclick="useVoucher('food')">
+          <span class="btn-icon">🍱</span>
+          Dùng 1 phiếu<br>Đồ Ăn
+        </button>
+      </div>
+
+      <div class="sec-head" style="margin-top:0.5rem"><span>🔄</span> Quy đổi phiếu</div>
+      <div class="exchange-banner">
+        <div class="ex-icon">✨</div>
+        <div class="ex-text">
+          <strong>Tỷ lệ đổi 1 : 1</strong>
+          <p>1 phiếu trà sữa = 1 phiếu đồ ăn<br>Đổi tối thiểu 1 phiếu</p>
         </div>
+      </div>
+
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+        <label style="font-size:13px;font-weight:700;color:var(--text-muted)">Số lượng đổi:</label>
+        <input type="number" id="exchange-amount" min="1" value="1"
+          style="width:70px;padding:6px 10px;border:1.5px solid rgba(92,51,23,0.15);border-radius:10px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:700;color:var(--brown);background:var(--cream);outline:none;text-align:center">
+      </div>
+
+      <button class="btn-exchange" onclick="exchange()">
+        <span>🧋</span> → <span>🍱</span> Đổi ngay!
+      </button>
     </div>
 
-    <!-- ===== SCRIPTS ===== -->
-    <script>
-        // ============ PARTICLES ============
-        function createParticles() {
-            const container = document.getElementById('particles');
-            const count = 50;
-            for (let i = 0; i < count; i++) {
-                const particle = document.createElement('div');
-                particle.classList.add('particle');
-                const size = Math.random() * 4 + 2;
-                particle.style.width = size + 'px';
-                particle.style.height = size + 'px';
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.animationDuration = Math.random() * 15 + 10 + 's';
-                particle.style.animationDelay = Math.random() * 10 + 's';
-                particle.style.background = Math.random() > 0.5 ? 'var(--accent)' : '#0ea5e9';
-                container.appendChild(particle);
-            }
-        }
-        createParticles();
-
-        // ============ LIVE CHART (Canvas) ============
-        const canvas = document.getElementById('liveChart');
-        const ctx = canvas.getContext('2d');
-        let chartData = [];
-        const maxPoints = 80;
-
-        function resizeCanvas() {
-            const rect = canvas.parentElement.getBoundingClientRect();
-            canvas.width = rect.width;
-            canvas.height = 220;
-        }
-        resizeCanvas();
-        window.addEventListener('resize', () => {
-            resizeCanvas();
-            drawChart();
-        });
-
-        // Seed initial data
-        let basePrice = 68245.50;
-        for (let i = 0; i < maxPoints; i++) {
-            basePrice += (Math.random() - 0.48) * 300;
-            chartData.push(basePrice);
-        }
-
-        function drawChart() {
-            const w = canvas.width;
-            const h = canvas.height;
-            ctx.clearRect(0, 0, w, h);
-
-            if (chartData.length < 2) return;
-
-            const min = Math.min(...chartData) * 0.998;
-            const max = Math.max(...chartData) * 1.002;
-            const range = max - min || 1;
-
-            const stepX = w / (chartData.length - 1);
-
-            // Gradient fill
-            const gradient = ctx.createLinearGradient(0, 0, 0, h);
-            gradient.addColorStop(0, 'rgba(0, 212, 170, 0.25)');
-            gradient.addColorStop(1, 'rgba(0, 212, 170, 0.0)');
-
-            // Draw fill
-            ctx.beginPath();
-            ctx.moveTo(0, h);
-            chartData.forEach((val, i) => {
-                const x = i * stepX;
-                const y = h - ((val - min) / range) * (h - 20);
-                ctx.lineTo(x, y);
-            });
-            ctx.lineTo(w, h);
-            ctx.closePath();
-            ctx.fillStyle = gradient;
-            ctx.fill();
-
-            // Draw line
-            ctx.beginPath();
-            chartData.forEach((val, i) => {
-                const x = i * stepX;
-                const y = h - ((val - min) / range) * (h - 20);
-                if (i === 0) ctx.moveTo(x, y);
-                else ctx.lineTo(x, y);
-            });
-            ctx.strokeStyle = '#00d4aa';
-            ctx.lineWidth = 2.5;
-            ctx.shadowColor = 'rgba(0, 212, 170, 0.5)';
-            ctx.shadowBlur = 12;
-            ctx.stroke();
-            ctx.shadowBlur = 0;
-
-            // Draw glow dot at end
-            const lastX = (chartData.length - 1) * stepX;
-            const lastY = h - ((chartData[chartData.length - 1] - min) / range) * (h - 20);
-            ctx.beginPath();
-            ctx.arc(lastX, lastY, 6, 0, Math.PI * 2);
-            ctx.fillStyle = '#00d4aa';
-            ctx.shadowColor = 'rgba(0, 212, 170, 0.8)';
-            ctx.shadowBlur = 20;
-            ctx.fill();
-            ctx.shadowBlur = 0;
-        }
-
-        function updateChart() {
-            const last = chartData[chartData.length - 1];
-            const change = (Math.random() - 0.48) * 400;
-            const newVal = Math.max(last + change, last * 0.95);
-            chartData.push(newVal);
-            if (chartData.length > maxPoints) chartData.shift();
-
-            // Update hero price display
-            const price = newVal;
-            const oldPrice = parseFloat(document.getElementById('heroPrice').textContent.replace(/[$,]/g, ''));
-            document.getElementById('heroPrice').textContent = '$' + price.toLocaleString('en-US', {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-            });
-            const pctChange = ((price - 68000) / 68000 * 100);
-            const changeEl = document.getElementById('heroChange');
-            changeEl.textContent = (pctChange >= 0 ? '+' : '') + pctChange.toFixed(2) + '%';
-            changeEl.style.color = pctChange >= 0 ? 'var(--accent)' : 'var(--accent-red)';
-            changeEl.style.background = pctChange >= 0 ?
-                'rgba(0,212,170,0.1)' : 'rgba(239,68,68,0.1)';
-
-            drawChart();
-        }
-
-        // Initial draw
-        drawChart();
-
-        // Animate chart
-        setInterval(updateChart, 1500);
-
-        // ============ COINS DATA ============
-        const coinsData = [
-            { id: 1, name: 'Bitcoin', symbol: 'BTC', iconClass: 'btc', price: 68245.50, change: 2.34, marketCap: '1.34T',
-                color: '#f7931a' },
-            { id: 2, name: 'Ethereum', symbol: 'ETH', iconClass: 'eth', price: 3420.18, change: -1.22, marketCap: '410B',
-                color: '#627eea' },
-            { id: 3, name: 'Solana', symbol: 'SOL', iconClass: 'sol', price: 187.65, change: 5.67, marketCap: '82B',
-                color: '#9945ff' },
-            { id: 4, name: 'BNB', symbol: 'BNB', iconClass: 'bnb', price: 612.30, change: 0.89, marketCap: '94B',
-                color: '#f0b90b' },
-            { id: 5, name: 'Ripple', symbol: 'XRP', iconClass: 'btc', price: 0.6234, change: -0.45, marketCap: '34B',
-                color: '#fff' },
-        ];
-
-        function renderCoinsTable() {
-            const tbody = document.getElementById('coinsBody');
-            tbody.innerHTML = coinsData.map((coin, idx) => {
-                const iconLetter = coin.symbol.charAt(0);
-                const isUp = coin.change >= 0;
-                const miniChartId = 'miniChart' + coin.id;
-                return `
-                        <tr>
-                            <td>${idx + 1}</td>
-                            <td>
-                                <div class="coin-info">
-                                    <div class="coin-icon ${coin.iconClass}">${iconLetter}</div>
-                                    <div>
-                                        <div class="coin-name">${coin.name}</div>
-                                        <div class="coin-symbol">${coin.symbol}</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="price-cell" id="price${coin.id}">$${coin.price.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2})}</td>
-                            <td><span class="change-cell ${isUp ? 'up' : 'down'}" id="change${coin.id}">${isUp ? '+' : ''}${coin.change.toFixed(2)}%</span></td>
-                            <td><canvas class="chart-mini" id="${miniChartId}"></canvas></td>
-                            <td>$${coin.marketCap}</td>
-                        </tr>
-                    `;
-            }).join('');
-
-            // Draw mini charts
-            coinsData.forEach(coin => {
-                drawMiniChart('miniChart' + coin.id, coin.change);
-            });
-        }
-
-        function drawMiniChart(canvasId, trend) {
-            const c = document.getElementById(canvasId);
-            if (!c) return;
-            const w = 80;
-            const h = 36;
-            c.width = w;
-            c.height = h;
-            const cx = c.getContext('2d');
-
-            const points = [];
-            let val = 50;
-            for (let i = 0; i < 20; i++) {
-                val += (Math.random() - 0.5) * 10 + (trend > 0 ? 0.6 : -0.6);
-                val = Math.max(5, Math.min(95, val));
-                points.push(val);
-            }
-
-            const stepX = w / (points.length - 1);
-            const color = trend >= 0 ? '#00d4aa' : '#ef4444';
-
-            cx.beginPath();
-            points.forEach((v, i) => {
-                const x = i * stepX;
-                const y = h - (v / 100) * h;
-                if (i === 0) cx.moveTo(x, y);
-                else cx.lineTo(x, y);
-            });
-            cx.strokeStyle = color;
-            cx.lineWidth = 1.5;
-            cx.stroke();
-        }
-
-        function animateCoinPrices() {
-            coinsData.forEach(coin => {
-                const fluctuation = (Math.random() - 0.5) * coin.price * 0.002;
-                coin.price += fluctuation;
-                const changeFluctuation = (Math.random() - 0.5) * 0.15;
-                coin.change += changeFluctuation;
-
-                const priceEl = document.getElementById('price' + coin.id);
-                const changeEl = document.getElementById('change' + coin.id);
-                if (priceEl) {
-                    priceEl.textContent = '$' + coin.price.toLocaleString('en-US', {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2
-                    });
-                    priceEl.style.transform = 'scale(1.03)';
-                    setTimeout(() => priceEl.style.transform = 'scale(1)', 150);
-                }
-                if (changeEl) {
-                    const isUp = coin.change >= 0;
-                    changeEl.textContent = (isUp ? '+' : '') + coin.change.toFixed(2) + '%';
-                    changeEl.className = 'change-cell ' + (isUp ? 'up' : 'down');
-                }
-            });
-        }
-
-        renderCoinsTable();
-        setInterval(animateCoinPrices, 3000);
-
-        // ============ COMMUNITY FEED ============
-        const feedMessages = [
-            { name: 'TraderMinh', avatar: '#f7931a', initials: 'TM', time: '2 phút trước',
-                text: 'BTC vừa phá kháng cự $68K! Tôi đã long từ $67.2K, target $70K.', tag: 'buy', tagText: 'MUA' },
-            { name: 'CryptoLan', avatar: '#627eea', initials: 'CL', time: '5 phút trước',
-                text: 'ETH đang tích lũy đẹp quanh $3,400. Chờ breakout lên $3,600.', tag: 'buy', tagText: 'MUA' },
-            { name: 'SolanaKing', avatar: '#9945ff', initials: 'SK', time: '8 phút trước',
-                text: 'SOL +5.6% hôm nay! Hệ sinh thái Solana đang cực hot.', tag: 'buy', tagText: 'MUA' },
-            { name: 'RiskManager', avatar: '#ef4444', initials: 'RM', time: '12 phút trước',
-                text: 'Chốt lời 30% XRP. Chờ pullback về $0.58 để vào lại.', tag: 'sell', tagText: 'BÁN' },
-            { name: 'NewbieTrader', avatar: '#f59e0b', initials: 'NT', time: '15 phút trước',
-                text: 'Mọi người nghĩ sao về BNB? Có nên hold qua tuần không ạ?', tag: 'buy', tagText: 'HỎI' },
-        ];
-
-        function renderFeed() {
-            const container = document.getElementById('feedContainer');
-            container.innerHTML = feedMessages.map(msg => `
-                    <div class="feed-item">
-                        <div class="feed-avatar" style="background:${msg.avatar}22;color:${msg.avatar}">${msg.initials}</div>
-                        <div class="feed-content">
-                            <span class="feed-name">${msg.name}</span>
-                            <span class="feed-time">· ${msg.time}</span>
-                            <div class="feed-text">${msg.text}</div>
-                            <span class="feed-tag ${msg.tag}">${msg.tagText}</span>
-                        </div>
-                    </div>
-                `).join('');
-        }
-        renderFeed();
-
-        // Simulate live feed
-        setInterval(() => {
-            const fakeNames = ['TraderTín', 'HolderVN', 'PumpMaster', 'ChartGuy', 'CoinHunter'];
-            const fakeTexts = [
-                'Vừa bắt được con sóng SOL, lời 15% rồi! 🚀',
-                'Ai đang hold BTC qua đêm không?',
-                'Phân tích kỹ thuật: BTC đang tạo Bull Flag trên khung 4H.',
-                'Cẩn thận! Volume đang giảm, có thể sắp có dump.',
-                'Mình mới vào trade, xin mn chỉ giáo thêm về RSI ạ.',
-            ];
-            const name = fakeNames[Math.floor(Math.random() * fakeNames.length)];
-            const text = fakeTexts[Math.floor(Math.random() * fakeTexts.length)];
-            const isBuy = Math.random() > 0.4;
-            const colors = ['#f7931a', '#627eea', '#9945ff', '#f59e0b', '#00d4aa'];
-            const color = colors[Math.floor(Math.random() * colors.length)];
-
-            const newMsg = {
-                name,
-                avatar: color,
-                initials: name.slice(0, 2).toUpperCase(),
-                time: 'Vừa xong',
-                text,
-                tag: isBuy ? 'buy' : 'sell',
-                tagText: isBuy ? 'MUA' : 'BÁN'
-            };
-
-            feedMessages.unshift(newMsg);
-            if (feedMessages.length > 15) feedMessages.pop();
-            renderFeed();
-
-            // Update online count
-            const onlineEl = document.getElementById('statOnline');
-            const online = 12000 + Math.floor(Math.random() * 2000);
-            onlineEl.textContent = online.toLocaleString();
-        }, 8000);
-
-        // ============ AUTH SYSTEM ============
-        let currentUser = null;
-
-        function switchAuthTab(tab) {
-            const loginForm = document.getElementById('loginForm');
-            const registerForm = document.getElementById('registerForm');
-            const tabs = document.querySelectorAll('#authCard .auth-tab');
-
-            tabs.forEach(t => t.classList.remove('active'));
-
-            if (tab === 'login') {
-                loginForm.classList.remove('hidden');
-                registerForm.classList.add('hidden');
-                tabs[0].classList.add('active');
-            } else {
-                loginForm.classList.add('hidden');
-                registerForm.classList.remove('hidden');
-                tabs[1].classList.add('active');
-            }
-        }
-
-        function switchModalTab(tab) {
-            const loginForm = document.getElementById('modalLoginForm');
-            const registerForm = document.getElementById('modalRegisterForm');
-            const tabLogin = document.getElementById('modalTabLogin');
-            const tabRegister = document.getElementById('modalTabRegister');
-
-            tabLogin.classList.remove('active');
-            tabRegister.classList.remove('active');
-
-            if (tab === 'login') {
-                loginForm.classList.remove('hidden');
-                registerForm.classList.add('hidden');
-                tabLogin.classList.add('active');
-            } else {
-                loginForm.classList.add('hidden');
-                registerForm.classList.remove('hidden');
-                tabRegister.classList.add('active');
-            }
-        }
-
-        function openAuthModal(tab) {
-            document.getElementById('authModal').classList.remove('hidden');
-            switchModalTab(tab);
-        }
-
-        function closeAuthModal() {
-            document.getElementById('authModal').classList.add('hidden');
-        }
-
-        // Close modal on overlay click
-        document.getElementById('authModal').addEventListener('click', function(e) {
-            if (e.target === this) closeAuthModal();
-        });
-
-        // Close modal on Escape
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') closeAuthModal();
-        });
-
-        function showToast(message, type = 'success') {
-            const existing = document.querySelector('.toast');
-            if (existing) existing.remove();
-
-            const toast = document.createElement('div');
-            toast.classList.add('toast');
-            toast.innerHTML = (type === 'success' ? '✅ ' : 'ℹ️ ') + message;
-            toast.style.borderColor = type === 'success' ? 'var(--accent)' : '#f59e0b';
-            document.body.appendChild(toast);
-
-            setTimeout(() => toast.remove(), 3000);
-        }
-
-        function handleLogin(e) {
-            e.preventDefault();
-            const emailInput = document.getElementById('loginEmail') || document.getElementById('modalLoginEmail');
-            const email = emailInput.value.trim();
-
-            if (!email) {
-                showToast('Vui lòng nhập email!', 'info');
-                return;
-            }
-
-            // Simulate login
-            currentUser = {
-                email: email,
-                username: email.split('@')[0],
-                avatar: '#' + Math.floor(Math.random() * 16777215).toString(16),
-                initials: email.substring(0, 2).toUpperCase(),
-            };
-
-            // Save to localStorage
-            localStorage.setItem('tradex_user', JSON.stringify(currentUser));
-
-            showToast('Đăng nhập thành công! Chào mừng, ' + currentUser.username + '! 🎉');
-            closeAuthModal();
-            updateUIForLoggedInUser();
-        }
-
-        function handleRegister(e) {
-            e.preventDefault();
-            const usernameInput = document.getElementById('regUsername') || document.getElementById('modalRegUsername');
-            const emailInput = document.getElementById('regEmail') || document.getElementById('modalRegEmail');
-            const username = usernameInput.value.trim();
-            const email = emailInput.value.trim();
-
-            if (!username || !email) {
-                showToast('Vui lòng điền đầy đủ thông tin!', 'info');
-                return;
-            }
-
-            // Simulate registration
-            currentUser = {
-                email: email,
-                username: username,
-                avatar: '#' + Math.floor(Math.random() * 16777215).toString(16),
-                initials: username.substring(0, 2).toUpperCase(),
-            };
-
-            localStorage.setItem('tradex_user', JSON.stringify(currentUser));
-
-            showToast('Đăng ký thành công! Chào mừng, ' + username + '! 🚀');
-            closeAuthModal();
-            updateUIForLoggedInUser();
-        }
-
-        function socialLogin(provider) {
-            const mockUser = {
-                email: 'user@' + provider.toLowerCase() + '.com',
-                username: provider + '_User',
-                avatar: provider === 'Google' ? '#4285f4' : '#5865f2',
-                initials: provider.substring(0, 2).toUpperCase(),
-            };
-
-            currentUser = mockUser;
-            localStorage.setItem('tradex_user', JSON.stringify(currentUser));
-
-            showToast('Đăng nhập với ' + provider + ' thành công! 🎉');
-            closeAuthModal();
-            updateUIForLoggedInUser();
-        }
-
-        function handleLogout() {
-            currentUser = null;
-            localStorage.removeItem('tradex_user');
-            showToast('Đã đăng xuất. Hẹn gặp lại! 👋');
-            updateUIForLoggedInUser();
-        }
-
-        function updateUIForLoggedInUser() {
-            const navLinks = document.querySelector('.nav-links');
-            const existingLogout = navLinks.querySelector('.user-menu');
-            if (existingLogout) existingLogout.remove();
-
-            if (currentUser) {
-                // Remove login/register buttons
-                const loginBtn = navLinks.querySelector('button.btn-outline');
-                const registerBtn = navLinks.querySelector('button.btn-primary');
-                if (loginBtn) loginBtn.style.display = 'none';
-                if (registerBtn) registerBtn.style.display = 'none';
-
-                // Add user menu
-                const userMenu = document.createElement('div');
-                userMenu.className = 'user-menu';
-                userMenu.style.cssText = 'display:flex;align-items:center;gap:8px;';
-                userMenu.innerHTML = `
-                        <span style="background:${currentUser.avatar};width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.75rem;color:#fff">${currentUser.initials}</span>
-                        <span style="font-weight:600;font-size:0.9rem">${currentUser.username}</span>
-                        <button class="btn btn-ghost" onclick="handleLogout()" style="font-size:0.8rem">Đăng xuất</button>
-                    `;
-                navLinks.appendChild(userMenu);
-            } else {
-                const loginBtn = navLinks.querySelector('button.btn-outline');
-                const registerBtn = navLinks.querySelector('button.btn-primary');
-                if (loginBtn) loginBtn.style.display = '';
-                if (registerBtn) registerBtn.style.display = '';
-            }
-        }
-
-        // Check for existing session on load
-        window.addEventListener('DOMContentLoaded', () => {
-            const saved = localStorage.getItem('tradex_user');
-            if (saved) {
-                try {
-                    currentUser = JSON.parse(saved);
-                    updateUIForLoggedInUser();
-                } catch (e) {
-                    localStorage.removeItem('tradex_user');
-                }
-            }
-        });
-
-        // ============ DYNAMIC STAT UPDATES ============
-        setInterval(() => {
-            const volume = (2.5 + Math.random() * 0.8).toFixed(2);
-            document.getElementById('statVolume').textContent = '$' + volume + 'T';
-
-            const fear = Math.floor(60 + Math.random() * 20);
-            const fearText = fear >= 70 ? 'Tham Lam' : fear >= 50 ? 'Trung Lập' : 'Sợ Hãi';
-            document.getElementById('statFear').textContent = fear + ' - ' + fearText;
-            const fearEl = document.getElementById('statFear');
-            if (fear >= 70) fearEl.style.color = '#f59e0b';
-            else if (fear >= 50) fearEl.style.color = '#94a3b8';
-            else fearEl.style.color = '#ef4444';
-        }, 5000);
-
-        console.log('🚀 TradeX đã sẵn sàng! Chào mừng đến với nền tảng giao dịch & cộng đồng.');
-        console.log('💡 Tính năng: Biểu đồ real-time | Bảng giá | Đăng nhập/Đăng ký | Cộng đồng feed | Animation');
-    </script>
+    <!-- TAB: SCORE -->
+    <div id="tab-score" class="tab-content">
+      <div class="sec-head"><span>⭐</span> Tích điểm hôm nay</div>
+
+      <div class="score-section">
+        <div class="score-label">Chọn điểm đánh giá (1–10)</div>
+        <div class="score-grid" id="score-grid"></div>
+        <div class="score-preview" id="score-preview">Chọn điểm để xem phần thưởng</div>
+      </div>
+
+      <div class="sec-head"><span>🎁</span> Bảng thưởng điểm</div>
+      <div class="reward-table">
+        <div class="reward-row">
+          <span class="pts">⭐ 1 – 7 điểm</span>
+          <span class="reward">+1 phiếu trà sữa 🧋</span>
+        </div>
+        <div class="reward-row special">
+          <span class="pts">⭐⭐ 8 điểm</span>
+          <span class="reward">+2 phiếu trà sữa 🧋🧋</span>
+        </div>
+        <div class="reward-row special">
+          <span class="pts">⭐⭐⭐ 9 điểm</span>
+          <span class="reward">+3 phiếu trà sữa 🧋🧋🧋</span>
+        </div>
+        <div class="reward-row special" style="background:var(--pink-light)">
+          <span class="pts">🌟 10 điểm</span>
+          <span class="reward" style="color:#C05050">+4 phiếu trà sữa 🧋🧋🧋🧋</span>
+        </div>
+      </div>
+
+      <button class="btn-confirm-score" onclick="submitScore()">✅ Xác nhận tích điểm</button>
+    </div>
+
+    <!-- TAB: HISTORY -->
+    <div id="tab-history" class="tab-content">
+      <div class="sec-head"><span>📋</span> Lịch sử giao dịch</div>
+      <div id="history-list">
+        <div class="history-empty">
+          <div class="he-icon">📭</div>
+          <p>Chưa có giao dịch nào</p>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /body-panel -->
+</div><!-- /screen-main -->
+
+</div><!-- /container -->
+</div><!-- /app -->
+
+<!-- TOAST -->
+<div class="toast-wrap">
+  <div class="toast" id="toast"></div>
+</div>
+
+<script>
+let state = {
+  user: '',
+  ts: 100,
+  food: 0,
+  selectedScore: null,
+  history: []
+};
+
+function doLogin(){
+  const u = document.getElementById('login-user').value.trim();
+  if(!u){ showToast('Vui lòng nhập tên đăng nhập 😊','error'); return; }
+  state.user = u;
+  document.getElementById('welcome-name').textContent = u + ' 🌸';
+  document.getElementById('screen-login').classList.remove('active');
+  document.getElementById('screen-main').classList.add('active');
+  buildScoreGrid();
+  updateCounts();
+}
+
+function doLogout(){
+  state = {user:'',ts:100,food:0,selectedScore:null,history:[]};
+  document.getElementById('screen-main').classList.remove('active');
+  document.getElementById('screen-login').classList.add('active');
+  document.getElementById('login-user').value='';
+  document.getElementById('login-pass').value='';
+  switchTabTo('vouchers');
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',i===0));
+}
+
+function updateCounts(){
+  const tc = document.getElementById('ts-count');
+  const fc = document.getElementById('food-count');
+  tc.textContent = state.ts;
+  fc.textContent = state.food;
+  tc.classList.add('pulse');
+  fc.classList.add('pulse');
+  setTimeout(()=>{ tc.classList.remove('pulse'); fc.classList.remove('pulse'); }, 400);
+}
+
+function useVoucher(type){
+  if(type==='ts'){
+    if(state.ts<=0){ showToast('Hết phiếu trà sữa rồi! 😢','error'); return; }
+    state.ts--;
+    addHistory('use-ts','🧋','Sử dụng 1 phiếu trà sữa','minus','-1');
+    showToast('🧋 Sử dụng phiếu trà sữa thành công!','success');
+  } else {
+    if(state.food<=0){ showToast('Hết phiếu đồ ăn rồi! 😢','error'); return; }
+    state.food--;
+    addHistory('use-food','🍱','Sử dụng 1 phiếu đồ ăn','minus','-1');
+    showToast('🍱 Sử dụng phiếu đồ ăn thành công!','success');
+  }
+  updateCounts();
+}
+
+function exchange(){
+  const amt = parseInt(document.getElementById('exchange-amount').value) || 1;
+  if(amt < 1){ showToast('Số lượng phải ít nhất 1','error'); return; }
+  if(state.ts < amt){ showToast(`Không đủ phiếu trà sữa! Cần ${amt}, có ${state.ts}`,'error'); return; }
+  state.ts -= amt;
+  state.food += amt;
+  addHistory('exchange','✨',`Đổi ${amt} phiếu TS → ${amt} phiếu đồ ăn`,'ex',`×${amt}`);
+  showToast(`✨ Đổi thành công ${amt} phiếu! 🧋→🍱`,'gold');
+  updateCounts();
+}
+
+function buildScoreGrid(){
+  const g = document.getElementById('score-grid');
+  g.innerHTML='';
+  for(let i=1;i<=10;i++){
+    const b=document.createElement('button');
+    b.className='score-btn';
+    b.textContent=i;
+    b.id='sbtn-'+i;
+    b.onclick=()=>selectScore(i);
+    g.appendChild(b);
+  }
+}
+
+function selectScore(s){
+  state.selectedScore=s;
+  document.querySelectorAll('.score-btn').forEach(b=>b.classList.remove('selected'));
+  document.getElementById('sbtn-'+s).classList.add('selected');
+  const bonus = s>=8?(s-6):1;
+  const stars = s>=10?'🌟':s>=8?'⭐⭐':'⭐';
+  const prev=document.getElementById('score-preview');
+  prev.style.display='block';
+  prev.innerHTML=`${stars} Điểm <b>${s}</b> → Nhận <b style="color:var(--brown)">+${bonus} phiếu trà sữa</b> 🧋`;
+}
+
+function submitScore(){
+  if(!state.selectedScore){ showToast('Vui lòng chọn điểm trước nhé! ⭐','error'); return; }
+  const s=state.selectedScore;
+  const bonus=s>=8?(s-6):1;
+  state.ts+=bonus;
+  addHistory('score','⭐',`Tích ${s}/10 điểm → +${bonus} phiếu TS`,'plus',`+${bonus}`);
+  showToast(`⭐ Tích ${s} điểm! Nhận +${bonus} phiếu trà sữa 🧋`,'success');
+  state.selectedScore=null;
+  document.querySelectorAll('.score-btn').forEach(b=>b.classList.remove('selected'));
+  document.getElementById('score-preview').style.display='none';
+  updateCounts();
+}
+
+function addHistory(iconClass, icon, text, badgeType, badge){
+  const now=new Date();
+  const time=now.toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  state.history.unshift({iconClass,icon,text,badgeType,badge,time});
+  renderHistory();
+}
+
+function renderHistory(){
+  const el=document.getElementById('history-list');
+  if(!state.history.length){
+    el.innerHTML='<div class="history-empty"><div class="he-icon">📭</div><p>Chưa có giao dịch nào</p></div>';
+    return;
+  }
+  el.innerHTML=state.history.slice(0,30).map(h=>`
+    <div class="history-item">
+      <div class="hi-icon ${h.iconClass}">${h.icon}</div>
+      <div class="hi-body">
+        <div class="hi-text">${h.text}</div>
+        <div class="hi-time">${h.time}</div>
+      </div>
+      <div class="hi-badge ${h.badgeType}">${h.badge}</div>
+    </div>
+  `).join('');
+}
+
+function switchTab(name, el){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  switchTabTo(name);
+}
+
+function switchTabTo(name){
+  ['vouchers','score','history'].forEach(t=>{
+    const el=document.getElementById('tab-'+t);
+    el.classList.toggle('active', t===name);
+  });
+}
+
+let toastTimer;
+function showToast(msg, type=''){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.className='toast '+type;
+  void t.offsetWidth;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+document.getElementById('login-pass').addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
+document.getElementById('login-user').addEventListener('keydown', e=>{ if(e.key==='Enter') document.getElementById('login-pass').focus(); });
+</script>
 </body>
 </html>
