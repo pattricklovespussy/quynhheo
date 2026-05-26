@@ -90,132 +90,6 @@
   .screen { display: none; }
   .screen.active { display: block; }
 
-  /* === LOGIN === */
-  .login-wrap {
-    text-align: center;
-  }
-
-  .logo-area {
-    margin-bottom: 2rem;
-    animation: dropIn 0.6s ease both;
-  }
-
-  .logo-bubble {
-    width: 100px;
-    height: 100px;
-    background: linear-gradient(135deg, var(--brown-light), var(--brown));
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 1rem;
-    font-size: 48px;
-    box-shadow: 0 8px 24px rgba(92,51,23,0.3), inset 0 2px 4px rgba(255,255,255,0.15);
-    position: relative;
-  }
-
-  .logo-bubble::after {
-    content: '';
-    position: absolute;
-    top: -8px; left: -8px; right: -8px; bottom: -8px;
-    border-radius: 50%;
-    border: 2px dashed rgba(92,51,23,0.2);
-    animation: spin 20s linear infinite;
-  }
-
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  .brand-name {
-    font-family: 'Playfair Display', serif;
-    font-size: 32px;
-    font-weight: 900;
-    color: var(--brown);
-    line-height: 1;
-  }
-
-  .brand-sub {
-    font-size: 13px;
-    color: var(--text-muted);
-    margin-top: 6px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-  }
-
-  .login-card {
-    background: var(--white);
-    border-radius: var(--radius);
-    padding: 2rem;
-    box-shadow: var(--shadow-lg);
-    border: 1.5px solid rgba(92,51,23,0.08);
-    animation: slideUp 0.5s 0.2s ease both;
-  }
-
-  .login-card h3 {
-    font-family: 'Playfair Display', serif;
-    font-size: 20px;
-    color: var(--brown);
-    margin-bottom: 1.5rem;
-  }
-
-  .field {
-    margin-bottom: 1rem;
-    text-align: left;
-  }
-
-  .field label {
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    display: block;
-    margin-bottom: 6px;
-  }
-
-  .field input {
-    width: 100%;
-    padding: 12px 16px;
-    border: 1.5px solid rgba(92,51,23,0.15);
-    border-radius: 12px;
-    font-family: 'Nunito', sans-serif;
-    font-size: 15px;
-    color: var(--text);
-    background: var(--cream);
-    outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
-  }
-
-  .field input:focus {
-    border-color: var(--brown-light);
-    box-shadow: 0 0 0 3px rgba(139,94,60,0.12);
-  }
-
-  .btn-login {
-    width: 100%;
-    padding: 14px;
-    background: linear-gradient(135deg, var(--brown-light), var(--brown));
-    color: white;
-    border: none;
-    border-radius: 14px;
-    font-family: 'Nunito', sans-serif;
-    font-size: 16px;
-    font-weight: 800;
-    cursor: pointer;
-    margin-top: 0.5rem;
-    box-shadow: 0 4px 16px rgba(92,51,23,0.3);
-    transition: transform 0.15s, box-shadow 0.15s;
-    letter-spacing: 0.02em;
-  }
-
-  .btn-login:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(92,51,23,0.35); }
-  .btn-login:active { transform: scale(0.98); }
-
-  .login-hint {
-    font-size: 12px;
-    color: var(--text-muted);
-    margin-top: 12px;
-  }
-
   /* === MAIN APP === */
   .app-header {
     background: linear-gradient(135deg, var(--brown) 0%, var(--brown-mid) 50%, var(--brown-light) 100%);
@@ -653,11 +527,6 @@
     from { transform: translateY(-20px); opacity: 0; }
     to { transform: translateY(0); opacity: 1; }
   }
-  @keyframes slideUp {
-    from { transform: translateY(30px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-  }
-
   .pulse {
     animation: pulse 0.4s ease;
   }
@@ -679,30 +548,8 @@
 <div class="app">
 <div class="container">
 
-<!-- ===== LOGIN ===== -->
-<div id="screen-login" class="screen active login-wrap">
-  <div class="logo-area">
-    <div class="logo-bubble">🧋</div>
-    <div class="brand-name">Boba & Bites</div>
-    <div class="brand-sub">Rewards Program</div>
-  </div>
-  <div class="login-card">
-    <h3>Chào mừng trở lại! 👋</h3>
-    <div class="field">
-      <label>Tên đăng nhập</label>
-      <input type="text" id="login-user" placeholder="Nhập tên của bạn..." />
-    </div>
-    <div class="field">
-      <label>Mật khẩu</label>
-      <input type="password" id="login-pass" placeholder="••••••••" />
-    </div>
-    <button class="btn-login" onclick="doLogin()">Đăng nhập ngay ✨</button>
-    <p class="login-hint">Nhập bất kỳ thông tin nào để thử nghiệm</p>
-  </div>
-</div>
-
 <!-- ===== MAIN ===== -->
-<div id="screen-main" class="screen">
+<div id="screen-main" class="screen active">
 
   <!-- HEADER -->
   <div class="app-header">
@@ -711,7 +558,7 @@
         <div class="header-greeting">Xin chào trở lại,</div>
         <div class="header-name" id="welcome-name">Bạn ơi~</div>
       </div>
-      <button class="btn-logout" onclick="doLogout()">Đăng xuất</button>
+      <button class="btn-logout" onclick="resetApp()">Đặt lại</button>
     </div>
     <div class="voucher-hero">
       <div class="vcard">
@@ -844,32 +691,16 @@
 
 <script>
 let state = {
-  user: '',
+  user: 'Bạn ơi~',
   ts: 100,
   food: 0,
   selectedScore: null,
   history: []
 };
 
-function doLogin(){
-  const u = document.getElementById('login-user').value.trim();
-  if(!u){ showToast('Vui lòng nhập tên đăng nhập 😊','error'); return; }
-  state.user = u;
-  document.getElementById('welcome-name').textContent = u + ' 🌸';
-  document.getElementById('screen-login').classList.remove('active');
-  document.getElementById('screen-main').classList.add('active');
-  buildScoreGrid();
-  updateCounts();
-}
-
-function doLogout(){
-  state = {user:'',ts:100,food:0,selectedScore:null,history:[]};
-  document.getElementById('screen-main').classList.remove('active');
-  document.getElementById('screen-login').classList.add('active');
-  document.getElementById('login-user').value='';
-  document.getElementById('login-pass').value='';
-  switchTabTo('vouchers');
-  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',i===0));
+function resetApp(){
+  state = {user:'Bạn ơi~',ts:100,food:0,selectedScore:null,history:[]};
+  renderApp();
 }
 
 function updateCounts(){
@@ -983,6 +814,15 @@ function switchTabTo(name){
   });
 }
 
+function renderApp(){
+  document.getElementById('welcome-name').textContent = state.user;
+  buildScoreGrid();
+  updateCounts();
+  renderHistory();
+  switchTabTo('vouchers');
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',i===0));
+}
+
 let toastTimer;
 function showToast(msg, type=''){
   const t=document.getElementById('toast');
@@ -994,8 +834,7 @@ function showToast(msg, type=''){
   toastTimer=setTimeout(()=>t.classList.remove('show'),2800);
 }
 
-document.getElementById('login-pass').addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
-document.getElementById('login-user').addEventListener('keydown', e=>{ if(e.key==='Enter') document.getElementById('login-pass').focus(); });
+renderApp();
 </script>
 </body>
 </html>
